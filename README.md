@@ -1,2 +1,6 @@
 # VUT_FIT_IJA
-Aplikace pro zobrazení a editaci diagramů tříd a sekvenčního diagramu
+Application for displaying and editing class diagrams and sequence diagrams
+
+## Authors
+* David Chocholatý (https://github.com/davidchocholaty)
+* Adam Kaňkovský   (https://github.com/adamkankovsky)
