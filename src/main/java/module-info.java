@@ -1,4 +1,4 @@
-module com.example.vut_fit_ija_projekt {
+module com.uml {
     requires javafx.controls;
     requires javafx.fxml;
 
@@ -6,6 +6,7 @@ module com.example.vut_fit_ija_projekt {
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
 
-    opens com.example.vut_fit_ija_projekt to javafx.fxml;
-    exports com.example.vut_fit_ija_projekt;
+
+    opens com.uml to javafx.fxml;
+    exports com.uml;
 }
