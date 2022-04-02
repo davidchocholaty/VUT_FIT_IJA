@@ -1,5 +1,7 @@
 package com.uml;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -26,11 +28,11 @@ public class MainController extends Parent {
     private boolean classAct = false;
     static int count = 0;
     static ClassUML tmpNode;
-    public ClassUML elem;
+    public ObservableList<Arrow> edges = FXCollections.observableArrayList();
 
-    public void initialize() {
+    /*public void initialize() {
         childController.setParentController(this);
-    }
+    }*/
 
     public void classActive(MouseEvent mouseEvent) {
         if (classButton.isSelected()) {
@@ -72,11 +74,9 @@ public class MainController extends Parent {
         double y = mouseEvent.getY();
         ClassUML el = new ClassUML(mouseEvent.getX(), mouseEvent.getY());
 
-        System.out.println(el);
-
-        el.setOnDragDetected(e -> dDetect(e, el));
-        el.setOnMouseDragged(e -> drag(e, el));
-        el.setOnMousePressed(e -> classClick(e, el));
+        el.getView().setOnDragDetected(e -> dDetect(e, el));
+        el.getView().setOnMouseDragged(e -> drag(e, el));
+        el.getView().setOnMousePressed(e -> classClick(e, el));
 
         return el;
     }
@@ -87,27 +87,25 @@ public class MainController extends Parent {
         }
     }
 
-    public void dDetect(MouseEvent e, Button inClassButton) {
+    public void dDetect(MouseEvent e, ClassUML inClassButton) {
         inClassButton.toFront();
     }
 
-    public void drag(MouseEvent event, Button el) {
-        el.setLayoutX(el.getTranslateX() + event.getX() + el.getLayoutX());
-        el.setLayoutY(el.getTranslateY() + event.getY() + el.getLayoutY());
+    public void drag(MouseEvent event, ClassUML el) {
+        el.getView().setLayoutX(el.getView().getTranslateX() + event.getX() + el.getView().getLayoutX());
+        el.getView().setLayoutY(el.getView().getTranslateY() + event.getY() + el.getView().getLayoutY());
     }
 
 
-    public Arrow createAndAddArrow(ClassUML el1, ClassUML el2) {
-        Node n1 = (Node) el1;
-        Node n2 = (Node) el2;
-        Arrow arrow = new Arrow(n1.getLayoutX(), n1.getLayoutY(), n2.getLayoutX(), n2.getLayoutY());
-        arrow.x1Property().bind(n1.layoutXProperty());
-        arrow.y1Property().bind(n1.layoutYProperty());
-        arrow.x2Property().bind(n2.layoutXProperty());
-        arrow.y2Property().bind(n2.layoutYProperty());
+    public Arrow createAndAddArrow(ClassUML n1, ClassUML n2) {
+        Arrow arrow = new Arrow(n1.getView().getLayoutX(), n1.getView().getLayoutY(), n2.getView().getLayoutX(), n2.getView().getLayoutY());
+        arrow.x1Property().bind(n1.getView().layoutXProperty());
+        arrow.y1Property().bind(n1.getView().layoutYProperty());
+        arrow.x2Property().bind(n2.getView().layoutXProperty());
+        arrow.y2Property().bind(n2.getView().layoutYProperty());
 
-        el1.edges.add(arrow);
-        el2.edges.add(arrow);
+        n1.edges.add(arrow);
+        n1.edges.add(arrow);
         this.rPane.getChildren().add(arrow);
         return arrow;
     }
@@ -132,8 +130,8 @@ public class MainController extends Parent {
     }
 
     public void handleKeyEvents(KeyEvent event) {
-        if (event.getCode() == KeyCode.DELETE && tmpNode != null) {
-            rPane.getChildren().remove(tmpNode);
+        if (event.getCode() == KeyCode.DELETE && tmpNode.getView() != null) {
+            rPane.getChildren().remove(tmpNode.getView());
         }
     }
 }

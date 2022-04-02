@@ -30,12 +30,6 @@ public class ClassController extends Parent{
     @FXML
     private Label className;
 
-    public void initialize(){
-        inClassButton.setOnDragDetected(e -> main.dDetect(e, main.elem));
-        inClassButton.setOnMouseDragged(e -> main.drag(e, main.elem));
-        inClassButton.setOnMousePressed(e-> main.classClick(e, main.elem));
-    }
-
     public void setParentController(MainController parentController) {
         main = parentController;
     }
