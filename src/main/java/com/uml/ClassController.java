@@ -1,33 +1,41 @@
 package com.uml;
 
+import javafx.beans.Observable;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 
 import java.util.Optional;
 
 public class ClassController extends Parent{
     @FXML
-    public AnchorPane classBody;
+    public Pane classBody;
     @FXML
     static MainController main;
-    static Node button1;
     @FXML
     public Button inClassButton;
     @FXML
     private Label className;
-    static int count = 0;
 
     public void initialize(){
-        inClassButton.setOnDragDetected(e -> main.dDetect(e, classBody));
-        inClassButton.setOnMouseDragged(e -> main.drag(e, classBody));
+        inClassButton.setOnDragDetected(e -> main.dDetect(e, main.elem));
+        inClassButton.setOnMouseDragged(e -> main.drag(e, main.elem));
+        inClassButton.setOnMousePressed(e-> main.classClick(e, main.elem));
     }
+
     public void setParentController(MainController parentController) {
         main = parentController;
     }
@@ -44,15 +52,4 @@ public class ClassController extends Parent{
         name.ifPresent(s -> this.className.setText(s));
     }
 
-    public void classClick(MouseEvent mouseEvent) {
-        if(main.isArrowAct()){
-            if(count == 0){
-                button1 = classBody;
-                count++;
-            }else if(count == 1){
-                main.arrow = main.createAndAddArrow(button1, classBody);
-                count = 0;
-            }
-        }
-    }
 }
