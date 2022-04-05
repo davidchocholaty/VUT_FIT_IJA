@@ -3,13 +3,11 @@ package com.uml;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Polyline;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Pair;
 
 public class Arrow extends Group {
