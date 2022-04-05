@@ -176,7 +176,7 @@ public class MainController extends Parent {
             UMLClass cls = diagram.findClass(tmpNode.getView().getId());
             /* deleteAllClassRelationships(UMLClass) */
             /* TODO David doimplementovat */
-            diagram.deleteAllClassRelationships(cls);
+            /*diagram.deleteAllClassRelationships(cls);*/
 
             for (Arrow a : tmpNode.edges) {
                 rPane.getChildren().remove(a);
@@ -184,7 +184,7 @@ public class MainController extends Parent {
 
             rPane.getChildren().remove(tmpNode.getView());
             /* TODO David doimplementovat */
-            diagram.deleteClass(cls);
+            /*diagram.deleteClass(cls);*/
         }
     }
 }
