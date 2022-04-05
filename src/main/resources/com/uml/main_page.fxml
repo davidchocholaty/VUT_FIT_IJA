@@ -14,9 +14,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.shape.Line?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="751.0" prefWidth="1225.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uml.MainController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="751.0" prefWidth="1225.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uml.MainController">
    <children>
       <fx:include fx:id="child" source="class_uml.fxml" visible="false" />
       <GridPane layoutX="223.0" layoutY="129.0" prefHeight="751.0" prefWidth="1225.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -137,13 +136,41 @@
                                        </image>
                                     </ImageView>
                                  </graphic>
-                                 <toggleGroup>
-                                    <ToggleGroup fx:id="group" />
-                                 </toggleGroup>
                               </ToggleButton>
                               <ToggleButton fx:id="arrowButton" mnemonicParsing="false" onMouseClicked="#arrowActive" prefHeight="103.0" prefWidth="94.0" toggleGroup="$group" GridPane.columnIndex="1">
                                  <graphic>
-                                    <Line endX="30.0" startX="-30.0" />
+                                    <ImageView fitHeight="38.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/asociation.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </ToggleButton>
+                              <ToggleButton fx:id="realizationButton" mnemonicParsing="false" onMouseClicked="#arrowActive" prefHeight="103.0" prefWidth="94.0" GridPane.rowIndex="1">
+                                 <graphic>
+                                    <ImageView fitHeight="38.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/realization.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </ToggleButton>
+                              <ToggleButton fx:id="aggregationButton" mnemonicParsing="false" onMouseClicked="#arrowActive" prefHeight="103.0" prefWidth="94.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <graphic>
+                                    <ImageView fitHeight="38.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/Composition.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </ToggleButton>
+                              <ToggleButton fx:id="compositionButton" mnemonicParsing="false" onMouseClicked="#arrowActive" prefHeight="103.0" prefWidth="94.0" GridPane.rowIndex="2">
+                                 <graphic>
+                                    <ImageView fitHeight="38.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/Agregation.png" />
+                                       </image>
+                                    </ImageView>
                                  </graphic>
                               </ToggleButton>
                            </children>

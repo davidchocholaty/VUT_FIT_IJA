@@ -1,13 +1,10 @@
 package com.uml;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -18,6 +15,9 @@ import java.io.IOException;
 public class MainController extends Parent {
     @FXML
     public ClassController childController;
+    public ToggleButton compositionButton;
+    public ToggleButton realizationButton;
+    public ToggleButton aggregationButton;
     private Node view;
     public Pane rPane;
     private Node button;
@@ -25,19 +25,22 @@ public class MainController extends Parent {
     public ToggleButton classButton;
     public ToggleButton arrowButton;
     public boolean arrowAct;
+    static String arrowID;
     private boolean classAct = false;
     static int count = 0;
     static ClassUML tmpNode;
-    public ObservableList<Arrow> edges = FXCollections.observableArrayList();
+    static Arrow tmpArrow;
+    static ToggleGroup group = new ToggleGroup();
 
-    /*public void initialize() {
-        childController.setParentController(this);
-    }*/
+    public void initialize() {
+        group.getToggles().addAll(compositionButton, realizationButton, aggregationButton, classButton, arrowButton);
+    }
 
     public void classActive(MouseEvent mouseEvent) {
         if (classButton.isSelected()) {
             this.classAct = true;
             this.arrowAct = false;
+            count = 0;
         } else {
             this.classAct = false;
         }
@@ -63,6 +66,23 @@ public class MainController extends Parent {
         if (arrowButton.isSelected()) {
             classAct = false;
             arrowAct = true;
+            count = 0;
+            arrowID = "arrow";
+        } else if (realizationButton.isSelected()) {
+            classAct = false;
+            arrowAct = true;
+            count = 0;
+            arrowID = "realization";
+        } else if (aggregationButton.isSelected()) {
+            classAct = false;
+            arrowAct = true;
+            count = 0;
+            arrowID = "aggregation";
+        } else if (compositionButton.isSelected()) {
+            classAct = false;
+            arrowAct = true;
+            count = 0;
+            arrowID = "composition";
         } else {
             arrowAct = false;
         }
@@ -97,17 +117,24 @@ public class MainController extends Parent {
     }
 
 
-    public Arrow createAndAddArrow(ClassUML n1, ClassUML n2) {
-        Arrow arrow = new Arrow(n1.getView().getLayoutX(), n1.getView().getLayoutY(), n2.getView().getLayoutX(), n2.getView().getLayoutY());
+    public Arrow createAndAddArrow(ClassUML n1, ClassUML n2, String arrowID) {
+        Arrow arrow = new Arrow(n1.getView().getLayoutX(), n1.getView().getLayoutY(), n2.getView().getLayoutX(), n2.getView().getLayoutY(), arrowID);
         arrow.x1Property().bind(n1.getView().layoutXProperty());
         arrow.y1Property().bind(n1.getView().layoutYProperty());
         arrow.x2Property().bind(n2.getView().layoutXProperty());
         arrow.y2Property().bind(n2.getView().layoutYProperty());
 
+        arrow.setOnMouseClicked(e -> arrowClicked(e, arrow));
+
         n1.edges.add(arrow);
-        n1.edges.add(arrow);
-        this.rPane.getChildren().add(arrow);
+        n2.edges.add(arrow);
+
         return arrow;
+    }
+
+    private void arrowClicked(MouseEvent e, Arrow arrow) {
+        System.out.println(arrow);
+        tmpArrow = arrow;
     }
 
     public void diagramDragDetected(MouseEvent mouseEvent) {
@@ -121,7 +148,7 @@ public class MainController extends Parent {
                 tmpNode = classBody;
                 count++;
             } else if (count == 1) {
-                arrow = createAndAddArrow(tmpNode, classBody);
+                rPane.getChildren().add(createAndAddArrow(tmpNode, classBody, arrowID));
                 count = 0;
             }
         } else {
@@ -132,6 +159,9 @@ public class MainController extends Parent {
     public void handleKeyEvents(KeyEvent event) {
         if (event.getCode() == KeyCode.DELETE && tmpNode.getView() != null) {
             rPane.getChildren().remove(tmpNode.getView());
+            for (Arrow a : tmpNode.edges) {
+                rPane.getChildren().remove(a);
+            }
         }
     }
 }
