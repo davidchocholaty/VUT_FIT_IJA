@@ -5,12 +5,15 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
+
+import com.uml.classdiagram.ClassDiagram;
 
 public class MainController extends Parent {
     @FXML
@@ -31,6 +34,10 @@ public class MainController extends Parent {
     static ClassUML tmpNode;
     static Arrow tmpArrow;
     static ToggleGroup group = new ToggleGroup();
+
+    /*************************************/
+    static ClassDiagram diagram = new ClassDiagram("Class diagram");
+    /*************************************/
 
     public void initialize() {
         group.getToggles().addAll(compositionButton, realizationButton, aggregationButton, classButton, arrowButton);
@@ -97,8 +104,13 @@ public class MainController extends Parent {
         el.getView().setOnDragDetected(e -> dDetect(e, el));
         el.getView().setOnMouseDragged(e -> drag(e, el));
         el.getView().setOnMousePressed(e -> classClick(e, el));
+        el.getView().setOnContextMenuRequested(e -> contentAction(e, el));
 
         return el;
+    }
+
+    private void contentAction(ContextMenuEvent e, ClassUML el) {
+
     }
 
     public void addElement(MouseEvent mouseEvent) throws IOException {
@@ -142,7 +154,7 @@ public class MainController extends Parent {
     }
 
     public void classClick(MouseEvent e, ClassUML classBody) {
-        System.out.println(classBody);
+        System.out.println(classBody.getView().getId());
         if (isArrowAct()) {
             if (count == 0) {
                 tmpNode = classBody;

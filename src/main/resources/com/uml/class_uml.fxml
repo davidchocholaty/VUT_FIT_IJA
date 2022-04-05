@@ -29,7 +29,7 @@
    <contextMenu>
    </contextMenu>
    <contextMenu>
-      <ContextMenu>
+      <ContextMenu fx:id="contextMenu">
         <items>
           <MenuItem mnemonicParsing="false" onAction="#addClassNameAction" text="add class name" />
             <MenuItem mnemonicParsing="false" onAction="#addArgumentAction" text="add Argument" />

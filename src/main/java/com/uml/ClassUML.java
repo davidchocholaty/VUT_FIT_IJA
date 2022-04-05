@@ -4,9 +4,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+
 
 import java.io.IOException;
+
+import com.uml.classdiagram.UMLClass;
 
 public class ClassUML extends Button{
     public Node view;
@@ -20,6 +23,11 @@ public class ClassUML extends Button{
         getView().setLayoutY(y);
         getView().translateXProperty().bind(loaded.widthProperty().divide(-2));
         getView().translateYProperty().bind(loaded.heightProperty().divide(-2));
+
+        UMLClass cls = MainController.diagram.createDefaultClass();
+
+        loaded.setId(cls.getName());
+
     }
 
     public Node getView() {

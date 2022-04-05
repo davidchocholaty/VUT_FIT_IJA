@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.Pane;
@@ -19,6 +20,7 @@ public class ClassController extends Parent{
     public Button inClassButton;
     public Label classArguments;
     public Label classMethods;
+    public ContextMenu contextMenu;
     @FXML
     private Label className;
 
@@ -41,7 +43,20 @@ public class ClassController extends Parent{
         dialog.setContentText("Class name:");
 
         Optional<String> name = dialog.showAndWait();
-        name.ifPresent(s -> this.className.setText(s));
+
+        System.out.println(name.get());
+
+        if (MainController.diagram.setNewClassName(this.getId(), name.get())) {
+            name.ifPresent(s -> this.className.setText(s));
+            this.setId(name.toString());
+            System.out.println("id: " + this.getId());
+        } else {
+            // TODO
+            System.out.println("id: " + this.getId());
+        }
+
+
+
     }
 
 
