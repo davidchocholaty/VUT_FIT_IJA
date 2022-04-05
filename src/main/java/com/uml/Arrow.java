@@ -1,5 +1,6 @@
 package com.uml;
 
+import com.uml.classdiagram.*;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -32,7 +33,7 @@ public class Arrow extends Group {
     private final double ARROWHEAD_ANGLE = Math.toRadians(30);
     private final double ARROWHEAD_LENGTH = 15;
 
-    public Arrow(double x1, double y1, double x2, double y2, String arrowID){
+    public Arrow(double x1, double y1, double x2, double y2, String arrowID, ClassUML from, ClassUML to){
         this.x1.set(x1);
         this.x2.set(x2);
         this.y1.set(y1);
@@ -75,21 +76,32 @@ public class Arrow extends Group {
 
         dialog.showAndWait();
 
+        UMLClass classFrom = MainController.diagram.findClass(from.getView().getId());
+        UMLClass classTo = MainController.diagram.findClass(to.getView().getId());
+
         switch (arrowID){
             case "arrow":
                 getChildren().addAll(mainLine, headAS, this.relA, this.relB);
+                UMLAssociation association = MainController.diagram.createAssociationRelationship(classFrom, classTo);
+                setMultiplicityTypes(association, relA.getText(), relB.getText());
                 break;
 
             case "realization":
+                /* TODO Adam - nebudou multiplicity, zmena na plnou caru */
                 getChildren().addAll(dashedLine, headR, this.relA, this.relB);
+                UMLInheritance inheritance = MainController.diagram.createInheritanceRelationship(classFrom, classTo);
                 break;
 
             case "aggregation":
                 getChildren().addAll(mainLine, headAG1, headAG2, this.relA, this.relB);
+                UMLAggregation aggregation = MainController.diagram.createAggregationRelationship(classFrom, classTo);
+                setMultiplicityTypes(aggregation, relA.getText(), relB.getText());
                 break;
 
             case "composition":
                 getChildren().addAll(mainLine, headAS, headC3, headC1, headC2, this.relA, this.relB);
+                UMLComposition composition = MainController.diagram.createCompositionRelationship(classFrom, classTo);
+                setMultiplicityTypes(composition, relA.getText(), relB.getText());
                 break;
 
             default:
@@ -103,6 +115,54 @@ public class Arrow extends Group {
         setUpClassStyle();
 
         update();
+    }
+
+    private void setMultiplicityTypes(UMLInstanceLevel relationship, String fromMultiplicity, String toMultiplicity) {
+        /* From multiplicity */
+        if (fromMultiplicity == null) {
+            relationship.setFromMultiplicity(UMLMultiplicityType.UNSPECIFIED);
+        } else {
+            switch (fromMultiplicity) {
+                case "0":
+                    relationship.setFromMultiplicity(UMLMultiplicityType.ZERO);
+                    break;
+                case "0..1":
+                    relationship.setFromMultiplicity(UMLMultiplicityType.ZERO_OR_ONE);
+                    break;
+                case "1":
+                    relationship.setFromMultiplicity(UMLMultiplicityType.ONE);
+                    break;
+                case "0..*":
+                    relationship.setFromMultiplicity(UMLMultiplicityType.ZERO_OR_MANY);
+                    break;
+                case "1..*":
+                    relationship.setFromMultiplicity(UMLMultiplicityType.ONE_OR_MANY);
+                    break;
+            }
+        }
+
+        /* To multiplicity */
+        if (toMultiplicity == null) {
+            relationship.setToMultiplicity(UMLMultiplicityType.UNSPECIFIED);
+        } else {
+            switch (toMultiplicity) {
+                case "0":
+                    relationship.setToMultiplicity(UMLMultiplicityType.ZERO);
+                    break;
+                case "0..1":
+                    relationship.setToMultiplicity(UMLMultiplicityType.ZERO_OR_ONE);
+                    break;
+                case "1":
+                    relationship.setToMultiplicity(UMLMultiplicityType.ONE);
+                    break;
+                case "0..*":
+                    relationship.setToMultiplicity(UMLMultiplicityType.ZERO_OR_MANY);
+                    break;
+                case "1..*":
+                    relationship.setToMultiplicity(UMLMultiplicityType.ONE_OR_MANY);
+                    break;
+            }
+        }
     }
 
     private void setUpClassStyle() {

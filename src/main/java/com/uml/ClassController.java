@@ -1,5 +1,6 @@
 package com.uml;
 
+import com.uml.classdiagram.*;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -118,6 +119,41 @@ public class ClassController extends Parent{
         dialog.getDialogPane().setContent(grid);
 
         dialog.showAndWait();
+
+        UMLClass cls = MainController.diagram.findClass(MainController.tmpNode.getView().getId());
+        UMLDataType dataType = MainController.diagram.dataTypeForName(type.getText());
+        UMLAttribute attr = new UMLAttribute(name.getText(), dataType);
+
+        /* TODO Adam - pokud budou prazdna policka - reakce na krizek */
+        String visibility = modifier.getValue().toString();
+
+        if (visibility == null)
+        {
+            attr.setVisibility(UMLVisibilityType.UNSPECIFIED);
+        } else {
+            switch (visibility) {
+                case "+":
+                    attr.setVisibility(UMLVisibilityType.PUBLIC);
+                    break;
+                case "-":
+                    attr.setVisibility(UMLVisibilityType.PRIVATE);
+                    break;
+                case "#":
+                    attr.setVisibility(UMLVisibilityType.PROTECTED);
+                    break;
+                case "~":
+                    attr.setVisibility(UMLVisibilityType.PACKAGE);
+                    break;
+            }
+        }
+
+        /* TODO David: Defaultni hodnota */
+/*
+        if(!cls.addAttribute(attr)) {
+            // TODO Adam - zadani stejneho argumentu - Warning
+        }
+*/
+
     }
 
     public void addMethod(ActionEvent actionEvent) {
@@ -138,26 +174,26 @@ public class ClassController extends Parent{
         name.setPromptText("Name");
         TextField parameters = new TextField();
         parameters.setPromptText("names types");
-        TextField ret = new TextField();
-        ret.setPromptText("names types");
+        TextField type = new TextField();
+        type.setPromptText("type");
 
         grid.add(new Label("Modifier :"), 0, 0);
         grid.add(modifier, 0, 1);
         grid.add(new Label("Name :"), 1, 0);
         grid.add(name, 1, 1);
-        grid.add(new Label("Type :"), 2, 0);
+        grid.add(new Label("Parameters :"), 2, 0);
         grid.add(parameters, 2, 1);
         grid.add(new Label("return:"), 3, 0);
-        grid.add(ret, 3, 1);
+        grid.add(type, 3, 1);
 
 
         // Convert the result to a username-password-pair when the login button is clicked.
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == loginButtonType) {
                 if(this.classMethods.getText().equals("")){
-                    this.classMethods.setText(this.classMethods.getText() + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((parameters.getText().equals("")) ? "()" : " ( " + parameters.getText() + " ) ") + ((ret.getText().equals("")) ? "" : " : " + ret.getText()));
+                    this.classMethods.setText(this.classMethods.getText() + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((parameters.getText().equals("")) ? "()" : " ( " + parameters.getText() + " ) ") + ((type.getText().equals("")) ? "" : " : " + type.getText()));
                 }else {
-                    this.classArguments.setText(this.classArguments.getText() + "\n" + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((parameters.getText().equals("")) ? "()" : " ( " + parameters.getText() + " ) ") + ((ret.getText().equals("")) ? "" : " : " + ret.getText()));
+                    this.classArguments.setText(this.classArguments.getText() + "\n" + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((parameters.getText().equals("")) ? "()" : " ( " + parameters.getText() + " ) ") + ((type.getText().equals("")) ? "" : " : " + type.getText()));
                 }
             }
             return null;
@@ -166,5 +202,24 @@ public class ClassController extends Parent{
         dialog.getDialogPane().setContent(grid);
 
         dialog.showAndWait();
+
+        UMLClass cls = MainController.diagram.findClass(MainController.tmpNode.getView().getId());
+        UMLDataType dataType = MainController.diagram.dataTypeForName(type.getText());
+
+        /* Create method parameters */
+
+        parameters.getText();
+        /* TODO David - rozparsovat parametry a pridat */
+
+        System.out.println(parameters.getText());
+/*
+        UMLOperation operation = UMLOperation.create(name.getText(), dataType, )
+
+
+        if(!cls.addOperation(operation)) {
+            // TODO Adam - zadani stejne metody - Warning
+       }
+
+ */
     }
 }

@@ -27,6 +27,8 @@ public class UMLClass extends UMLClassifier {
 	private final List<UMLOperation> classOperations;
 	private static int defaultClassId = 1;
 
+	/* TODO David x-ova a y-ova souradnice pro ukladani - datovy typ double */
+
 	/**
 	 * Creates an instance representing a UML class model.
 	 * <p>

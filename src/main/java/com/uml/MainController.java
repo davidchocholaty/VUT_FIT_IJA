@@ -1,5 +1,7 @@
 package com.uml;
 
+import com.uml.classdiagram.UMLClass;
+import com.uml.classdiagram.UMLRelationship;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -131,7 +133,7 @@ public class MainController extends Parent {
 
 
     public Arrow createAndAddArrow(ClassUML n1, ClassUML n2, String arrowID) {
-        Arrow arrow = new Arrow(n1.getView().getLayoutX(), n1.getView().getLayoutY(), n2.getView().getLayoutX(), n2.getView().getLayoutY(), arrowID);
+        Arrow arrow = new Arrow(n1.getView().getLayoutX(), n1.getView().getLayoutY(), n2.getView().getLayoutX(), n2.getView().getLayoutY(), arrowID, n1, n2);
         arrow.x1Property().bind(n1.getView().layoutXProperty());
         arrow.y1Property().bind(n1.getView().layoutYProperty());
         arrow.x2Property().bind(n2.getView().layoutXProperty());
@@ -171,10 +173,18 @@ public class MainController extends Parent {
 
     public void handleKeyEvents(KeyEvent event) {
         if (event.getCode() == KeyCode.DELETE && tmpNode.getView() != null) {
-            rPane.getChildren().remove(tmpNode.getView());
+            UMLClass cls = diagram.findClass(tmpNode.getView().getId());
+            /* deleteAllClassRelationships(UMLClass) */
+            /* TODO David doimplementovat */
+            diagram.deleteAllClassRelationships(cls);
+
             for (Arrow a : tmpNode.edges) {
                 rPane.getChildren().remove(a);
             }
+
+            rPane.getChildren().remove(tmpNode.getView());
+            /* TODO David doimplementovat */
+            diagram.deleteClass(cls);
         }
     }
 }
