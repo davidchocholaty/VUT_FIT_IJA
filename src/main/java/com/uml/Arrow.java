@@ -42,8 +42,8 @@ public class Arrow extends Group {
         relB.getStyleClass().add("relLabel");
 
         Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Přidání relací");
-        ButtonType loginButtonType = new ButtonType("Pčidat", ButtonBar.ButtonData.OK_DONE);
+        dialog.setTitle("Add relationship");
+        ButtonType loginButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
         GridPane grid = new GridPane();
@@ -52,13 +52,13 @@ public class Arrow extends Group {
         grid.setPadding(new Insets(20, 150, 10, 10));
 
         TextField relA = new TextField();
-        relA.setPromptText("RelaceA");
+        relA.setPromptText("Relationship A");
         TextField relB = new TextField();
-        relB.setPromptText("RelaceB");
+        relB.setPromptText("Relationship B");
 
-        grid.add(new Label("Relace A:"), 0, 0);
+        grid.add(new Label("Relationship A:"), 0, 0);
         grid.add(relA, 1, 0);
-        grid.add(new Label("Relace B:"), 2, 0);
+        grid.add(new Label("Relationship B:"), 2, 0);
         grid.add(relB, 3, 0);
 
         // Convert the result to a username-password-pair when the login button is clicked.

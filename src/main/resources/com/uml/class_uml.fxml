@@ -10,7 +10,7 @@
 
 <Button minWidth="100.0" mnemonicParsing="false" styleClass="classElement" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uml.ClassController">
    <graphic>
-      <VBox alignment="CENTER">
+      <VBox>
          <padding>
             <Insets left="-8.0" right="-8.0" />
          </padding>
@@ -18,7 +18,7 @@
             <Label fx:id="className">
             </Label>
             <Separator minWidth="10.0" style="-fx-background-color: black;" />
-            <Label fx:id="classArguments" textAlignment="CENTER">
+            <Label fx:id="classArguments">
             </Label>
             <Separator minWidth="100.0" style="-fx-background-color: black;" />
             <Label fx:id="classMethods">
@@ -30,11 +30,11 @@
    </contextMenu>
    <contextMenu>
       <ContextMenu fx:id="contextMenu">
-        <items>
-          <MenuItem mnemonicParsing="false" onAction="#addClassNameAction" text="add class name" />
-            <MenuItem mnemonicParsing="false" onAction="#addArgumentAction" text="add Argument" />
-           <MenuItem mnemonicParsing="false" onAction="#addMethod" text="add method" />
-        </items>
+         <items>
+            <MenuItem fx:id="Name" mnemonicParsing="false" onAction="#addClassNameAction" text="add class name" />
+            <MenuItem fx:id="Arguments" mnemonicParsing="false" onAction="#addArgumentAction" text="add Argument" />
+            <MenuItem fx:id="Methods" mnemonicParsing="false" onAction="#addMethod" text="add method" />
+         </items>
       </ContextMenu>
    </contextMenu>
 </Button>

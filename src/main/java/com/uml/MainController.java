@@ -1,11 +1,13 @@
 package com.uml;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -104,13 +106,12 @@ public class MainController extends Parent {
         el.getView().setOnDragDetected(e -> dDetect(e, el));
         el.getView().setOnMouseDragged(e -> drag(e, el));
         el.getView().setOnMousePressed(e -> classClick(e, el));
-        el.getView().setOnContextMenuRequested(e -> contentAction(e, el));
 
         return el;
     }
 
-    private void contentAction(ContextMenuEvent e, ClassUML el) {
-
+    private void contentAction(ActionEvent e, ClassUML el) {
+        System.out.println("tady");
     }
 
     public void addElement(MouseEvent mouseEvent) throws IOException {
