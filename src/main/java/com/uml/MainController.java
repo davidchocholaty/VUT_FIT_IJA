@@ -174,17 +174,15 @@ public class MainController extends Parent {
     public void handleKeyEvents(KeyEvent event) {
         if (event.getCode() == KeyCode.DELETE && tmpNode.getView() != null) {
             UMLClass cls = diagram.findClass(tmpNode.getView().getId());
-            /* deleteAllClassRelationships(UMLClass) */
-            /* TODO David doimplementovat */
-            /*diagram.deleteAllClassRelationships(cls);*/
+            diagram.deleteAllClassRelationships(cls);
 
             for (Arrow a : tmpNode.edges) {
                 rPane.getChildren().remove(a);
             }
 
             rPane.getChildren().remove(tmpNode.getView());
-            /* TODO David doimplementovat */
-            /*diagram.deleteClass(cls);*/
+
+            diagram.deleteClass(cls);
         }
     }
 }

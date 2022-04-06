@@ -20,7 +20,7 @@ public class UMLAttribute extends Element {
 	private UMLDataType type;
 	private UMLVisibilityType visibility;
 	private static int defaultAttrId = 1;
-
+	private String defaultValue;
 	/**
 	 * Creates an attribute instance.
 	 *
@@ -31,6 +31,7 @@ public class UMLAttribute extends Element {
 		super(name);
 		this.type = type;
 		this.visibility = UMLVisibilityType.UNSPECIFIED;
+		this.defaultValue = "";
 	}
 
 	/**
@@ -74,6 +75,14 @@ public class UMLAttribute extends Element {
 		newAttribute.setDefaultName();
 
 		return newAttribute;
+	}
+
+	public void setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
+	}
+
+	public String getDefaultValue() {
+		return this.defaultValue;
 	}
 
 	/**

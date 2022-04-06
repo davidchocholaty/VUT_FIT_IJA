@@ -147,7 +147,9 @@ public class ClassController extends Parent{
             }
         }
 
-        /* TODO David: Defaultni hodnota */
+        /* TODO David: Otazka na Adama, zda bude moct uzivatel nastavovat defaultni hodnotu v argumentu
+        *  v implementaci UMLAttribute je hodnota defaultValue jako vychozi nastavena na "" a uzivatel ji muze zmenit */
+
 /*
         if(!cls.addAttribute(attr)) {
             // TODO Adam - zadani stejneho argumentu - Warning
@@ -203,23 +205,47 @@ public class ClassController extends Parent{
 
         dialog.showAndWait();
 
+        /* Create method parameters backhand */
         UMLClass cls = MainController.diagram.findClass(MainController.tmpNode.getView().getId());
-        UMLDataType dataType = MainController.diagram.dataTypeForName(type.getText());
+        UMLDataType retDataType = MainController.diagram.dataTypeForName(type.getText());
+        List<UMLAttribute> classAttributes = new ArrayList<UMLAttribute>();
 
         /* Create method parameters */
 
-        parameters.getText();
-        /* TODO David - rozparsovat parametry a pridat */
+        String methodParams = parameters.getText();
+        /* Remove all whitespaces and non-visible characters */
+        methodParams = methodParams.replaceAll("\\s+","");
 
-        System.out.println(parameters.getText());
-/*
-        UMLOperation operation = UMLOperation.create(name.getText(), dataType, )
+        String[] splittedMethodParams = methodParams.split(",");
 
+        for (String currentParam : splittedMethodParams) {
+            if (currentParam.equals("")) {
+                // TODO error - asi Warning - nespravny format parametru (carky mezi nimi)
+            }
+
+            String[] splittedParam = currentParam.split(":");
+
+            if (splittedParam.length != 2) {
+                // TODO error - asi Wargning nespravny format parametru (jednoho parametru)
+            } else if(splittedParam[0].equals("")) {
+                // TODO error - asi Warning - nezadane jmeno parametru
+            } else if (splittedParam[1].equals("")) {
+                // TODO error - asi Warning - nezadany datovy typ parametru
+            } else {
+                String paramName = splittedParam[0];
+                String paramDataType = splittedParam[1];
+
+                UMLDataType dataType = MainController.diagram.dataTypeForName(paramDataType);
+
+                UMLAttribute attr = new UMLAttribute(paramName, dataType);
+                classAttributes.add(attr);
+            }
+        }
+
+        UMLOperation operation = UMLOperation.create(name.getText(), retDataType, classAttributes.toArray(new UMLAttribute[classAttributes.size()]));
 
         if(!cls.addOperation(operation)) {
             // TODO Adam - zadani stejne metody - Warning
        }
-
- */
     }
 }

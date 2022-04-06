@@ -22,12 +22,12 @@ import java.util.List;
  */
 public class UMLClass extends UMLClassifier {
 	private boolean isAbstract;
+	private double xCoordinate;
+	private double yCoordinate;
 	private UMLVisibilityType visibility;
 	private final List<UMLAttribute> classAttributes;
 	private final List<UMLOperation> classOperations;
 	private static int defaultClassId = 1;
-
-	/* TODO David x-ova a y-ova souradnice pro ukladani - datovy typ double */
 
 	/**
 	 * Creates an instance representing a UML class model.
@@ -72,6 +72,22 @@ public class UMLClass extends UMLClassifier {
 		classAttributes.add(attr);
 
 		return true;
+	}
+
+	public void setXCoordinate(double xCoordinate) {
+		this.xCoordinate = xCoordinate;
+	}
+
+	public void setYCoordinate(double yCoordinate) {
+		this.yCoordinate = yCoordinate;
+	}
+
+	public double getXCoordinate() {
+		return this.xCoordinate;
+	}
+
+	public double getYCoordinate() {
+		return this.yCoordinate;
 	}
 
 	public boolean deleteAttribute(UMLAttribute attr) {

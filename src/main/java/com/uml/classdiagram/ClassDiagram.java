@@ -104,6 +104,33 @@ public class ClassDiagram extends Element {
 		return false;
 	}
 
+	public boolean deleteClass(UMLClass cls) {
+		int idx;
+
+		if ((idx = diagramClasses.indexOf(cls)) != -1) {
+			diagramClasses.remove(idx);
+			return true;
+		}
+
+		return false;
+	}
+
+	public void deleteAllClassRelationships(UMLClass cls) {
+		int idx;
+
+		for (UMLRelationship currentRel : diagramRelationships) {
+			/* If parameter class is from class in current relationship -> delete relationship */
+			if (currentRel.getFrom().getName().equals(cls.getName())) {
+				idx = diagramRelationships.indexOf(currentRel);
+				diagramRelationships.remove(idx);
+			} else if (currentRel.getTo().getName().equals(cls.getName())) {
+				/* If parameter class is to class in current relationship -> delete relationship */
+				idx = diagramRelationships.indexOf(currentRel);
+				diagramRelationships.remove(idx);
+			}
+		}
+	}
+
 	public UMLInterface createInterface(String name) {
 		for (UMLClass currentClass : diagramClasses) {
 			if (currentClass.getName().equals(name)) {
