@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="751.0" prefWidth="1225.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uml.MainController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="751.0" prefWidth="1225.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uml.MainController">
    <children>
       <fx:include fx:id="child" source="class_uml.fxml" visible="false" />
       <GridPane layoutX="223.0" layoutY="129.0" prefHeight="751.0" prefWidth="1225.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -47,7 +47,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="50.0">
+                  <Button fx:id="saveButton" mnemonicParsing="false" onMouseClicked="#saveProject" prefHeight="60.0" prefWidth="50.0">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -137,7 +137,7 @@
                                     </ImageView>
                                  </graphic>
                               </ToggleButton>
-                              <ToggleButton fx:id="arrowButton" mnemonicParsing="false" onMouseClicked="#arrowActive" prefHeight="103.0" prefWidth="94.0" toggleGroup="$group" GridPane.columnIndex="1">
+                              <ToggleButton fx:id="arrowButton" mnemonicParsing="false" onMouseClicked="#arrowActive" prefHeight="103.0" prefWidth="94.0" GridPane.columnIndex="1">
                                  <graphic>
                                     <ImageView fitHeight="38.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -145,6 +145,9 @@
                                        </image>
                                     </ImageView>
                                  </graphic>
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="group" />
+                                 </toggleGroup>
                               </ToggleButton>
                               <ToggleButton fx:id="realizationButton" mnemonicParsing="false" onMouseClicked="#arrowActive" prefHeight="103.0" prefWidth="94.0" GridPane.rowIndex="1">
                                  <graphic>

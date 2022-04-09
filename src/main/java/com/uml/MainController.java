@@ -15,9 +15,12 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
+import java.io.File;
 import java.io.IOException;
 
 import com.uml.classdiagram.ClassDiagram;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
 
 public class MainController extends Parent {
     @FXML
@@ -184,5 +187,22 @@ public class MainController extends Parent {
 
             diagram.deleteClass(cls);
         }
+    }
+
+    public void saveProject(MouseEvent mouseEvent) {
+
+        //SaveHandler save = new SaveHandler(diagram);
+
+        Window window = rPane.getScene().getWindow();
+
+        FileChooser fileChooser = new FileChooser();
+
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("xml files (*.ijaxml, *.ixl)", "*.ijaxml", "*.ixl");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        File file = fileChooser.showSaveDialog(window);
+
+        //save.saveClassDiagram(toString())
+
     }
 }
