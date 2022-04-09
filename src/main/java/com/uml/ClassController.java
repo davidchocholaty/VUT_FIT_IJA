@@ -59,12 +59,7 @@ public class ClassController extends Parent{
                 MainController.tmpNode.getView().setId(s);
                 System.out.println("id: " + MainController.tmpNode.getView().getId());
             } else {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Warning");
-                alert.setHeaderText(null);
-                alert.setContentText("This name was used!");
-
-                alert.showAndWait();
+                warning("This name was used!");
                 addClassNameAction(event);
                 System.out.println("id: " + MainController.tmpNode.getView().getId());
             }
@@ -91,8 +86,8 @@ public class ClassController extends Parent{
         modifier.getItems().addAll("", "+", "-", "#", "~");
         TextField name = new TextField();
         name.setPromptText("Name");
-        TextField type = new TextField();
-        type.setPromptText("Type");
+        ComboBox type = new ComboBox();
+        type.getItems().addAll("None", "Boolean", "Integer", "UnlimitedNatural", "String", "Real");
         TextField def = new TextField();
         def.setPromptText("value1");
 
@@ -109,31 +104,28 @@ public class ClassController extends Parent{
         // Convert the result to a username-password-pair when the login button is clicked.
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == loginButtonType) {
-                if(this.classArguments.getText().equals("")){
-                    this.classArguments.setText(this.classArguments.getText() + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((type.getText().equals("")) ? "" : " : " + type.getText()) + ((def.getText().equals("")) ? "" : " = " + def.getText()));
-                }else {
-                    this.classArguments.setText(this.classArguments.getText() + "\n" + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((type.getText().equals("")) ? "" : " : " + type.getText()) + ((def.getText().equals("")) ? "" : " = " + def.getText()));
-                }
 
-                UMLDataType dataType = MainController.diagram.dataTypeForName(type.getText());
+                UMLDataType dataType = MainController.diagram.dataTypeForName(type.getValue().toString());
                 UMLAttribute attr = new UMLAttribute(name.getText(), dataType);
 
-                String visibility = modifier.getValue().toString();
+                if(modifier.getValue() != null) {
+                    String visibility = modifier.getValue().toString();
 
-                if (visibility != null) {
-                    switch (visibility) {
-                        case "+":
-                            attr.setVisibility(UMLVisibilityType.PUBLIC);
-                            break;
-                        case "-":
-                            attr.setVisibility(UMLVisibilityType.PRIVATE);
-                            break;
-                        case "#":
-                            attr.setVisibility(UMLVisibilityType.PROTECTED);
-                            break;
-                        case "~":
-                            attr.setVisibility(UMLVisibilityType.PACKAGE);
-                            break;
+                    if (visibility != null) {
+                        switch (visibility) {
+                            case "+":
+                                attr.setVisibility(UMLVisibilityType.PUBLIC);
+                                break;
+                            case "-":
+                                attr.setVisibility(UMLVisibilityType.PRIVATE);
+                                break;
+                            case "#":
+                                attr.setVisibility(UMLVisibilityType.PROTECTED);
+                                break;
+                            case "~":
+                                attr.setVisibility(UMLVisibilityType.PACKAGE);
+                                break;
+                        }
                     }
                 }
 
@@ -142,7 +134,15 @@ public class ClassController extends Parent{
                 }
 
                 if(!cls.addAttribute(attr)) {
-                    // TODO Adam - zadani stejneho argumentu - Warning
+                    warning("This argument was entered already");
+                    addArgumentAction(actionEvent);
+                    return null;
+                }
+
+                if(this.classArguments.getText().equals("")){
+                    this.classArguments.setText(this.classArguments.getText() + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((type.getValue().toString().equals("")) ? "" : " : " + type.getValue().toString()) + ((def.getText().equals("")) ? "" : " = " + def.getText()));
+                }else {
+                    this.classArguments.setText(this.classArguments.getText() + "\n" + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((type.getValue().toString().equals("")) ? "" : " : " + type.getValue().toString()) + ((def.getText().equals("")) ? "" : " = " + def.getText()));
                 }
 
             }
@@ -152,7 +152,6 @@ public class ClassController extends Parent{
         dialog.getDialogPane().setContent(grid);
 
         dialog.showAndWait();
-
 
     }
 
@@ -192,11 +191,6 @@ public class ClassController extends Parent{
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == loginButtonType) {
-                if(this.classMethods.getText().equals("")){
-                    this.classMethods.setText(this.classMethods.getText() + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((parameters.getText().equals("")) ? "()" : " ( " + parameters.getText() + " ) ") + ((type.getText().equals("")) ? "" : " : " + type.getText()));
-                }else {
-                    this.classArguments.setText(this.classArguments.getText() + "\n" + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((parameters.getText().equals("")) ? "()" : " ( " + parameters.getText() + " ) ") + ((type.getText().equals("")) ? "" : " : " + type.getText()));
-                }
 
                 UMLDataType retDataType = MainController.diagram.dataTypeForName(type.getText());
                 List<UMLAttribute> classAttributes = new ArrayList<UMLAttribute>();
@@ -211,17 +205,25 @@ public class ClassController extends Parent{
 
                 for (String currentParam : splittedMethodParams) {
                     if (currentParam.equals("")) {
-                        // TODO error - asi Warning - nespravny format parametru (carky mezi nimi)
+                        warning("bad parameter format. You need to write the comma between");
+                        addMethod(actionEvent);
+                        return null;
                     }
 
                     String[] splittedParam = currentParam.split(":");
 
                     if (splittedParam.length != 2) {
-                        // TODO error - asi Wargning nespravny format parametru (jednoho parametru)
+                        warning("Bad parameter format.");
+                        addMethod(actionEvent);
+                        return null;
                     } else if(splittedParam[0].equals("")) {
-                        // TODO error - asi Warning - nezadane jmeno parametru
+                        warning("You need to write parameter name.");
+                        addMethod(actionEvent);
+                        return null;
                     } else if (splittedParam[1].equals("")) {
-                        // TODO error - asi Warning - nezadany datovy typ parametru
+                        warning("You need to write parameter data type.");
+                        addMethod(actionEvent);
+                        return null;
                     } else {
                         String paramName = splittedParam[0];
                         String paramDataType = splittedParam[1];
@@ -235,27 +237,37 @@ public class ClassController extends Parent{
 
                 UMLOperation operation = UMLOperation.create(name.getText(), retDataType, classAttributes.toArray(new UMLAttribute[classAttributes.size()]));
 
-                String visibility = modifier.getValue().toString();
+                if(modifier.getValue() != null) {
+                    String visibility = modifier.getValue().toString();
 
-                if (visibility != null) {
-                    switch (visibility) {
-                        case "+":
-                            operation.setVisibility(UMLVisibilityType.PUBLIC);
-                            break;
-                        case "-":
-                            operation.setVisibility(UMLVisibilityType.PRIVATE);
-                            break;
-                        case "#":
-                            operation.setVisibility(UMLVisibilityType.PROTECTED);
-                            break;
-                        case "~":
-                            operation.setVisibility(UMLVisibilityType.PACKAGE);
-                            break;
+                    if (visibility != null) {
+                        switch (visibility) {
+                            case "+":
+                                operation.setVisibility(UMLVisibilityType.PUBLIC);
+                                break;
+                            case "-":
+                                operation.setVisibility(UMLVisibilityType.PRIVATE);
+                                break;
+                            case "#":
+                                operation.setVisibility(UMLVisibilityType.PROTECTED);
+                                break;
+                            case "~":
+                                operation.setVisibility(UMLVisibilityType.PACKAGE);
+                                break;
+                        }
                     }
                 }
 
                 if(!cls.addOperation(operation)) {
-                    // TODO Adam - zadani stejne metody - Warning
+                    warning("This operation name was entered already");
+                    addMethod(actionEvent);
+                    return null;
+                }
+
+                if(this.classMethods.getText().equals("")){
+                    this.classMethods.setText(this.classMethods.getText() + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((parameters.getText().equals("")) ? "()" : " ( " + parameters.getText() + " ) ") + ((type.getText().equals("")) ? "" : " : " + type.getText()));
+                }else {
+                    this.classArguments.setText(this.classArguments.getText() + "\n" + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((parameters.getText().equals("")) ? "()" : " ( " + parameters.getText() + " ) ") + ((type.getText().equals("")) ? "" : " : " + type.getText()));
                 }
             }
             return null;
@@ -264,5 +276,14 @@ public class ClassController extends Parent{
         dialog.getDialogPane().setContent(grid);
 
         dialog.showAndWait();
+    }
+
+    public void warning(String message){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+
+        alert.showAndWait();
     }
 }
