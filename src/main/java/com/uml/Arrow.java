@@ -42,70 +42,70 @@ public class Arrow extends Group {
         relA.getStyleClass().add("relLabel");
         relB.getStyleClass().add("relLabel");
 
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Add relationship");
-        ButtonType loginButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
-
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
-
-        TextField relA = new TextField();
-        relA.setPromptText("Relationship A");
-        TextField relB = new TextField();
-        relB.setPromptText("Relationship B");
-
-        grid.add(new Label("Relationship A:"), 0, 0);
-        grid.add(relA, 1, 0);
-        grid.add(new Label("Relationship B:"), 2, 0);
-        grid.add(relB, 3, 0);
-
-        // Convert the result to a username-password-pair when the login button is clicked.
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == loginButtonType) {
-                this.relA.setText(relA.getText());
-                this.relB.setText(relB.getText());
-                return new Pair<>(relA.getText(), relB.getText());
-            }
-            return null;
-        });
-
-        dialog.getDialogPane().setContent(grid);
-
-        dialog.showAndWait();
-
         UMLClass classFrom = MainController.diagram.findClass(from.getView().getId());
         UMLClass classTo = MainController.diagram.findClass(to.getView().getId());
 
-        switch (arrowID){
-            case "arrow":
-                getChildren().addAll(mainLine, headAS, this.relA, this.relB);
-                UMLAssociation association = MainController.diagram.createAssociationRelationship(classFrom, classTo);
-                setMultiplicityTypes(association, relA.getText(), relB.getText());
-                break;
+        if(arrowID.equals("realization")){
+            getChildren().addAll(mainLine, headR);
+            UMLInheritance inheritance = MainController.diagram.createInheritanceRelationship(classFrom, classTo);
+        }else {
 
-            case "realization":
-                /* TODO Adam - nebudou multiplicity, zmena na plnou caru */
-                getChildren().addAll(dashedLine, headR, this.relA, this.relB);
-                UMLInheritance inheritance = MainController.diagram.createInheritanceRelationship(classFrom, classTo);
-                break;
+            Dialog<Pair<String, String>> dialog = new Dialog<>();
+            dialog.setTitle("Add relationship");
+            ButtonType loginButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
-            case "aggregation":
-                getChildren().addAll(mainLine, headAG1, headAG2, this.relA, this.relB);
-                UMLAggregation aggregation = MainController.diagram.createAggregationRelationship(classFrom, classTo);
-                setMultiplicityTypes(aggregation, relA.getText(), relB.getText());
-                break;
+            GridPane grid = new GridPane();
+            grid.setHgap(10);
+            grid.setVgap(10);
+            grid.setPadding(new Insets(20, 150, 10, 10));
 
-            case "composition":
-                getChildren().addAll(mainLine, headAS, headC3, headC1, headC2, this.relA, this.relB);
-                UMLComposition composition = MainController.diagram.createCompositionRelationship(classFrom, classTo);
-                setMultiplicityTypes(composition, relA.getText(), relB.getText());
-                break;
+            TextField relA = new TextField();
+            relA.setPromptText("Relationship A");
+            TextField relB = new TextField();
+            relB.setPromptText("Relationship B");
 
-            default:
-                break;
+            grid.add(new Label("Relationship A:"), 0, 0);
+            grid.add(relA, 1, 0);
+            grid.add(new Label("Relationship B:"), 2, 0);
+            grid.add(relB, 3, 0);
+
+            // Convert the result to a username-password-pair when the login button is clicked.
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == loginButtonType) {
+                    this.relA.setText(relA.getText());
+                    this.relB.setText(relB.getText());
+                    return new Pair<>(relA.getText(), relB.getText());
+                }
+                return null;
+            });
+
+            dialog.getDialogPane().setContent(grid);
+
+            dialog.showAndWait();
+
+            switch (arrowID) {
+                case "arrow":
+                    getChildren().addAll(mainLine, headAS, this.relA, this.relB);
+                    UMLAssociation association = MainController.diagram.createAssociationRelationship(classFrom, classTo);
+                    setMultiplicityTypes(association, relA.getText(), relB.getText());
+                    break;
+
+                case "aggregation":
+                    getChildren().addAll(mainLine, headAG1, headAG2, this.relA, this.relB);
+                    UMLAggregation aggregation = MainController.diagram.createAggregationRelationship(classFrom, classTo);
+                    setMultiplicityTypes(aggregation, relA.getText(), relB.getText());
+                    break;
+
+                case "composition":
+                    getChildren().addAll(mainLine, headAS, headC3, headC1, headC2, this.relA, this.relB);
+                    UMLComposition composition = MainController.diagram.createCompositionRelationship(classFrom, classTo);
+                    setMultiplicityTypes(composition, relA.getText(), relB.getText());
+                    break;
+
+                default:
+                    break;
+            }
         }
 
         for(SimpleDoubleProperty s : new SimpleDoubleProperty[]{this.x1, this.x2, this.y1, this.y2}){
