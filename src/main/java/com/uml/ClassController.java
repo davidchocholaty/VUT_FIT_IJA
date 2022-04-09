@@ -127,10 +127,7 @@ public class ClassController extends Parent{
         /* TODO Adam - pokud budou prazdna policka - reakce na krizek */
         String visibility = modifier.getValue().toString();
 
-        if (visibility == null)
-        {
-            attr.setVisibility(UMLVisibilityType.UNSPECIFIED);
-        } else {
+        if (visibility != null) {
             switch (visibility) {
                 case "+":
                     attr.setVisibility(UMLVisibilityType.PUBLIC);
@@ -243,6 +240,26 @@ public class ClassController extends Parent{
         }
 
         UMLOperation operation = UMLOperation.create(name.getText(), retDataType, classAttributes.toArray(new UMLAttribute[classAttributes.size()]));
+
+        /* TODO Adam - pokud budou prazdna policka - reakce na krizek */
+        String visibility = modifier.getValue().toString();
+
+        if (visibility != null) {
+            switch (visibility) {
+                case "+":
+                    operation.setVisibility(UMLVisibilityType.PUBLIC);
+                    break;
+                case "-":
+                    operation.setVisibility(UMLVisibilityType.PRIVATE);
+                    break;
+                case "#":
+                    operation.setVisibility(UMLVisibilityType.PROTECTED);
+                    break;
+                case "~":
+                    operation.setVisibility(UMLVisibilityType.PACKAGE);
+                    break;
+            }
+        }
 
         if(!cls.addOperation(operation)) {
             // TODO Adam - zadani stejne metody - Warning
