@@ -38,15 +38,8 @@ public class SaveHandler {
         List<UMLClass> diagramClasses = this.diagram.getClasses();
         List<UMLRelationship> diagramRelationships = this.diagram.getRelationships();
 
-        Element diagramClass;
-        Element abstractTag;
-        Element xCoordinate;
-        Element yCoordinate;
-        Element visibility;
-        Element attr;
-        Element dataType;
-        Element value;
-        Element oper;
+        Element diagramClass, abstractTag, xCoordinate, yCoordinate, visibility;
+
         Element diagramRel;
         Element from;
         Element to;
@@ -93,75 +86,13 @@ public class SaveHandler {
             diagramClass.appendChild(visibility);
             visibility.setTextContent(currentClass.getVisibility().name());
 
-            /* Iterate through attributes */
+            /* Add attributes tags */
             List<UMLAttribute> classAttributes = currentClass.getAttributes();
+            addAttributesTags(doc, diagramClass, classAttributes);
 
-            for (UMLAttribute currentAttr : classAttributes) {
-                /* Create attribute tag */
-                attr = doc.createElement("attribute");
-                diagramClass.appendChild(attr);
-                attr.setAttribute("name", currentAttr.getName());
-
-                /* dataType tag */
-                dataType = doc.createElement("dataType");
-                attr.appendChild(dataType);
-                dataType.setTextContent(currentAttr.getType().toString());
-
-                /* visibility tag */
-                visibility = doc.createElement("visibility");
-                attr.appendChild(visibility);
-                visibility.setTextContent(currentAttr.getVisibility().name());
-
-                /* value tag */
-                value = doc.createElement("value");
-                attr.appendChild(value);
-                value.setTextContent(currentAttr.getDefaultValue());
-            }
-
-            /* Iterate through operations */
+            /* Add operations tags */
             List <UMLOperation> classOperations = currentClass.getOperations();
-
-            for (UMLOperation currentOper : classOperations) {
-                /* Create operation tag */
-                oper = doc.createElement("operation");
-                diagramClass.appendChild(oper);
-                oper.setAttribute("name", currentOper.getName());
-
-                /* dataType tag */
-                dataType = doc.createElement("dataType");
-                oper.appendChild(dataType);
-                dataType.setTextContent(currentOper.getType().toString());
-
-                /* visibility tag */
-                visibility = doc.createElement("visibility");
-                oper.appendChild(visibility);
-                visibility.setTextContent(currentOper.getVisibility().name());
-
-                /* Iterate through operation arguments */
-                List<UMLAttribute> operArgs = currentOper.getArguments();
-
-                for (UMLAttribute currentArg : operArgs) {
-                    /* Create attribute tag */
-                    attr = doc.createElement("attribute");
-                    oper.appendChild(attr);
-                    attr.setAttribute("name", currentArg.getName());
-
-                    /* dataType tag */
-                    dataType = doc.createElement("dataType");
-                    attr.appendChild(dataType);
-                    dataType.setTextContent(currentArg.getType().toString());
-
-                    /* visibility tag */
-                    visibility = doc.createElement("visibility");
-                    attr.appendChild(visibility);
-                    visibility.setTextContent(currentArg.getVisibility().name());
-
-                    /* value tag */
-                    value = doc.createElement("value");
-                    attr.appendChild(value);
-                    value.setTextContent(currentArg.getDefaultValue());
-                }
-            }
+            addOperationsTags(doc, diagramClass, classOperations);
         }
 
         /* Iterate through relationships */
@@ -237,6 +168,57 @@ public class SaveHandler {
             writeXml(doc, output);
         } catch (IOException | TransformerException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void addAttributesTags(Document doc, Element parent, List<UMLAttribute> attributes) {
+        Element attr, dataType, visibility, value;
+
+        for (UMLAttribute currentAttr : attributes) {
+            /* Create attribute tag */
+            attr = doc.createElement("attribute");
+            parent.appendChild(attr);
+            attr.setAttribute("name", currentAttr.getName());
+
+            /* dataType tag */
+            dataType = doc.createElement("dataType");
+            attr.appendChild(dataType);
+            dataType.setTextContent(currentAttr.getType().toString());
+
+            /* visibility tag */
+            visibility = doc.createElement("visibility");
+            attr.appendChild(visibility);
+            visibility.setTextContent(currentAttr.getVisibility().name());
+
+            /* value tag */
+            value = doc.createElement("value");
+            attr.appendChild(value);
+            value.setTextContent(currentAttr.getDefaultValue());
+        }
+    }
+
+    private void addOperationsTags(Document doc, Element parent, List<UMLOperation> operations) {
+        Element oper, dataType, visibility;
+
+        for (UMLOperation currentOper : operations) {
+            /* Create operation tag */
+            oper = doc.createElement("operation");
+            parent.appendChild(oper);
+            oper.setAttribute("name", currentOper.getName());
+
+            /* dataType tag */
+            dataType = doc.createElement("dataType");
+            oper.appendChild(dataType);
+            dataType.setTextContent(currentOper.getType().toString());
+
+            /* visibility tag */
+            visibility = doc.createElement("visibility");
+            oper.appendChild(visibility);
+            visibility.setTextContent(currentOper.getVisibility().name());
+
+            /* Iterate through operation arguments */
+            List<UMLAttribute> operArgs = currentOper.getArguments();
+            addAttributesTags(doc, oper, operArgs);
         }
     }
 
