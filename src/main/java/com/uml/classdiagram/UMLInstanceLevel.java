@@ -33,6 +33,8 @@ public abstract class UMLInstanceLevel extends UMLRelationship {
 		super(from, to);
 		this.fromMultiplicity = UMLMultiplicityType.UNSPECIFIED;
 		this.toMultiplicity = UMLMultiplicityType.UNSPECIFIED;
+		this.fromRole = "";
+		this.toRole = "";
 	}
 
 	/**
