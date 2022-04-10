@@ -30,6 +30,20 @@ public class ClassUML extends Button{
 
     }
 
+    public ClassUML(double x, double y, String name) throws IOException {
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("class_uml.fxml"));
+        Button loaded = loader.load();
+        setView(loaded);
+        getView().setLayoutX(x);
+        getView().setLayoutY(y);
+        getView().translateXProperty().bind(loaded.widthProperty().divide(-2));
+        getView().translateYProperty().bind(loaded.heightProperty().divide(-2));
+
+        MainController.diagram.createClass(name);
+
+        loaded.setId(name);
+    }
+
     public Node getView() {
         return view;
     }

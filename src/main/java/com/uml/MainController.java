@@ -118,6 +118,20 @@ public class MainController extends Parent {
         return el;
     }
 
+    public ClassUML createElement(double x, double y, String name) throws IOException {
+        ClassUML el = new ClassUML(x, y, name);
+
+        el.getView().setOnDragDetected(e -> dDetect(e, el));
+        el.getView().setOnMouseDragged(e -> drag(e, el));
+        el.getView().setOnMousePressed(e -> classClick(e, el));
+
+        return el;
+    }
+
+    public void addElement(ClassUML el){
+        rPane.getChildren().add(el.getView());
+    }
+
     private void contentAction(ActionEvent e, ClassUML el) {
         System.out.println("tady");
     }
