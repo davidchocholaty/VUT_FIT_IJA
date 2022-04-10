@@ -223,7 +223,7 @@ public class MainController extends Parent {
         SaveHandler saveHandler = new SaveHandler(diagram);
         try{
             saveHandler.saveClassDiagram(path);
-        } catch (ParserConfigurationException e) {
+        } catch (ParserConfigurationException | FileNotFoundException | TransformerException e) {
             childController.warning("Invalid file path.");
         }
     }
@@ -234,9 +234,9 @@ public class MainController extends Parent {
         try {
             parser.parse();
         } catch (ParserConfigurationException | CustomException.IllegalFileExtension | IOException | SAXException e) {
-            childController.warning("invalid file");
+            childController.warning("Invalid file path.");
         } catch (CustomException.IllegalFileFormat e) {
-            childController.warning("invalid file syntax");
+            childController.warning("Invalid file syntax.");
         }
     }
 
