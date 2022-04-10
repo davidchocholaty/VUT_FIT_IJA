@@ -43,6 +43,8 @@ public class ClassUML extends Button{
 
         MainController.diagram.createClass(name);
 
+        System.out.println(name);
+
         loaded.setId(name);
     }
 

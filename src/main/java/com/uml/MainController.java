@@ -218,7 +218,8 @@ public class MainController extends Parent {
     }
 
     public void saveProject(MouseEvent mouseEvent) {
-        String path = getFilePathWindow();
+        boolean saveLoad = false;
+        String path = getFilePathWindow(saveLoad);
 
         SaveHandler saveHandler = new SaveHandler(diagram);
         try{
@@ -229,7 +230,8 @@ public class MainController extends Parent {
     }
 
     public void loadProject(MouseEvent mouseEvent){
-        String path  = getFilePathWindow();
+        boolean saveLoad = true;
+        String path  = getFilePathWindow(saveLoad);
         IJAXMLParser parser = new IJAXMLParser(path);
         try {
             parser.parse();
@@ -240,7 +242,7 @@ public class MainController extends Parent {
         }
     }
 
-    private String getFilePathWindow(){
+    private String getFilePathWindow(boolean saveLoad){
         Window window = rPane.getScene().getWindow();
 
         FileChooser fileChooser = new FileChooser();
@@ -248,7 +250,13 @@ public class MainController extends Parent {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("ija xml files (*.ijaxml, *.ixl)", "*.ijaxml", "*.ixl");
         fileChooser.getExtensionFilters().add(extFilter);
 
-        File file = fileChooser.showSaveDialog(window);
+        File file;
+
+        if (saveLoad) {
+            file = fileChooser.showOpenDialog(window);
+        } else {
+            file = fileChooser.showSaveDialog(window);
+        }
 
         return file.getAbsolutePath();
     }
