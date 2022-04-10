@@ -24,29 +24,63 @@ public class IJAXMLParser {
         this.secondLevelOrder = 0;
     }
 
-    public void parse() {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    public void parse() throws ParserConfigurationException, SAXException,
+            IOException, CustomException.IllegalFileExtension, CustomException.IllegalFileFormat {
+        String ext = getFileExtension();
 
-        try {
+        /* Wrong file extension test */
+        if (!ext.equals("ijaxml") && !ext.equals("ixl")) {
+            throw new CustomException.IllegalFileExtension("Unsupported file format.");
+        }
+        else {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 
             DocumentBuilder db = dbf.newDocumentBuilder();
             this.doc = db.parse(new File(this.filePath));
 
-            // http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+            /* http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work */
             this.doc.getDocumentElement().normalize();
 
             if (this.doc.hasChildNodes()) {
                 parseClasses();
                 parseRelationships();
             }
-
-        } catch (ParserConfigurationException | SAXException | IOException e) {
-            e.printStackTrace();
         }
     }
 
-    private void parseClasses() {
+    /* https://stackoverflow.com/questions/3571223/how-do-i-get-the-file-extension-of-a-file-in-java */
+    private String getFileExtension() {
+        String ext = "";
+
+        int i = this.filePath.lastIndexOf('.');
+        int p = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
+
+        if (i > p) {
+            ext = filePath.substring(i+1);
+        }
+
+        return ext;
+    }
+
+    private String parseXmlAttribute(Node node, String attrName) throws CustomException.IllegalFileFormat {
+        String attrValue = null;
+
+        if (node.hasAttributes()) {
+            NamedNodeMap nodeMap = node.getAttributes();
+
+            if (nodeMap.getLength() != 1 ||
+                    !nodeMap.item(0).getNodeName().equals(attrName)) {
+                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+            }
+             /* TODO attribute tag attribute name */
+            attrValue = nodeMap.item(0).getNodeValue();
+        }
+
+        return attrValue;
+    }
+
+    private void parseClasses() throws CustomException.IllegalFileFormat {
         /* Iterate through classes */
         NodeList list = this.doc.getChildNodes();
         Node node;
@@ -59,16 +93,13 @@ public class IJAXMLParser {
                     break;
                 }
 
-                if (node.hasAttributes()) {
-                    NamedNodeMap nodeMap = node.getAttributes();
+                String attrValue = parseXmlAttribute(node, "name");
 
-                    if (nodeMap.getLength() != 1 ||
-                            !nodeMap.item(0).getNodeName().equals("name")) {
-                        // TODO error
-                    } else {
-                        /* TODO class tag attribute name */
-                    }
+                if (attrValue == null) {
+                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
                 }
+
+                // TODO prace s value
 
                 if (node.hasChildNodes()) {
                     parseClassChildren(node);
@@ -79,7 +110,7 @@ public class IJAXMLParser {
         }
     }
 
-    private void parseClassChildren(Node classNode) {
+    private void parseClassChildren(Node classNode) throws CustomException.IllegalFileFormat {
         NodeList list = classNode.getChildNodes();
         Node node;
         this.secondLevelOrder = 0;
@@ -90,7 +121,7 @@ public class IJAXMLParser {
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("abstract")) {
-                // TODO error
+                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             } else {
                 /* TODO abstract tag */
             }
@@ -102,7 +133,7 @@ public class IJAXMLParser {
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("xCoordinate")) {
-                // TODO error
+                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             } else {
                 /* TODO xCoordinate tag */
             }
@@ -114,7 +145,7 @@ public class IJAXMLParser {
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("yCoordinate")) {
-                // TODO error
+                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             } else {
                 /* TODO yCoordinate tag */
             }
@@ -126,7 +157,7 @@ public class IJAXMLParser {
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("visibility")) {
-                // TODO error
+                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             } else {
                 /* TODO visibility tag */
             }
@@ -139,7 +170,7 @@ public class IJAXMLParser {
         parseOperations(list);
     }
 
-    private void parseAttributes(NodeList list) {
+    private void parseAttributes(NodeList list) throws CustomException.IllegalFileFormat {
         Node node;
 
         while (this.secondLevelOrder < list.getLength()) {
@@ -150,16 +181,13 @@ public class IJAXMLParser {
                     break;
                 }
 
-                if (node.hasAttributes()) {
-                    NamedNodeMap nodeMap = node.getAttributes();
+                String attrValue = parseXmlAttribute(node, "name");
 
-                    if (nodeMap.getLength() != 1 ||
-                            !nodeMap.item(0).getNodeName().equals("name")) {
-                        // TODO error
-                    } else {
-                        /* TODO attribute tag attribute name */
-                    }
+                if (attrValue == null) {
+                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
                 }
+
+                // TODO prace s value
 
                 if (node.hasChildNodes()) {
                     parseAttributeChildren(node);
@@ -170,37 +198,37 @@ public class IJAXMLParser {
         }
     }
 
-    private void parseDataTypeTag(Node node) {
+    private void parseDataTypeTag(Node node) throws CustomException.IllegalFileFormat {
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("dataType")) {
-                // TODO error
+                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             } else {
                 /* TODO abstract tag */
             }
         }
     }
 
-    private void parseVisibilityTag(Node node) {
+    private void parseVisibilityTag(Node node) throws CustomException.IllegalFileFormat {
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("visibility")) {
-                // TODO error
+                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             } else {
                 /* TODO xCoordinate tag */
             }
         }
     }
 
-    private void parseValueTag(Node node) {
+    private void parseValueTag(Node node) throws CustomException.IllegalFileFormat {
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("value")) {
-                // TODO error
+                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             } else {
                 /* TODO yCoordinate tag */
             }
         }
     }
 
-    private int parseClassElement(NodeList list) {
+    private int parseClassElement(NodeList list) throws CustomException.IllegalFileFormat {
         Node node;
         int idx = 0;
 
@@ -219,7 +247,7 @@ public class IJAXMLParser {
         return idx;
     }
 
-    private void parseAttributeChildren(Node attrNode) {
+    private void parseAttributeChildren(Node attrNode) throws CustomException.IllegalFileFormat {
         NodeList list = attrNode.getChildNodes();
         Node node;
         int idx;
@@ -232,7 +260,7 @@ public class IJAXMLParser {
         parseValueTag(node);
     }
 
-    private void parseOperations(NodeList list) {
+    private void parseOperations(NodeList list) throws CustomException.IllegalFileFormat {
         Node node;
 
         while (this.secondLevelOrder < list.getLength()) {
@@ -243,19 +271,16 @@ public class IJAXMLParser {
                     break;
                 }
 
-                if (node.hasAttributes()) {
-                    NamedNodeMap nodeMap = node.getAttributes();
+                String attrValue = parseXmlAttribute(node, "name");
 
-                    if (nodeMap.getLength() != 1 ||
-                            !nodeMap.item(0).getNodeName().equals("name")) {
-                        // TODO error
-                    } else {
-                        /* TODO attribute tag attribute name */
-                    }
+                if (attrValue == null) {
+                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
                 }
 
+                // TODO prace s value
+
                 if (node.hasChildNodes()) {
-                    parseAttributeChildren(node);
+                    parseOperationChildren(node);
                 }
             }
 
@@ -263,7 +288,7 @@ public class IJAXMLParser {
         }
     }
 
-    private void parseOperationChildren(Node operNode) {
+    private void parseOperationChildren(Node operNode) throws CustomException.IllegalFileFormat {
         NodeList list = operNode.getChildNodes();
         int idx;
 
@@ -273,7 +298,7 @@ public class IJAXMLParser {
         parseOperationAttributesTags(list, idx);
     }
 
-    private void parseOperationAttributesTags(NodeList list, int idx) {
+    private void parseOperationAttributesTags(NodeList list, int idx) throws CustomException.IllegalFileFormat {
         Node node;
 
         while (idx < list.getLength()) {
@@ -281,19 +306,16 @@ public class IJAXMLParser {
 
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 if (!node.getNodeName().equals("attribute")) {
-                    // TODO error
+                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
                 }
 
-                if (node.hasAttributes()) {
-                    NamedNodeMap nodeMap = node.getAttributes();
+                String attrValue = parseXmlAttribute(node, "name");
 
-                    if (nodeMap.getLength() != 1 ||
-                            !nodeMap.item(0).getNodeName().equals("name")) {
-                        // TODO error
-                    } else {
-                        /* TODO attribute tag attribute name */
-                    }
+                if (attrValue == null) {
+                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
                 }
+
+                // TODO prace s value
 
                 if (node.hasChildNodes()) {
                     parseAttributeChildren(node);
@@ -304,7 +326,7 @@ public class IJAXMLParser {
         }
     }
 
-    private void parseRelationships() {
+    private void parseRelationships() throws CustomException.IllegalFileFormat {
         /* Iterate through relationships */
         NodeList list = this.doc.getChildNodes();
         Node node;
@@ -314,19 +336,16 @@ public class IJAXMLParser {
 
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 if (!node.getNodeName().equals("relationship")) {
-                    // TODO error
+                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
                 }
 
-                if (node.hasAttributes()) {
-                    NamedNodeMap nodeMap = node.getAttributes();
+                String attrValue = parseXmlAttribute(node, "id");
 
-                    if (nodeMap.getLength() != 1 ||
-                            !nodeMap.item(0).getNodeName().equals("id")) {
-                        // TODO error
-                    } else {
-                        /* TODO class tag attribute name */
-                    }
+                if (attrValue == null) {
+                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
                 }
+
+                // TODO prace s value
 
                 if (node.hasChildNodes()) {
                     parseRelationshipChildren(node);
@@ -337,7 +356,7 @@ public class IJAXMLParser {
         }
     }
 
-    private void parseRelationshipChildren(Node relNode) {
+    private void parseRelationshipChildren(Node relNode) throws CustomException.IllegalFileFormat {
         NodeList list = relNode.getChildNodes();
         Node node;
         this.secondLevelOrder = 0;
@@ -348,7 +367,7 @@ public class IJAXMLParser {
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("from")) {
-                // TODO error
+                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             } else {
                 /* TODO abstract tag */
             }
@@ -360,13 +379,12 @@ public class IJAXMLParser {
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("to")) {
-                // TODO error
+                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             } else {
                 /* TODO xCoordinate tag */
             }
         }
 
-        // TODO classLevel, instanceLevel
         node = list.item(this.secondLevelOrder);
         this.secondLevelOrder++;
 
@@ -376,33 +394,34 @@ public class IJAXMLParser {
             } else if(node.getNodeName().equals("instanceLevel")) {
                 parseInstanceLevel(node);
             } else {
-                // TODO error
+                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             }
         }
     }
 
-    private void parseClassLevel(Node classLevel) {
+    private void parseClassLevel(Node classLevel) throws CustomException.IllegalFileFormat {
         NodeList list = classLevel.getChildNodes();
 
         if (list.getLength() != 1 ||
                 list.item(0).getNodeName().equals("instance")) {
-            // TODO error
+            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
         } else {
             parseInheritanceTag(list.item(0));
         }
     }
 
     private void parseInheritanceTag(Node node) {
-        // TODO
+        // TODO prace s hodnotou
     }
 
-    private void parseInstanceLevel(Node instanceLevel) {
+    private void parseInstanceLevel(Node instanceLevel) throws CustomException.IllegalFileFormat {
         NodeList list = instanceLevel.getChildNodes();
         Node node;
         int idx = 0;
+        final int instLevelTagsCnt = 5;
 
-        if (list.getLength() != 5) {
-            // TODO error
+        if (list.getLength() != instLevelTagsCnt) {
+            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
         } else {
             /* fromMultiplicity */
             node = list.item(idx);
@@ -410,7 +429,7 @@ public class IJAXMLParser {
 
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 if (!node.getNodeName().equals("fromMultiplicity")) {
-                    // TODO error
+                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
                 } else {
                     /* TODO abstract tag */
                 }
@@ -422,7 +441,7 @@ public class IJAXMLParser {
 
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 if (!node.getNodeName().equals("toMultiplicity")) {
-                    // TODO error
+                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
                 } else {
                     /* TODO abstract tag */
                 }
@@ -434,7 +453,7 @@ public class IJAXMLParser {
 
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 if (!node.getNodeName().equals("fromRole")) {
-                    // TODO error
+                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
                 } else {
                     /* TODO abstract tag */
                 }
@@ -446,22 +465,28 @@ public class IJAXMLParser {
 
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 if (!node.getNodeName().equals("toRole")) {
-                    // TODO error
+                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
                 } else {
                     /* TODO abstract tag */
                 }
             }
 
-            /* association nebo aggregation nebo composition */
+            /* association or aggregation or composition */
+            node = list.item(idx);
+
             if (node.getNodeType() == Node.ELEMENT_NODE) {
-                if (node.getNodeName().equals("association")) {
-                    /* TODO */
-                } else if (node.getNodeName().equals("aggregation")) {
-                    /* TODO */
-                } else if (node.getNodeName().equals("composition")) {
-                    /* TODO */
-                } else {
-                    // TODO error
+                switch (node.getNodeName()) {
+                    case "association":
+                        /* TODO */
+                        break;
+                    case "aggregation":
+                        /* TODO */
+                        break;
+                    case "composition":
+                        /* TODO */
+                        break;
+                    default:
+                        throw new CustomException.IllegalFileFormat("Invalid file syntax.");
                 }
             }
         }
