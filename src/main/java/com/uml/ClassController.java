@@ -86,8 +86,8 @@ public class ClassController extends Parent{
         modifier.getItems().addAll("", "+", "-", "#", "~");
         TextField name = new TextField();
         name.setPromptText("Name");
-        ComboBox type = new ComboBox();
-        type.getItems().addAll("None", "Boolean", "Integer", "UnlimitedNatural", "String", "Real");
+        TextField type = new TextField();
+        type.setPromptText("type");
         TextField def = new TextField();
         def.setPromptText("value1");
 
@@ -105,7 +105,7 @@ public class ClassController extends Parent{
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == loginButtonType) {
 
-                UMLDataType dataType = MainController.diagram.dataTypeForName(type.getValue().toString());
+                UMLDataType dataType = MainController.diagram.dataTypeForName(type.getText());
                 UMLAttribute attr = new UMLAttribute(name.getText(), dataType);
 
                 if(modifier.getValue() != null) {
@@ -140,9 +140,9 @@ public class ClassController extends Parent{
                 }
 
                 if(this.classArguments.getText().equals("")){
-                    this.classArguments.setText(this.classArguments.getText() + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((type.getValue().toString().equals("")) ? "" : " : " + type.getValue().toString()) + ((def.getText().equals("")) ? "" : " = " + def.getText()));
+                    this.classArguments.setText(this.classArguments.getText() + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((type.getText().equals("")) ? "" : " : " + type.getText()) + ((def.getText().equals("")) ? "" : " = " + def.getText()));
                 }else {
-                    this.classArguments.setText(this.classArguments.getText() + "\n" + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((type.getValue().toString().equals("")) ? "" : " : " + type.getValue().toString()) + ((def.getText().equals("")) ? "" : " = " + def.getText()));
+                    this.classArguments.setText(this.classArguments.getText() + "\n" + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((type.getText().equals("")) ? "" : " : " + type.getText()) + ((def.getText().equals("")) ? "" : " = " + def.getText()));
                 }
 
             }

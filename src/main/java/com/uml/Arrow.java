@@ -33,6 +33,9 @@ public class Arrow extends Group {
     private final double ARROWHEAD_ANGLE = Math.toRadians(30);
     private final double ARROWHEAD_LENGTH = 15;
 
+    //TODO delsi argument arrow scale
+    //TODO full screen compatibilita
+
     public Arrow(double x1, double y1, double x2, double y2, String arrowID, ClassUML from, ClassUML to){
         this.x1.set(x1);
         this.x2.set(x2);
