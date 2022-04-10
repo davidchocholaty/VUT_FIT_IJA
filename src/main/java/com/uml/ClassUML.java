@@ -25,6 +25,8 @@ public class ClassUML extends Button{
         getView().translateYProperty().bind(loaded.heightProperty().divide(-2));
 
         UMLClass cls = MainController.diagram.createDefaultClass();
+        cls.setXCoordinate(x);
+        cls.setYCoordinate(y);
 
         loaded.setId(cls.getName());
 

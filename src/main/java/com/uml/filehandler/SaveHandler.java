@@ -13,6 +13,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -28,7 +29,8 @@ public class SaveHandler {
         doc = null;
     }
 
-    public void saveClassDiagram(String destPath) throws ParserConfigurationException {
+    public void saveClassDiagram(String destPath) throws ParserConfigurationException,
+            FileNotFoundException, TransformerException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = dbf.newDocumentBuilder();
         this.doc = docBuilder.newDocument();
@@ -43,11 +45,8 @@ public class SaveHandler {
         addClassTags(rootElement, diagramClasses);
         addRelationshipsTags(rootElement, diagramRelationships);
 
-        try (FileOutputStream output = new FileOutputStream(destPath)) {
-            writeXml(this.doc, output);
-        } catch (IOException | TransformerException e) {
-            e.printStackTrace();
-        }
+        FileOutputStream output = new FileOutputStream(destPath);
+        writeXml(this.doc, output);
     }
 
     private void addClassTags(Element rootElement, List<UMLClass> diagramClasses) {
