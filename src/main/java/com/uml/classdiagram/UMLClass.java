@@ -43,6 +43,8 @@ public class UMLClass extends UMLClassifier {
 		this.visibility = UMLVisibilityType.UNSPECIFIED;
 		this.classAttributes = new ArrayList<UMLAttribute>();
 		this.classOperations = new ArrayList<UMLOperation>();
+		this.xCoordinate = 0.0;
+		this.yCoordinate = 0.0;
 	}
 
 	/**

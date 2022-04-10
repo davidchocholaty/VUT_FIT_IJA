@@ -1,5 +1,7 @@
 package com.uml.filehandler;
 
+import com.uml.ClassUML;
+import com.uml.classdiagram.UMLOperation;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -9,6 +11,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /* https://mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/ */
 public class IJAXMLParser {
@@ -16,16 +21,29 @@ public class IJAXMLParser {
     private Document doc;
     private int firstLevelOrder;
     private int secondLevelOrder;
+    private List<ClassUML> diagramClasses;
 
     public IJAXMLParser(String filePath) {
         this.filePath = filePath;
         this.doc = null;
         this.firstLevelOrder = 0;
         this.secondLevelOrder = 0;
+        this.diagramClasses = new ArrayList<ClassUML>();
+    }
+
+    public ClassUML getClassByName(String name) {
+        for (ClassUML currentClass : this.diagramClasses) {
+            if (currentClass.getView().getId().equals(name)) {
+                return currentClass;
+            }
+        }
+
+        return null;
     }
 
     public void parse() throws ParserConfigurationException, SAXException,
-            IOException, CustomException.IllegalFileExtension, CustomException.IllegalFileFormat {
+            IOException, CustomException.IllegalFileExtension, CustomException.IllegalFileFormat,
+            NullPointerException, NumberFormatException {
         String ext = getFileExtension();
 
         /* Wrong file extension test */
@@ -80,7 +98,8 @@ public class IJAXMLParser {
         return attrValue;
     }
 
-    private void parseClasses() throws CustomException.IllegalFileFormat {
+    private void parseClasses() throws CustomException.IllegalFileFormat,
+            NullPointerException, NumberFormatException {
         /* Iterate through classes */
         NodeList list = this.doc.getChildNodes();
         Node node;
@@ -99,10 +118,8 @@ public class IJAXMLParser {
                     throw new CustomException.IllegalFileFormat("Invalid file syntax.");
                 }
 
-                // TODO prace s value
-
                 if (node.hasChildNodes()) {
-                    parseClassChildren(node);
+                    parseClassChildren(node, attrValue);
                 }
             }
 
@@ -110,9 +127,11 @@ public class IJAXMLParser {
         }
     }
 
-    private void parseClassChildren(Node classNode) throws CustomException.IllegalFileFormat {
+    private void parseClassChildren(Node classNode, String attrValue) throws CustomException.IllegalFileFormat,
+            NullPointerException, NumberFormatException {
         NodeList list = classNode.getChildNodes();
         Node node;
+        double x, y;
         this.secondLevelOrder = 0;
 
         /* Abstract tag */
@@ -135,7 +154,7 @@ public class IJAXMLParser {
             if (!node.getNodeName().equals("xCoordinate")) {
                 throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             } else {
-                /* TODO xCoordinate tag */
+                x = Double.parseDouble(node.getNodeValue());
             }
         }
 
@@ -147,9 +166,12 @@ public class IJAXMLParser {
             if (!node.getNodeName().equals("yCoordinate")) {
                 throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             } else {
-                /* TODO yCoordinate tag */
+                y = Double.parseDouble(node.getNodeValue());
             }
         }
+
+        /* Call frontend method for creating class element */
+        
 
         /* visibility tag */
         node = list.item(this.secondLevelOrder);

@@ -17,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import com.uml.classdiagram.ClassDiagram;
@@ -24,6 +25,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Window;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 public class MainController extends Parent {
     @FXML
@@ -106,9 +108,6 @@ public class MainController extends Parent {
     }
 
     public ClassUML createElement(MouseEvent mouseEvent) throws IOException {
-
-        double x = mouseEvent.getX();
-        double y = mouseEvent.getY();
         ClassUML el = new ClassUML(mouseEvent.getX(), mouseEvent.getY());
 
         el.getView().setOnDragDetected(e -> dDetect(e, el));
@@ -133,8 +132,14 @@ public class MainController extends Parent {
     }
 
     public void drag(MouseEvent event, ClassUML el) {
-        el.getView().setLayoutX(el.getView().getTranslateX() + event.getX() + el.getView().getLayoutX());
-        el.getView().setLayoutY(el.getView().getTranslateY() + event.getY() + el.getView().getLayoutY());
+        double x = el.getView().getTranslateX() + event.getX() + el.getView().getLayoutX();
+        double y = el.getView().getTranslateY() + event.getY() + el.getView().getLayoutY();
+        el.getView().setLayoutX(x);
+        el.getView().setLayoutY(y);
+
+        UMLClass cls = diagram.findClass(el.getView().getId());
+        cls.setXCoordinate(x);
+        cls.setYCoordinate(y);
     }
 
 
@@ -207,8 +212,8 @@ public class MainController extends Parent {
         SaveHandler saveHandler = new SaveHandler(diagram);
         try{
             saveHandler.saveClassDiagram(path);
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
+        } catch (ParserConfigurationException | FileNotFoundException | TransformerException e) {
+            childController.warning("Invalid file path.");
         }
     }
 }
