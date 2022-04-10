@@ -129,7 +129,7 @@ public class ClassController extends Parent{
                     }
                 }
 
-                if(def.getText().equals("")){
+                if(!def.getText().equals("")){
                     attr.setDefaultValue(def.getText());
                 }
 

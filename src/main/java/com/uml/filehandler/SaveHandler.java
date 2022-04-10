@@ -69,16 +69,12 @@ public class SaveHandler {
     /*-----------------------------------------------------------------------------*/
 
     private void addAttributesTags(Element parent, List<UMLAttribute> attributes) {
-        Element attr, dataType, visibility, value;
-
         for (UMLAttribute currentAttr : attributes) {
             addAttributeTag(parent, currentAttr);
         }
     }
 
     private void addOperationsTags(Element diagramClass, List<UMLOperation> operations) {
-        Element oper, dataType, visibility;
-
         for (UMLOperation currentOper : operations) {
             addOperationTag(diagramClass, currentOper);
         }
@@ -180,6 +176,7 @@ public class SaveHandler {
         /* value tag */
         value = this.doc.createElement("value");
         attr.appendChild(value);
+
         value.setTextContent(currentAttr.getDefaultValue());
     }
 

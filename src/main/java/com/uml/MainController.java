@@ -193,9 +193,6 @@ public class MainController extends Parent {
     }
 
     public void saveProject(MouseEvent mouseEvent) {
-
-        //SaveHandler save = new SaveHandler(diagram);
-
         Window window = rPane.getScene().getWindow();
 
         FileChooser fileChooser = new FileChooser();
@@ -206,8 +203,6 @@ public class MainController extends Parent {
         File file = fileChooser.showSaveDialog(window);
 
         String path = file.getAbsolutePath();
-
-        //save.saveClassDiagram(toString())
 
         SaveHandler saveHandler = new SaveHandler(diagram);
         try{
