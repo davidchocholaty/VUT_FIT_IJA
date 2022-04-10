@@ -2,6 +2,8 @@ package com.uml;
 
 import com.uml.classdiagram.UMLClass;
 import com.uml.classdiagram.UMLRelationship;
+import com.uml.filehandler.CustomException;
+import com.uml.filehandler.IJAXMLParser;
 import com.uml.filehandler.SaveHandler;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,6 +24,7 @@ import java.io.IOException;
 import com.uml.classdiagram.ClassDiagram;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -207,6 +210,29 @@ public class MainController extends Parent {
     }
 
     public void saveProject(MouseEvent mouseEvent) {
+        String path = getFilePathWindow();
+
+        SaveHandler saveHandler = new SaveHandler(diagram);
+        try{
+            saveHandler.saveClassDiagram(path);
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadProject(MouseEvent mouseEvent){
+        String path  = getFilePathWindow();
+        IJAXMLParser parser = new IJAXMLParser(path);
+        try {
+            parser.parse();
+        } catch (ParserConfigurationException | CustomException.IllegalFileExtension | IOException | SAXException e) {
+            childController.warning("invalid file");
+        } catch (CustomException.IllegalFileFormat e) {
+            childController.warning("invalid file syntax");
+        }
+    }
+
+    private String getFilePathWindow(){
         Window window = rPane.getScene().getWindow();
 
         FileChooser fileChooser = new FileChooser();
@@ -216,13 +242,6 @@ public class MainController extends Parent {
 
         File file = fileChooser.showSaveDialog(window);
 
-        String path = file.getAbsolutePath();
-
-        SaveHandler saveHandler = new SaveHandler(diagram);
-        try{
-            saveHandler.saveClassDiagram(path);
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
+        return file.getAbsolutePath();
     }
 }
