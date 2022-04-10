@@ -398,12 +398,72 @@ public class IJAXMLParser {
 
     private void parseInstanceLevel(Node instanceLevel) {
         NodeList list = instanceLevel.getChildNodes();
+        Node node;
+        int idx = 0;
 
-        /* fromMultiplicity */
-        /* toMultiplicity */
-        /* fromRole */
-        /* toRole */
+        if (list.getLength() != 5) {
+            // TODO error
+        } else {
+            /* fromMultiplicity */
+            node = list.item(idx);
+            idx++;
 
-        /* association nebo aggregation nebo composition */
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                if (!node.getNodeName().equals("fromMultiplicity")) {
+                    // TODO error
+                } else {
+                    /* TODO abstract tag */
+                }
+            }
+
+            /* toMultiplicity */
+            node = list.item(idx);
+            idx++;
+
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                if (!node.getNodeName().equals("toMultiplicity")) {
+                    // TODO error
+                } else {
+                    /* TODO abstract tag */
+                }
+            }
+
+            /* fromRole */
+            node = list.item(idx);
+            idx++;
+
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                if (!node.getNodeName().equals("fromRole")) {
+                    // TODO error
+                } else {
+                    /* TODO abstract tag */
+                }
+            }
+
+            /* toRole */
+            node = list.item(idx);
+            idx++;
+
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                if (!node.getNodeName().equals("toRole")) {
+                    // TODO error
+                } else {
+                    /* TODO abstract tag */
+                }
+            }
+
+            /* association nebo aggregation nebo composition */
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                if (node.getNodeName().equals("association")) {
+                    /* TODO */
+                } else if (node.getNodeName().equals("aggregation")) {
+                    /* TODO */
+                } else if (node.getNodeName().equals("composition")) {
+                    /* TODO */
+                } else {
+                    // TODO error
+                }
+            }
+        }
     }
 }

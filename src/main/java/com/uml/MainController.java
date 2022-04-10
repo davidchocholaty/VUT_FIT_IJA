@@ -2,6 +2,7 @@ package com.uml;
 
 import com.uml.classdiagram.UMLClass;
 import com.uml.classdiagram.UMLRelationship;
+import com.uml.filehandler.SaveHandler;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -21,6 +22,8 @@ import java.io.IOException;
 import com.uml.classdiagram.ClassDiagram;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 public class MainController extends Parent {
     @FXML
@@ -197,12 +200,20 @@ public class MainController extends Parent {
 
         FileChooser fileChooser = new FileChooser();
 
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("xml files (*.ijaxml, *.ixl)", "*.ijaxml", "*.ixl");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("ija xml files (*.ijaxml, *.ixl)", "*.ijaxml", "*.ixl");
         fileChooser.getExtensionFilters().add(extFilter);
 
         File file = fileChooser.showSaveDialog(window);
 
+        String path = file.getAbsolutePath();
+
         //save.saveClassDiagram(toString())
 
+        SaveHandler saveHandler = new SaveHandler(diagram);
+        try{
+            saveHandler.saveClassDiagram(path);
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
     }
 }
