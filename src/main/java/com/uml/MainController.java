@@ -2,6 +2,8 @@ package com.uml;
 
 import com.uml.classdiagram.UMLClass;
 import com.uml.classdiagram.UMLRelationship;
+import com.uml.filehandler.CustomException;
+import com.uml.filehandler.IJAXMLParser;
 import com.uml.filehandler.SaveHandler;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,6 +25,7 @@ import java.io.IOException;
 import com.uml.classdiagram.ClassDiagram;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -108,6 +111,9 @@ public class MainController extends Parent {
     }
 
     public ClassUML createElement(MouseEvent mouseEvent) throws IOException {
+
+        double x = mouseEvent.getX();
+        double y = mouseEvent.getY();
         ClassUML el = new ClassUML(mouseEvent.getX(), mouseEvent.getY());
 
         el.getView().setOnDragDetected(e -> dDetect(e, el));
@@ -212,6 +218,29 @@ public class MainController extends Parent {
     }
 
     public void saveProject(MouseEvent mouseEvent) {
+        String path = getFilePathWindow();
+
+        SaveHandler saveHandler = new SaveHandler(diagram);
+        try{
+            saveHandler.saveClassDiagram(path);
+        } catch (ParserConfigurationException | FileNotFoundException | TransformerException e) {
+            childController.warning("Invalid file path.");
+        }
+    }
+
+    public void loadProject(MouseEvent mouseEvent){
+        String path  = getFilePathWindow();
+        IJAXMLParser parser = new IJAXMLParser(path);
+        try {
+            parser.parse();
+        } catch (ParserConfigurationException | CustomException.IllegalFileExtension | IOException | SAXException e) {
+            childController.warning("Invalid file path.");
+        } catch (CustomException.IllegalFileFormat e) {
+            childController.warning("Invalid file syntax.");
+        }
+    }
+
+    private String getFilePathWindow(){
         Window window = rPane.getScene().getWindow();
 
         FileChooser fileChooser = new FileChooser();
@@ -221,13 +250,6 @@ public class MainController extends Parent {
 
         File file = fileChooser.showSaveDialog(window);
 
-        String path = file.getAbsolutePath();
-
-        SaveHandler saveHandler = new SaveHandler(diagram);
-        try{
-            saveHandler.saveClassDiagram(path);
-        } catch (ParserConfigurationException | FileNotFoundException | TransformerException e) {
-            childController.warning("Invalid file path.");
-        }
+        return file.getAbsolutePath();
     }
 }
