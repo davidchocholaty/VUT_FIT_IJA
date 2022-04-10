@@ -1,6 +1,8 @@
 package com.uml.filehandler;
 
+import com.uml.App;
 import com.uml.ClassUML;
+import com.uml.MainController;
 import com.uml.classdiagram.UMLOperation;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
@@ -22,6 +24,7 @@ public class IJAXMLParser {
     private int firstLevelOrder;
     private int secondLevelOrder;
     private List<ClassUML> diagramClasses;
+    private MainController controller;
 
     public IJAXMLParser(String filePath) {
         this.filePath = filePath;
@@ -29,9 +32,10 @@ public class IJAXMLParser {
         this.firstLevelOrder = 0;
         this.secondLevelOrder = 0;
         this.diagramClasses = new ArrayList<ClassUML>();
+        this.controller = null;
     }
 
-    public ClassUML getClassByName(String name) {
+    private ClassUML getClassByName(String name) {
         for (ClassUML currentClass : this.diagramClasses) {
             if (currentClass.getView().getId().equals(name)) {
                 return currentClass;
@@ -60,10 +64,17 @@ public class IJAXMLParser {
             /* http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work */
             this.doc.getDocumentElement().normalize();
 
+            /* Create frontend app */
+            App.main(null);
+            App app = new App();
+            this.controller = app.getController();
+
+            /*
             if (this.doc.hasChildNodes()) {
                 parseClasses();
                 parseRelationships();
             }
+            */
         }
     }
 
@@ -171,7 +182,7 @@ public class IJAXMLParser {
         }
 
         /* Call frontend method for creating class element */
-        
+
 
         /* visibility tag */
         node = list.item(this.secondLevelOrder);
