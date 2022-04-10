@@ -206,10 +206,9 @@ public class IJAXMLParser {
         this.controller.addElement(el);
 
         /* visibility tag */
-        /*
         node = list.item(this.secondLevelOrder);
-        this.secondLevelOrder++;
-
+        this.secondLevelOrder += 2;
+        /*
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("visibility")) {
                 throw new CustomException.IllegalFileFormat("Invalid file syntax.");
@@ -243,14 +242,12 @@ public class IJAXMLParser {
                     throw new CustomException.IllegalFileFormat("Invalid file syntax.");
                 }
 
-                // TODO prace s value
-
                 if (node.hasChildNodes()) {
                     parseAttributeChildren(node);
                 }
             }
 
-            this.secondLevelOrder++;
+            this.secondLevelOrder += 2;
         }
     }
 
@@ -290,13 +287,13 @@ public class IJAXMLParser {
 
         /* dataType tag */
         node = list.item(idx);
-        idx++;
+        idx += 2;
 
         parseDataTypeTag(node);
 
         /* visibility tag */
         node = list.item(idx);
-        idx++;
+        idx += 2;
 
         parseVisibilityTag(node);
 
@@ -333,14 +330,12 @@ public class IJAXMLParser {
                     throw new CustomException.IllegalFileFormat("Invalid file syntax.");
                 }
 
-                // TODO prace s value
-
                 if (node.hasChildNodes()) {
                     parseOperationChildren(node);
                 }
             }
 
-            this.secondLevelOrder++;
+            this.secondLevelOrder += 2;
         }
     }
 
@@ -371,16 +366,16 @@ public class IJAXMLParser {
                     throw new CustomException.IllegalFileFormat("Invalid file syntax.");
                 }
 
-                // TODO prace s value
-
                 if (node.hasChildNodes()) {
                     parseAttributeChildren(node);
                 }
             }
 
-            idx++;
+            idx += 2;
         }
     }
+
+    /*--------------------------------------------------------------------------*/
 
     private void parseRelationships() throws CustomException.IllegalFileFormat {
         /* Iterate through relationships */
