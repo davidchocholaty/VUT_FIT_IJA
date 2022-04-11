@@ -5,6 +5,7 @@ import com.uml.ClassUML;
 import com.uml.MainController;
 import com.uml.classdiagram.UMLOperation;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -36,6 +37,7 @@ public class IJAXMLParser {
         this.diagramClasses = new ArrayList<ClassUML>();
         this.controller = null;
         this.firstLevelList = null;
+        this.currentClass = null;
     }
 
     private ClassUML getClassByName(String name) {
@@ -205,6 +207,8 @@ public class IJAXMLParser {
         this.diagramClasses.add(el);
         this.controller.addElement(el);
 
+
+
         /* visibility tag */
         node = list.item(this.secondLevelOrder);
         this.secondLevelOrder += 2;
@@ -216,10 +220,10 @@ public class IJAXMLParser {
                 // TODO visibility tag
             }
         }
-
+        */
         // attributes tags
         parseAttributes(list);
-
+        /*
         // operations tags
         parseOperations(list);
         */
@@ -243,7 +247,7 @@ public class IJAXMLParser {
                 }
 
                 if (node.hasChildNodes()) {
-                    parseAttributeChildren(node);
+                    parseAttributeChildren(node, attrValue);
                 }
             }
 
@@ -251,66 +255,83 @@ public class IJAXMLParser {
         }
     }
 
-    private void parseDataTypeTag(Node node) throws CustomException.IllegalFileFormat {
+    private String parseDataTypeTag(Node node) throws CustomException.IllegalFileFormat {
+        String dataType = null;
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("dataType")) {
                 throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             } else {
-                /* TODO abstract tag */
+                dataType = node.getTextContent();
             }
         }
+
+        return dataType;
     }
 
-    private void parseVisibilityTag(Node node) throws CustomException.IllegalFileFormat {
+    private String parseVisibilityTag(Node node) throws CustomException.IllegalFileFormat {
+        String visibility = null;
+
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("visibility")) {
                 throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             } else {
-                /* TODO xCoordinate tag */
+                visibility = node.getTextContent();
             }
         }
+
+        return visibility;
     }
 
-    private void parseValueTag(Node node) throws CustomException.IllegalFileFormat {
+    private String parseValueTag(Node node) throws CustomException.IllegalFileFormat {
+        String value = null;
+
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("value")) {
                 throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             } else {
-                /* TODO yCoordinate tag */
+                value = node.getTextContent();
             }
         }
+
+        return value;
     }
 
-    private int parseClassElement(NodeList list) throws CustomException.IllegalFileFormat {
+    private void parseAttributeChildren(Node attrNode, String attrValue) throws CustomException.IllegalFileFormat {
+        NodeList list = attrNode.getChildNodes();
         Node node;
+        String dataType, visibility, value;
         int idx = 1;
 
         /* dataType tag */
         node = list.item(idx);
         idx += 2;
 
-        parseDataTypeTag(node);
+        dataType = parseDataTypeTag(node);
+
+        if (dataType == null) {
+            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+        }
 
         /* visibility tag */
         node = list.item(idx);
         idx += 2;
 
-        parseVisibilityTag(node);
+        visibility = parseVisibilityTag(node);
 
-        return idx;
-    }
-
-    private void parseAttributeChildren(Node attrNode) throws CustomException.IllegalFileFormat {
-        NodeList list = attrNode.getChildNodes();
-        Node node;
-        int idx;
-
-        idx = parseClassElement(list);
+        if (visibility == null) {
+            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+        }
 
         /* value tag */
         node = list.item(idx);
 
-        parseValueTag(node);
+        value = parseValueTag(node);
+
+        if (value == null) {
+            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+        }
+
+        // TODO volani metody
     }
 
     private void parseOperations(NodeList list) throws CustomException.IllegalFileFormat {
@@ -331,7 +352,7 @@ public class IJAXMLParser {
                 }
 
                 if (node.hasChildNodes()) {
-                    parseOperationChildren(node);
+                    parseOperationChildren(node, attrValue);
                 }
             }
 
@@ -339,18 +360,36 @@ public class IJAXMLParser {
         }
     }
 
-    private void parseOperationChildren(Node operNode) throws CustomException.IllegalFileFormat {
+    private void parseOperationChildren(Node operNode, String attrValue) throws CustomException.IllegalFileFormat {
         NodeList list = operNode.getChildNodes();
-        int idx;
+        Node node;
+        String retDataType, visibility;
+        int idx = 1;
 
-        idx = parseClassElement(list);
+        /* dataType tag */
+        node = list.item(idx);
+        idx += 2;
+
+        retDataType = parseDataTypeTag(node);
+
+        /* visibility tag */
+        node = list.item(idx);
+        idx += 2;
+
+        visibility = parseVisibilityTag(node);
 
         /* attributes tags */
-        parseOperationAttributesTags(list, idx);
+        parseOperationAttributesTags(list, idx, retDataType, visibility);
     }
 
-    private void parseOperationAttributesTags(NodeList list, int idx) throws CustomException.IllegalFileFormat {
+    private void parseOperationAttributesTags(NodeList list,
+                                              int idx,
+                                              String operRetDataType,
+                                              String operVisibility)
+            throws CustomException.IllegalFileFormat {
         Node node;
+
+        //List<Pair<String, String>> =
 
         while (idx < list.getLength()) {
             node = list.item(idx);
@@ -367,12 +406,34 @@ public class IJAXMLParser {
                 }
 
                 if (node.hasChildNodes()) {
-                    parseAttributeChildren(node);
+                    String dataType = parseOperationArgument(node);
+                    /* TODO mam nazev parametru a jeho datovy typ */
+
                 }
             }
 
             idx += 2;
         }
+
+        /* TODO volani metody */
+    }
+
+    private String parseOperationArgument(Node attrNode) throws CustomException.IllegalFileFormat {
+        NodeList list = attrNode.getChildNodes();
+        Node node;
+        String dataType;
+        int idx = 1;
+
+        /* dataType tag */
+        node = list.item(idx);
+
+        dataType = parseDataTypeTag(node);
+
+        if (dataType == null) {
+            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+        }
+
+        return dataType;
     }
 
     /*--------------------------------------------------------------------------*/
