@@ -142,6 +142,8 @@ public class MainController extends Parent {
 
     public void addAttribute(ClassUML cls,String name, String dataType, String modifier, String value){
         ClassController controller = cls.getController();
+        System.out.println(controller);
+
         if(controller.classArguments.getText().equals("")){
             controller.classArguments.setText(controller.classArguments.getText() + ((modifier.equals("")) ? "" : modifier) + " " + name + ((dataType.equals("")) ? "" : " : " + dataType) + ((value.equals("")) ? "" : " = " + value));
         }else {

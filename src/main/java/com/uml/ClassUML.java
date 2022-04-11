@@ -44,6 +44,8 @@ public class ClassUML extends Button{
         getView().translateXProperty().bind(loaded.widthProperty().divide(-2));
         getView().translateYProperty().bind(loaded.heightProperty().divide(-2));
 
+        this.controller = loader.getController();
+
         MainController.diagram.createClass(name);
 
         loaded.setId(name);

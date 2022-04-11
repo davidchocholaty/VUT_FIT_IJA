@@ -37,7 +37,6 @@ public class IJAXMLParser {
         this.diagramClasses = new ArrayList<ClassUML>();
         this.controller = null;
         this.firstLevelList = null;
-        this.currentClass = null;
     }
 
     private ClassUML getClassByName(String name) {
@@ -296,6 +295,32 @@ public class IJAXMLParser {
         return value;
     }
 
+    private String visibility2SingleChar(String visibility) {
+        String visibilitySingleChar = null;
+
+        switch (visibility) {
+            case "UNSPECIFIED":
+                visibilitySingleChar = "";
+                break;
+            case "PUBLIC":
+                visibilitySingleChar = "+";
+                break;
+            case "PRIVATE":
+                visibilitySingleChar = "-";
+                break;
+            case "PROTECTED":
+                visibilitySingleChar = "#";
+                break;
+            case "PACKAGE":
+                visibilitySingleChar = "~";
+                break;
+            default:
+                break;
+        }
+
+        return visibilitySingleChar;
+    }
+
     private void parseAttributeChildren(Node attrNode, String attrValue) throws CustomException.IllegalFileFormat {
         NodeList list = attrNode.getChildNodes();
         Node node;
@@ -317,6 +342,7 @@ public class IJAXMLParser {
         idx += 2;
 
         visibility = parseVisibilityTag(node);
+        visibility = visibility2SingleChar(visibility);
 
         if (visibility == null) {
             throw new CustomException.IllegalFileFormat("Invalid file syntax.");
@@ -331,7 +357,8 @@ public class IJAXMLParser {
             throw new CustomException.IllegalFileFormat("Invalid file syntax.");
         }
 
-        // TODO volani metody
+        ClassUML cls = this.diagramClasses.get(this.diagramClasses.size() - 1);
+        this.controller.addAttribute(cls, attrValue, dataType, visibility, value);
     }
 
     private void parseOperations(NodeList list) throws CustomException.IllegalFileFormat {
@@ -389,7 +416,7 @@ public class IJAXMLParser {
             throws CustomException.IllegalFileFormat {
         Node node;
 
-        //List<Pair<String, String>> =
+        //List<Pair<String, String>> attrList =
 
         while (idx < list.getLength()) {
             node = list.item(idx);
