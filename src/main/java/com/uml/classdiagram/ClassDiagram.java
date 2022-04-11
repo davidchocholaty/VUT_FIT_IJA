@@ -240,7 +240,7 @@ public class ClassDiagram extends Element {
 	}
 
 	/**
-	 *
+	 * Method for obtaining diagram classes.
 	 *
 	 * @return Unmodifiable list with diagram
 	 */
