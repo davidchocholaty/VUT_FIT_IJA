@@ -121,7 +121,7 @@ public class MainController extends Parent {
 
     public ClassUML createElement(double x, double y, String name) throws IOException {
         ClassUML el = new ClassUML(x, y, name);
-        childController.className.setText(name);
+        el.getController().className.setText(name);
 
         el.getView().setOnDragDetected(e -> dDetect(e, el));
         el.getView().setOnMouseDragged(e -> drag(e, el));
