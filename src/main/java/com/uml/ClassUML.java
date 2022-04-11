@@ -48,7 +48,9 @@ public class ClassUML extends Button{
         this.controller = loader.getController();
         this.controller.setParentController(controller);
 
-        controller.diagram.createClass(name);
+        UMLClass cls = controller.diagram.createClass(name);
+        cls.setXCoordinate(x);
+        cls.setYCoordinate(y);
 
         loaded.setId(name);
     }

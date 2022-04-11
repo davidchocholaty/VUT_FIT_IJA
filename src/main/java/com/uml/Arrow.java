@@ -34,8 +34,6 @@ public class Arrow extends Group {
     private final double ARROWHEAD_LENGTH = 15;
 
     //TODO delsi argument arrow scale
-    //TODO full screen compatibilita
-    //TODO combobox relation
 
     public Arrow(double x1, double y1, double x2, double y2, String arrowID, ClassUML from, ClassUML to, MainController controller){
         this.x1.set(x1);
@@ -54,7 +52,7 @@ public class Arrow extends Group {
             UMLInheritance inheritance = controller.diagram.createInheritanceRelationship(classFrom, classTo);
         }else {
 
-            Dialog<Pair<String, String>> dialog = new Dialog<>();
+            Dialog dialog = new Dialog();
             dialog.setTitle("Add relationship");
             ButtonType loginButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
             dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
@@ -64,10 +62,12 @@ public class Arrow extends Group {
             grid.setVgap(10);
             grid.setPadding(new Insets(20, 150, 10, 10));
 
-            TextField relA = new TextField();
-            relA.setPromptText("Relationship A");
-            TextField relB = new TextField();
-            relB.setPromptText("Relationship B");
+            ComboBox relA = new ComboBox();
+            relA.getItems().addAll("", "0", "0..1", "1", "0..*", "1..*");
+            relA.getSelectionModel().selectFirst();
+            ComboBox relB = new ComboBox();
+            relB.getItems().addAll("", "0", "0..1", "1", "0..*", "1..*");
+            relB.getSelectionModel().selectFirst();
 
             grid.add(new Label("Relationship A:"), 0, 0);
             grid.add(relA, 1, 0);
@@ -77,9 +77,9 @@ public class Arrow extends Group {
             // Convert the result to a username-password-pair when the login button is clicked.
             dialog.setResultConverter(dialogButton -> {
                 if (dialogButton == loginButtonType) {
-                    this.relA.setText(relA.getText());
-                    this.relB.setText(relB.getText());
-                    return new Pair<>(relA.getText(), relB.getText());
+                    this.relA.setText(relA.getValue().toString());
+                    this.relB.setText(relB.getValue().toString());
+                    return new Pair<>(relA.getValue().toString(), relB.getValue().toString());
                 }
                 return null;
             });
@@ -92,19 +92,19 @@ public class Arrow extends Group {
                 case "arrow":
                     getChildren().addAll(mainLine, headAS, this.relA, this.relB);
                     UMLAssociation association = controller.diagram.createAssociationRelationship(classFrom, classTo);
-                    setMultiplicityTypes(association, relA.getText(), relB.getText());
+                    setMultiplicityTypes(association, this.relA.getText(), this.relB.getText());
                     break;
 
                 case "aggregation":
                     getChildren().addAll(mainLine, headAG1, headAG2, this.relA, this.relB);
                     UMLAggregation aggregation = controller.diagram.createAggregationRelationship(classFrom, classTo);
-                    setMultiplicityTypes(aggregation, relA.getText(), relB.getText());
+                    setMultiplicityTypes(aggregation, this.relA.getText(), this.relB.getText());
                     break;
 
                 case "composition":
                     getChildren().addAll(mainLine, headAS, headC3, headC1, headC2, this.relA, this.relB);
                     UMLComposition composition = controller.diagram.createCompositionRelationship(classFrom, classTo);
-                    setMultiplicityTypes(composition, relA.getText(), relB.getText());
+                    setMultiplicityTypes(composition, this.relA.getText(), this.relB.getText());
                     break;
 
                 default:

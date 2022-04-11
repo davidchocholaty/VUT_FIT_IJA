@@ -1,6 +1,6 @@
 package com.uml;
 
-import com.uml.classdiagram.UMLClass;
+import com.uml.classdiagram.*;
 import com.uml.filehandler.CustomException;
 import com.uml.filehandler.IJAXMLParser;
 import com.uml.filehandler.SaveHandler;
@@ -17,8 +17,9 @@ import javafx.scene.layout.Pane;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.uml.classdiagram.ClassDiagram;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import org.xml.sax.SAXException;
@@ -140,8 +141,35 @@ public class MainController extends Parent {
         }
     }
 
-    public void addAttribute(ClassUML cls,String name, String dataType, String modifier, String value){
-        ClassController controller = cls.getController();
+    public void addAttribute(ClassUML uml,String name, String dataType, String modifier, String value){
+        ClassController controller = uml.getController();
+
+        UMLClass cls = this.diagram.findClass(MainController.tmpNode.getView().getId());
+        UMLDataType type = this.diagram.dataTypeForName(dataType);
+        UMLAttribute attr = new UMLAttribute(name, type);
+
+        if (!modifier.equals("")) {
+            switch (modifier) {
+                case "+":
+                    attr.setVisibility(UMLVisibilityType.PUBLIC);
+                    break;
+                case "-":
+                    attr.setVisibility(UMLVisibilityType.PRIVATE);
+                    break;
+                case "#":
+                    attr.setVisibility(UMLVisibilityType.PROTECTED);
+                    break;
+                case "~":
+                    attr.setVisibility(UMLVisibilityType.PACKAGE);
+                    break;
+            }
+        }
+
+        if(!value.equals("")){
+            attr.setDefaultValue(value);
+        }
+
+        cls.addAttribute(attr);
 
         if(controller.classArguments.getText().equals("")){
             controller.classArguments.setText(controller.classArguments.getText() + ((modifier.equals("")) ? "" : modifier) + " " + name + ((dataType.equals("")) ? "" : " : " + dataType) + ((value.equals("")) ? "" : " = " + value));
@@ -150,8 +178,53 @@ public class MainController extends Parent {
         }
     }
 
-    public void addOperation(ClassUML cls, String name, String parameters, String ret, String modifier){
-        ClassController controller = cls.getController();
+    public void addOperation(ClassUML uml, String name, String parameters, String ret, String modifier){
+        ClassController controller = uml.getController();
+
+        UMLClass cls = this.diagram.findClass(MainController.tmpNode.getView().getId());
+        UMLDataType retDataType = this.diagram.dataTypeForName(ret);
+        List<UMLAttribute> classAttributes = new ArrayList<UMLAttribute>();
+
+        /* Create method parameters */
+
+        String methodParams = parameters;
+        /* Remove all whitespaces and non-visible characters */
+        methodParams = methodParams.replaceAll("\\s+","");
+
+        String[] splittedMethodParams = methodParams.split(",");
+
+        for (String currentParam : splittedMethodParams) {
+
+            String[] splittedParam = currentParam.split(":");
+
+            String paramName = splittedParam[0];
+            String paramDataType = splittedParam[1];
+
+            UMLDataType dataType = this.diagram.dataTypeForName(paramDataType);
+
+            UMLAttribute attr = new UMLAttribute(paramName, dataType);
+            classAttributes.add(attr);
+        }
+
+        UMLOperation operation = UMLOperation.create(name, retDataType, classAttributes.toArray(new UMLAttribute[classAttributes.size()]));
+
+        if (!modifier.equals("")) {
+            switch (modifier) {
+                case "+":
+                    operation.setVisibility(UMLVisibilityType.PUBLIC);
+                    break;
+                case "-":
+                    operation.setVisibility(UMLVisibilityType.PRIVATE);
+                    break;
+                case "#":
+                    operation.setVisibility(UMLVisibilityType.PROTECTED);
+                    break;
+                case "~":
+                    operation.setVisibility(UMLVisibilityType.PACKAGE);
+                    break;
+            }
+        }
+
         if(controller.classMethods.getText().equals("")){
             controller.classMethods.setText(controller.classMethods.getText() + ((modifier.equals("")) ? "" : modifier) + " " + name + ((parameters.equals("")) ? "()" : " ( " + parameters + " ) ") + ((ret.equals("")) ? "" : " : " + ret));
         }else {

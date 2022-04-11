@@ -33,3 +33,6 @@
 .classElement{
     -fx-border-color: black;
 }
+.toggle-button:selected{
+    -fx-background-color: #FCA311;
+}
