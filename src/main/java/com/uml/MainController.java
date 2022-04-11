@@ -174,6 +174,32 @@ public class MainController extends Parent {
         cls.setYCoordinate(y);
     }
 
+    public void createAndAddRelationship(ClassUML from, ClassUML to, String fromText, String toText, String relType){
+        Arrow arrow = new Arrow(from, to, this, fromText, toText, relType);
+        arrow.x1Property().bind(from.getView().layoutXProperty());
+        arrow.y1Property().bind(from.getView().layoutYProperty());
+        arrow.x2Property().bind(to.getView().layoutXProperty());
+        arrow.y2Property().bind(to.getView().layoutYProperty());
+
+        arrow.setOnMouseClicked(e -> arrowClicked(e, arrow));
+
+        from.edges.add(arrow);
+        to.edges.add(arrow);
+    }
+
+    public void createAndAddRelationship(ClassUML from, ClassUML to, String relType){
+        Arrow arrow = new Arrow(from, to, this, relType);
+        arrow.x1Property().bind(from.getView().layoutXProperty());
+        arrow.y1Property().bind(from.getView().layoutYProperty());
+        arrow.x2Property().bind(to.getView().layoutXProperty());
+        arrow.y2Property().bind(to.getView().layoutYProperty());
+
+        arrow.setOnMouseClicked(e -> arrowClicked(e, arrow));
+
+        from.edges.add(arrow);
+        to.edges.add(arrow);
+    }
+
 
     public Arrow createAndAddArrow(ClassUML n1, ClassUML n2, String arrowID) {
         Arrow arrow = new Arrow(n1.getView().getLayoutX(), n1.getView().getLayoutY(), n2.getView().getLayoutX(), n2.getView().getLayoutY(), arrowID, n1, n2, this);

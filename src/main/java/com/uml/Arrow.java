@@ -35,6 +35,7 @@ public class Arrow extends Group {
 
     //TODO delsi argument arrow scale
     //TODO full screen compatibilita
+    //TODO combobox relation
 
     public Arrow(double x1, double y1, double x2, double y2, String arrowID, ClassUML from, ClassUML to, MainController controller){
         this.x1.set(x1);
@@ -109,6 +110,76 @@ public class Arrow extends Group {
                 default:
                     break;
             }
+        }
+
+        for(SimpleDoubleProperty s : new SimpleDoubleProperty[]{this.x1, this.x2, this.y1, this.y2}){
+            s.addListener((l,o,n) -> update() );
+        }
+
+        setUpClassStyle();
+
+        update();
+    }
+
+    public Arrow(ClassUML from, ClassUML to, MainController controller, String fromText, String toText, String relType){
+        this.x1.set(from.getView().getLayoutX());
+        this.x2.set(to.getView().getLayoutX());
+        this.y1.set(from.getView().getLayoutY());
+        this.y2.set(to.getView().getLayoutY());
+
+        relA.getStyleClass().add("relLabel");
+        relB.getStyleClass().add("relLabel");
+
+        UMLClass classFrom = controller.diagram.findClass(from.getView().getId());
+        UMLClass classTo = controller.diagram.findClass(to.getView().getId());
+
+        relA.setText(fromText);
+        relB.setText(toText);
+
+        switch (relType){
+            case "association":
+                getChildren().addAll(mainLine, headAS, this.relA, this.relB);
+                UMLAssociation association = controller.diagram.createAssociationRelationship(classFrom, classTo);
+                setMultiplicityTypes(association, relA.getText(), relB.getText());
+                break;
+            case "aggregation":
+                getChildren().addAll(mainLine, headAG1, headAG2, this.relA, this.relB);
+                UMLAggregation aggregation = controller.diagram.createAggregationRelationship(classFrom, classTo);
+                setMultiplicityTypes(aggregation, relA.getText(), relB.getText());
+                break;
+            case "composition":
+                getChildren().addAll(mainLine, headAS, headC3, headC1, headC2, this.relA, this.relB);
+                UMLComposition composition = controller.diagram.createCompositionRelationship(classFrom, classTo);
+                setMultiplicityTypes(composition, relA.getText(), relB.getText());
+                break;
+            default:
+                break;
+        }
+
+        for(SimpleDoubleProperty s : new SimpleDoubleProperty[]{this.x1, this.x2, this.y1, this.y2}){
+            s.addListener((l,o,n) -> update() );
+        }
+
+        setUpClassStyle();
+
+        update();
+    }
+
+    public Arrow(ClassUML from, ClassUML to, MainController controller, String relType){
+        this.x1.set(from.getView().getLayoutX());
+        this.x2.set(to.getView().getLayoutX());
+        this.y1.set(from.getView().getLayoutY());
+        this.y2.set(to.getView().getLayoutY());
+
+        UMLClass classFrom = controller.diagram.findClass(from.getView().getId());
+        UMLClass classTo = controller.diagram.findClass(to.getView().getId());
+
+        relA.getStyleClass().add("relLabel");
+        relB.getStyleClass().add("relLabel");
+
+        if(relType.equals("inheritance")){
+            getChildren().addAll(mainLine, headR);
+            UMLInheritance inheritance = controller.diagram.createInheritanceRelationship(classFrom, classTo);
         }
 
         for(SimpleDoubleProperty s : new SimpleDoubleProperty[]{this.x1, this.x2, this.y1, this.y2}){
