@@ -39,16 +39,6 @@ public class IJAXMLParser {
         this.firstLevelList = null;
     }
 
-    private ClassUML getClassByName(String name) {
-        for (ClassUML currentClass : this.diagramClasses) {
-            if (currentClass.getView().getId().equals(name)) {
-                return currentClass;
-            }
-        }
-
-        return null;
-    }
-
     public void parse() throws ParserConfigurationException, SAXException,
             IOException, CustomException.IllegalFileExtension, CustomException.IllegalFileFormat,
             NullPointerException, NumberFormatException {
@@ -87,9 +77,19 @@ public class IJAXMLParser {
                 this.firstLevelList = list.item(0).getChildNodes();
 
                 parseClasses();
-            //    parseRelationships();
+                parseRelationships();
             }
         }
+    }
+
+    private ClassUML getClassByName(String name) {
+        for (ClassUML currentClass : this.diagramClasses) {
+            if (currentClass.getView().getId().equals(name)) {
+                return currentClass;
+            }
+        }
+
+        return null;
     }
 
     /* https://stackoverflow.com/questions/3571223/how-do-i-get-the-file-extension-of-a-file-in-java */
@@ -204,8 +204,6 @@ public class IJAXMLParser {
         ClassUML el = this.controller.createElement(x, y, attrValue);
         this.diagramClasses.add(el);
         this.controller.addElement(el);
-
-
 
         /* visibility tag */
         node = list.item(this.secondLevelOrder);
@@ -488,14 +486,16 @@ public class IJAXMLParser {
                     throw new CustomException.IllegalFileFormat("Invalid file syntax.");
                 }
 
+                /*
                 String attrValue = parseXmlAttribute(node, "id");
 
                 if (attrValue == null) {
                     throw new CustomException.IllegalFileFormat("Invalid file syntax.");
                 }
+                */
 
                 if (node.hasChildNodes()) {
-                    parseRelationshipChildren(node, Long.parseLong(attrValue));
+                    parseRelationshipChildren(node);
                 }
             }
 
@@ -503,7 +503,7 @@ public class IJAXMLParser {
         }
     }
 
-    private void parseRelationshipChildren(Node relNode, long id) throws CustomException.IllegalFileFormat {
+    private void parseRelationshipChildren(Node relNode) throws CustomException.IllegalFileFormat {
         NodeList list = relNode.getChildNodes();
         Node node;
         String from = null;
@@ -559,18 +559,25 @@ public class IJAXMLParser {
 
     private void parseClassLevel(Node classLevel, String from, String to) throws CustomException.IllegalFileFormat {
         NodeList list = classLevel.getChildNodes();
+        int expectedListLen = 3;
 
-        if (list.getLength() != 1 ||
-                list.item(0).getNodeName().equals("instance")) {
+        if (list.getLength() != expectedListLen ||
+                list.item(1).getNodeName().equals("instance")) {
             throw new CustomException.IllegalFileFormat("Invalid file syntax.");
         } else {
             parseInheritanceTag(from, to);
         }
     }
 
-    private void parseInheritanceTag(String from, String to) {
+    private void parseInheritanceTag(String from, String to) throws CustomException.IllegalFileFormat {
+        ClassUML clsFrom = getClassByName(from);
+        ClassUML clsTo = getClassByName(to);
 
-        // TODO volani metody
+        if (clsFrom == null || clsTo == null) {
+            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+        }
+
+        this.controller.createAndAddRelationship(clsFrom, clsTo, "inheritance");
     }
 
     private void parseInstanceLevel(Node instanceLevel, String from, String to) throws CustomException.IllegalFileFormat {
@@ -640,19 +647,30 @@ public class IJAXMLParser {
             }
         }
 */
+
+        ClassUML clsFrom = getClassByName(from);
+        ClassUML clsTo = getClassByName(to);
+
+        if (clsFrom == null || clsTo == null) {
+            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+        }
+
         /* association or aggregation or composition */
         node = list.item(idx);
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             switch (node.getNodeName()) {
                 case "association":
-                    /* TODO volani metody */
+                    this.controller.createAndAddRelationship(clsFrom, clsTo,
+                            fromMultiplicity, toMultiplicity, "association");
                     break;
                 case "aggregation":
-                    /* TODO volani metody */
+                    this.controller.createAndAddRelationship(clsFrom, clsTo,
+                            fromMultiplicity, toMultiplicity, "aggregation");
                     break;
                 case "composition":
-                    /* TODO volani metody */
+                    this.controller.createAndAddRelationship(clsFrom, clsTo,
+                            fromMultiplicity, toMultiplicity, "composition");
                     break;
                 default:
                     throw new CustomException.IllegalFileFormat("Invalid file syntax.");
