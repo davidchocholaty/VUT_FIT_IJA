@@ -18,8 +18,7 @@ import java.util.Optional;
 public class ClassController extends Parent{
     @FXML
     public Pane classBody;
-    @FXML
-    static MainController main;
+    private MainController main;
     @FXML
     public Button inClassButton;
     public Label classArguments;
@@ -32,7 +31,7 @@ public class ClassController extends Parent{
     public Label className;
 
     public void setParentController(MainController parentController) {
-        main = parentController;
+        this.main = parentController;
     }
 
     public void initialize(){
@@ -54,7 +53,7 @@ public class ClassController extends Parent{
         System.out.println(MainController.tmpNode.getView().getId());
 
         name.ifPresent(s -> {
-            if (MainController.diagram.setNewClassName(MainController.tmpNode.getView().getId(),s)) {
+            if (main.diagram.setNewClassName(MainController.tmpNode.getView().getId(),s)) {
                 this.className.setText(s);
                 MainController.tmpNode.getView().setId(s);
                 System.out.println("id: " + MainController.tmpNode.getView().getId());
@@ -75,7 +74,7 @@ public class ClassController extends Parent{
         ButtonType loginButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
-        UMLClass cls = MainController.diagram.findClass(MainController.tmpNode.getView().getId());
+        UMLClass cls = main.diagram.findClass(MainController.tmpNode.getView().getId());
 
         GridPane grid = new GridPane();
         grid.setHgap(10);
@@ -105,7 +104,7 @@ public class ClassController extends Parent{
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == loginButtonType) {
 
-                UMLDataType dataType = MainController.diagram.dataTypeForName(type.getText());
+                UMLDataType dataType = main.diagram.dataTypeForName(type.getText());
                 UMLAttribute attr = new UMLAttribute(name.getText(), dataType);
 
                 if(modifier.getValue() != null) {
@@ -163,7 +162,7 @@ public class ClassController extends Parent{
         dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
         /* Create method parameters backhand */
-        UMLClass cls = MainController.diagram.findClass(MainController.tmpNode.getView().getId());
+        UMLClass cls = main.diagram.findClass(MainController.tmpNode.getView().getId());
 
         GridPane grid = new GridPane();
         grid.setHgap(10);
@@ -192,7 +191,7 @@ public class ClassController extends Parent{
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == loginButtonType) {
 
-                UMLDataType retDataType = MainController.diagram.dataTypeForName(type.getText());
+                UMLDataType retDataType = main.diagram.dataTypeForName(type.getText());
                 List<UMLAttribute> classAttributes = new ArrayList<UMLAttribute>();
 
                 /* Create method parameters */
@@ -228,7 +227,7 @@ public class ClassController extends Parent{
                         String paramName = splittedParam[0];
                         String paramDataType = splittedParam[1];
 
-                        UMLDataType dataType = MainController.diagram.dataTypeForName(paramDataType);
+                        UMLDataType dataType = main.diagram.dataTypeForName(paramDataType);
 
                         UMLAttribute attr = new UMLAttribute(paramName, dataType);
                         classAttributes.add(attr);

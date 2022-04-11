@@ -176,7 +176,7 @@ public class MainController extends Parent {
 
 
     public Arrow createAndAddArrow(ClassUML n1, ClassUML n2, String arrowID) {
-        Arrow arrow = new Arrow(n1.getView().getLayoutX(), n1.getView().getLayoutY(), n2.getView().getLayoutX(), n2.getView().getLayoutY(), arrowID, n1, n2);
+        Arrow arrow = new Arrow(n1.getView().getLayoutX(), n1.getView().getLayoutY(), n2.getView().getLayoutX(), n2.getView().getLayoutY(), arrowID, n1, n2, this);
         arrow.x1Property().bind(n1.getView().layoutXProperty());
         arrow.y1Property().bind(n1.getView().layoutYProperty());
         arrow.x2Property().bind(n2.getView().layoutXProperty());
@@ -233,24 +233,28 @@ public class MainController extends Parent {
         boolean saveLoad = false;
         String path = getFilePathWindow(saveLoad);
 
-        SaveHandler saveHandler = new SaveHandler(diagram);
-        try{
-            saveHandler.saveClassDiagram(path);
-        } catch (ParserConfigurationException | FileNotFoundException | TransformerException e) {
-            childController.warning("Invalid file path.");
+        if(path != null){
+            SaveHandler saveHandler = new SaveHandler(diagram);
+            try{
+                saveHandler.saveClassDiagram(path);
+            } catch (ParserConfigurationException | FileNotFoundException | TransformerException e) {
+                childController.warning("Invalid file path.");
+            }
         }
     }
 
     public void loadProject(MouseEvent mouseEvent){
         boolean saveLoad = true;
         String path  = getFilePathWindow(saveLoad);
-        IJAXMLParser parser = new IJAXMLParser(path);
-        try {
-            parser.parse();
-        } catch (ParserConfigurationException | CustomException.IllegalFileExtension | IOException | SAXException e) {
-            childController.warning("Invalid file path.");
-        } catch (CustomException.IllegalFileFormat e) {
-            childController.warning("Invalid file syntax.");
+        if(path != null){
+            IJAXMLParser parser = new IJAXMLParser(path);
+            try {
+                parser.parse();
+            } catch (ParserConfigurationException | CustomException.IllegalFileExtension | IOException | SAXException e) {
+                childController.warning("Invalid file path.");
+            } catch (CustomException.IllegalFileFormat e) {
+                childController.warning("Invalid file syntax.");
+            }
         }
     }
 
@@ -269,7 +273,10 @@ public class MainController extends Parent {
         } else {
             file = fileChooser.showSaveDialog(window);
         }
-
-        return file.getAbsolutePath();
+        if(file != null){
+            return file.getAbsolutePath();
+        }else{
+            return null;
+        }
     }
 }
