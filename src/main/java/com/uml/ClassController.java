@@ -29,7 +29,7 @@ public class ClassController extends Parent{
     public MenuItem Arguments;
     public MenuItem Methods;
     @FXML
-    private Label className;
+    public Label className;
 
     public void setParentController(MainController parentController) {
         main = parentController;
