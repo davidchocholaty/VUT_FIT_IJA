@@ -47,7 +47,7 @@ public class MainController extends Parent {
     static ToggleGroup group = new ToggleGroup();
 
     /*************************************/
-    static ClassDiagram diagram = new ClassDiagram("Class diagram");
+    public ClassDiagram diagram = new ClassDiagram("Class diagram");
     /*************************************/
 
     public void initialize() {
@@ -110,7 +110,7 @@ public class MainController extends Parent {
 
         double x = mouseEvent.getX();
         double y = mouseEvent.getY();
-        ClassUML el = new ClassUML(mouseEvent.getX(), mouseEvent.getY());
+        ClassUML el = new ClassUML(mouseEvent.getX(), mouseEvent.getY(), this);
 
         el.getView().setOnDragDetected(e -> dDetect(e, el));
         el.getView().setOnMouseDragged(e -> drag(e, el));
@@ -120,7 +120,7 @@ public class MainController extends Parent {
     }
 
     public ClassUML createElement(double x, double y, String name) throws IOException {
-        ClassUML el = new ClassUML(x, y, name);
+        ClassUML el = new ClassUML(x, y, name, this);
         el.getController().className.setText(name);
 
         el.getView().setOnDragDetected(e -> dDetect(e, el));
@@ -142,7 +142,6 @@ public class MainController extends Parent {
 
     public void addAttribute(ClassUML cls,String name, String dataType, String modifier, String value){
         ClassController controller = cls.getController();
-        System.out.println(controller);
 
         if(controller.classArguments.getText().equals("")){
             controller.classArguments.setText(controller.classArguments.getText() + ((modifier.equals("")) ? "" : modifier) + " " + name + ((dataType.equals("")) ? "" : " : " + dataType) + ((value.equals("")) ? "" : " = " + value));

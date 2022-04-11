@@ -222,10 +222,9 @@ public class IJAXMLParser {
         */
         // attributes tags
         parseAttributes(list);
-        /*
+
         // operations tags
         parseOperations(list);
-        */
     }
 
     private void parseAttributes(NodeList list) throws CustomException.IllegalFileFormat {
@@ -399,24 +398,35 @@ public class IJAXMLParser {
 
         retDataType = parseDataTypeTag(node);
 
+        if (retDataType == null) {
+            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+        }
+
         /* visibility tag */
         node = list.item(idx);
         idx += 2;
 
         visibility = parseVisibilityTag(node);
+        visibility = visibility2SingleChar(visibility);
+
+        if (visibility == null) {
+            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+        }
 
         /* attributes tags */
-        parseOperationAttributesTags(list, idx, retDataType, visibility);
+        parseOperationAttributesTags(list, idx, attrValue, retDataType, visibility);
     }
 
     private void parseOperationAttributesTags(NodeList list,
                                               int idx,
+                                              String operName,
                                               String operRetDataType,
                                               String operVisibility)
             throws CustomException.IllegalFileFormat {
         Node node;
 
-        //List<Pair<String, String>> attrList =
+        List<Pair<String, String>> attrList = new ArrayList<Pair<String, String>>();
+        StringBuilder params = new StringBuilder();
 
         while (idx < list.getLength()) {
             node = list.item(idx);
@@ -434,15 +444,17 @@ public class IJAXMLParser {
 
                 if (node.hasChildNodes()) {
                     String dataType = parseOperationArgument(node);
-                    /* TODO mam nazev parametru a jeho datovy typ */
-
+                    params.append(attrValue + " : " + dataType + ", ");
                 }
             }
 
             idx += 2;
         }
 
-        /* TODO volani metody */
+        params.setLength(params.length() - 2); // delete last ", "
+
+        ClassUML cls = this.diagramClasses.get(this.diagramClasses.size() - 1);
+        this.controller.addOperation(cls, operName, params.toString(), operRetDataType, operVisibility);
     }
 
     private String parseOperationArgument(Node attrNode) throws CustomException.IllegalFileFormat {
