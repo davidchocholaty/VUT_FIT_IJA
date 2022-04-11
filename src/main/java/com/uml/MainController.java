@@ -140,16 +140,22 @@ public class MainController extends Parent {
         }
     }
 
-    public void addAttribute(String name, String dataType, String modifier, String value){
-        if(childController.classArguments.getText().equals("")){
-            childController.classArguments.setText(childController.classArguments.getText() + ((modifier.equals("")) ? "" : modifier) + " " + name + ((dataType.equals("")) ? "" : " : " + dataType) + ((value.equals("")) ? "" : " = " + value));
+    public void addAttribute(ClassUML cls,String name, String dataType, String modifier, String value){
+        ClassController controller = cls.getController();
+        if(controller.classArguments.getText().equals("")){
+            controller.classArguments.setText(controller.classArguments.getText() + ((modifier.equals("")) ? "" : modifier) + " " + name + ((dataType.equals("")) ? "" : " : " + dataType) + ((value.equals("")) ? "" : " = " + value));
         }else {
-            childController.classArguments.setText(childController.classArguments.getText() + "\n" + ((modifier.equals("")) ? "" : modifier) + " " + name + ((dataType.equals("")) ? "" : " : " + dataType) + ((value.equals("")) ? "" : " = " + value));
+            controller.classArguments.setText(controller.classArguments.getText() + "\n" + ((modifier.equals("")) ? "" : modifier) + " " + name + ((dataType.equals("")) ? "" : " : " + dataType) + ((value.equals("")) ? "" : " = " + value));
         }
     }
 
-    public void addOperation(String name, String parameters, String ret, String modifier){
-
+    public void addOperation(ClassUML cls, String name, String parameters, String ret, String modifier){
+        ClassController controller = cls.getController();
+        if(controller.classMethods.getText().equals("")){
+            controller.classMethods.setText(controller.classMethods.getText() + ((modifier.equals("")) ? "" : modifier) + " " + name + ((parameters.equals("")) ? "()" : " ( " + parameters + " ) ") + ((ret.equals("")) ? "" : " : " + ret));
+        }else {
+            controller.classMethods.setText(controller.classMethods.getText() + "\n" + ((modifier.equals("")) ? "" : modifier) + " " + name + ((parameters.equals("")) ? "()" : " ( " + parameters + " ) ") + ((ret.equals("")) ? "" : " : " + ret));
+        }
     }
 
     public void dDetect(MouseEvent e, ClassUML inClassButton) {
