@@ -3,7 +3,6 @@ package com.uml.filehandler;
 import com.uml.App;
 import com.uml.ClassUML;
 import com.uml.MainController;
-import com.uml.classdiagram.UMLOperation;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.w3c.dom.*;
@@ -16,7 +15,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /* https://mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/ */
@@ -602,6 +600,8 @@ public class IJAXMLParser {
             case "ONE_OR_MANY":
                 multiplicityChars = "1..*";
                 break;
+            default:
+                break;
         }
 
         return multiplicityChars;
@@ -636,6 +636,10 @@ public class IJAXMLParser {
 
         fromMultiplicity = multiplicityStrToChars(fromMultiplicity);
 
+        if (fromMultiplicity == null) {
+            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+        }
+
         /* toMultiplicity */
         node = list.item(idx);
         idx += 2;
@@ -646,6 +650,10 @@ public class IJAXMLParser {
             } else {
                 toMultiplicity = node.getTextContent();
             }
+        }
+
+        if (toMultiplicity == null) {
+            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
         }
 
         toMultiplicity = multiplicityStrToChars(toMultiplicity);

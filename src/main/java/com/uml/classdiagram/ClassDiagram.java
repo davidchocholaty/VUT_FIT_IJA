@@ -32,7 +32,7 @@ public class ClassDiagram extends Element {
 	 *     Standard UML data types are set.
 	 * </p>
 	 *
-	 * @param name
+	 * @param name Class diagram name.
 	 */
 	public ClassDiagram(String name) {
 		super(name);
@@ -65,7 +65,8 @@ public class ClassDiagram extends Element {
 	 *     If a class with the same name already exists in the diagram, it does nothing.
 	 * </p>
 	 *
-	 * @param name Class name
+	 * @param name Class name.
+	 * @return     If class name is valid, return new UMLClass instance. Otherwise, return null.
 	 */
 	public UMLClass createClass(String name) {
 		for (UMLClass currentClass : diagramClasses) {
@@ -80,6 +81,11 @@ public class ClassDiagram extends Element {
 		return newClass;
 	}
 
+	/**
+	 * Creates an instance of the UML class with default name and inserts it into the diagram.
+	 *
+	 * @return New default UMLClass instance.
+	 */
 	public UMLClass createDefaultClass() {
 		UMLClass newClass = UMLClass.createDefault();
 		diagramClasses.add(newClass);
@@ -87,6 +93,17 @@ public class ClassDiagram extends Element {
 		return newClass;
 	}
 
+	/**
+	 * Set new name for class in diagram.
+	 * <p>
+	 *		Change class name only, if class with old name exists in diagram and
+	 *		class with new name doesn't exist in diagram.
+	 * </p>
+	 *
+	 * @param oldName Diagram class name.
+	 * @param newName New name for diagram class.
+	 * @return        Return status of operation (true/false).
+	 */
 	public boolean setNewClassName(String oldName, String newName) {
 		for (UMLClass currentClass : diagramClasses) {
 			if (currentClass.getName().equals(newName)) {
@@ -104,6 +121,12 @@ public class ClassDiagram extends Element {
 		return false;
 	}
 
+	/**
+	 * Delete class from diagram if exists.
+	 *
+	 * @param cls Class to be deleted.
+	 * @return    Status of operation (true/false).
+	 */
 	public boolean deleteClass(UMLClass cls) {
 		int idx;
 
@@ -115,6 +138,11 @@ public class ClassDiagram extends Element {
 		return false;
 	}
 
+	/**
+	 * 
+	 *
+	 * @param cls
+	 */
 	public void deleteAllClassRelationships(UMLClass cls) {
 		int idx;
 
