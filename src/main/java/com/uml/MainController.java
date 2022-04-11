@@ -185,6 +185,8 @@ public class MainController extends Parent {
 
         from.edges.add(arrow);
         to.edges.add(arrow);
+
+        rPane.getChildren().add(arrow);
     }
 
     public void createAndAddRelationship(ClassUML from, ClassUML to, String relType){
@@ -198,6 +200,8 @@ public class MainController extends Parent {
 
         from.edges.add(arrow);
         to.edges.add(arrow);
+
+        rPane.getChildren().add(arrow);
     }
 
 
