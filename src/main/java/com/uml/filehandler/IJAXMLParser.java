@@ -480,7 +480,7 @@ public class IJAXMLParser {
         /* Iterate through relationships */
         Node node;
 
-        while (this.firstLevelOrder < list.getLength()) {
+        while (this.firstLevelOrder < this.firstLevelList.getLength()) {
             node = this.firstLevelList.item(this.firstLevelOrder);
 
             if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -646,13 +646,13 @@ public class IJAXMLParser {
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             switch (node.getNodeName()) {
                 case "association":
-                    /* TODO */
+                    /* TODO volani metody */
                     break;
                 case "aggregation":
-                    /* TODO */
+                    /* TODO volani metody */
                     break;
                 case "composition":
-                    /* TODO */
+                    /* TODO volani metody */
                     break;
                 default:
                     throw new CustomException.IllegalFileFormat("Invalid file syntax.");
