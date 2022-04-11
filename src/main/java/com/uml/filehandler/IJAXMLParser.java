@@ -69,7 +69,6 @@ public class IJAXMLParser {
             this.doc.getDocumentElement().normalize();
 
             /* Create frontend app */
-            //App.main(null);
 
             App app = new App();
             app.start(new Stage());
@@ -479,11 +478,10 @@ public class IJAXMLParser {
 
     private void parseRelationships() throws CustomException.IllegalFileFormat {
         /* Iterate through relationships */
-        NodeList list = this.doc.getChildNodes();
         Node node;
 
-        while (this.firstLevelOrder < list.getLength()) {
-            node = list.item(this.firstLevelOrder);
+        while (this.firstLevelOrder < this.firstLevelList.getLength()) {
+            node = this.firstLevelList.item(this.firstLevelOrder);
 
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 if (!node.getNodeName().equals("relationship")) {
@@ -496,150 +494,170 @@ public class IJAXMLParser {
                     throw new CustomException.IllegalFileFormat("Invalid file syntax.");
                 }
 
-                // TODO prace s value
-
                 if (node.hasChildNodes()) {
-                    parseRelationshipChildren(node);
+                    parseRelationshipChildren(node, Long.parseLong(attrValue));
                 }
             }
 
-            this.firstLevelOrder++;
+            this.firstLevelOrder += 2;
         }
     }
 
-    private void parseRelationshipChildren(Node relNode) throws CustomException.IllegalFileFormat {
+    private void parseRelationshipChildren(Node relNode, long id) throws CustomException.IllegalFileFormat {
         NodeList list = relNode.getChildNodes();
         Node node;
+        String from = null;
+        String to = null;
         this.secondLevelOrder = 1;
 
         /* From tag */
         node = list.item(this.secondLevelOrder);
-        this.secondLevelOrder++;
+        this.secondLevelOrder += 2;
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("from")) {
                 throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             } else {
-                /* TODO abstract tag */
+                from = node.getTextContent();
             }
         }
 
+        if (from == null) {
+            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+        }
+
+
         /* to tag */
         node = list.item(this.secondLevelOrder);
-        this.secondLevelOrder++;
+        this.secondLevelOrder += 2;
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("to")) {
                 throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             } else {
-                /* TODO xCoordinate tag */
+                to = node.getTextContent();
             }
         }
 
+        if (to == null) {
+            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+        }
+
         node = list.item(this.secondLevelOrder);
-        this.secondLevelOrder++;
+        this.secondLevelOrder += 2;
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (node.getNodeName().equals("classLevel")) {
-                parseClassLevel(node);
+                parseClassLevel(node, from, to);
             } else if(node.getNodeName().equals("instanceLevel")) {
-                parseInstanceLevel(node);
+                parseInstanceLevel(node, from, to);
             } else {
                 throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             }
         }
     }
 
-    private void parseClassLevel(Node classLevel) throws CustomException.IllegalFileFormat {
+    private void parseClassLevel(Node classLevel, String from, String to) throws CustomException.IllegalFileFormat {
         NodeList list = classLevel.getChildNodes();
 
         if (list.getLength() != 1 ||
                 list.item(0).getNodeName().equals("instance")) {
             throw new CustomException.IllegalFileFormat("Invalid file syntax.");
         } else {
-            parseInheritanceTag(list.item(0));
+            parseInheritanceTag(from, to);
         }
     }
 
-    private void parseInheritanceTag(Node node) {
-        // TODO prace s hodnotou
+    private void parseInheritanceTag(String from, String to) {
+
+        // TODO volani metody
     }
 
-    private void parseInstanceLevel(Node instanceLevel) throws CustomException.IllegalFileFormat {
+    private void parseInstanceLevel(Node instanceLevel, String from, String to) throws CustomException.IllegalFileFormat {
         NodeList list = instanceLevel.getChildNodes();
         Node node;
+        String fromMultiplicity = null;
+        String toMultiplicity = null;
         int idx = 1;
-        final int instLevelTagsCnt = 5;
+        //final int instLevelTagsCnt = 5;
 
-        if (list.getLength() != instLevelTagsCnt) {
-            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
-        } else {
+        //if (list.getLength() != instLevelTagsCnt) {
+        //    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+        //} else {
             /* fromMultiplicity */
-            node = list.item(idx);
-            idx++;
+        node = list.item(idx);
+        idx += 2;
 
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                if (!node.getNodeName().equals("fromMultiplicity")) {
-                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
-                } else {
-                    /* TODO abstract tag */
-                }
-            }
-
-            /* toMultiplicity */
-            node = list.item(idx);
-            idx++;
-
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                if (!node.getNodeName().equals("toMultiplicity")) {
-                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
-                } else {
-                    /* TODO abstract tag */
-                }
-            }
-
-            /* fromRole */
-            node = list.item(idx);
-            idx++;
-
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                if (!node.getNodeName().equals("fromRole")) {
-                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
-                } else {
-                    /* TODO abstract tag */
-                }
-            }
-
-            /* toRole */
-            node = list.item(idx);
-            idx++;
-
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                if (!node.getNodeName().equals("toRole")) {
-                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
-                } else {
-                    /* TODO abstract tag */
-                }
-            }
-
-            /* association or aggregation or composition */
-            node = list.item(idx);
-
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                switch (node.getNodeName()) {
-                    case "association":
-                        /* TODO */
-                        break;
-                    case "aggregation":
-                        /* TODO */
-                        break;
-                    case "composition":
-                        /* TODO */
-                        break;
-                    default:
-                        throw new CustomException.IllegalFileFormat("Invalid file syntax.");
-                }
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (!node.getNodeName().equals("fromMultiplicity")) {
+                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+            } else {
+                fromMultiplicity = node.getTextContent();
             }
         }
+
+        if (fromMultiplicity == null) {
+            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+        }
+
+        /* toMultiplicity */
+        node = list.item(idx);
+        idx += 2;
+
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (!node.getNodeName().equals("toMultiplicity")) {
+                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+            } else {
+                toMultiplicity = node.getTextContent();
+            }
+        }
+
+        if (toMultiplicity == null) {
+            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+        }
+
+        /* fromRole */
+        node = list.item(idx);
+        idx += 2;
+/*
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (!node.getNodeName().equals("fromRole")) {
+                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+            } else {
+                // TODO
+            }
+        }
+*/
+        /* toRole */
+        node = list.item(idx);
+        idx += 2;
+/*
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (!node.getNodeName().equals("toRole")) {
+                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+            } else {
+                // TODO
+            }
+        }
+*/
+        /* association or aggregation or composition */
+        node = list.item(idx);
+
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            switch (node.getNodeName()) {
+                case "association":
+                    /* TODO volani metody */
+                    break;
+                case "aggregation":
+                    /* TODO volani metody */
+                    break;
+                case "composition":
+                    /* TODO volani metody */
+                    break;
+                default:
+                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+            }
+        }
+        //}
     }
 }
