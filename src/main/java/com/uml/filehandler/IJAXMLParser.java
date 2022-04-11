@@ -580,6 +580,33 @@ public class IJAXMLParser {
         this.controller.createAndAddRelationship(clsFrom, clsTo, "inheritance");
     }
 
+    private String multiplicityStrToChars(String multiplicity) {
+        String multiplicityChars = null;
+
+        switch (multiplicity) {
+            case "UNSPECIFIED":
+                multiplicityChars = "";
+                break;
+            case "ZERO":
+                multiplicityChars = "0";
+                break;
+            case "ZERO_OR_ONE":
+                multiplicityChars = "0..1";
+                break;
+            case "ONE":
+                multiplicityChars = "1";
+                break;
+            case "ZERO_OR_MANY":
+                multiplicityChars = "0..*";
+                break;
+            case "ONE_OR_MANY":
+                multiplicityChars = "1..*";
+                break;
+        }
+
+        return multiplicityChars;
+    }
+
     private void parseInstanceLevel(Node instanceLevel, String from, String to) throws CustomException.IllegalFileFormat {
         NodeList list = instanceLevel.getChildNodes();
         Node node;
@@ -607,6 +634,8 @@ public class IJAXMLParser {
             throw new CustomException.IllegalFileFormat("Invalid file syntax.");
         }
 
+        fromMultiplicity = multiplicityStrToChars(fromMultiplicity);
+
         /* toMultiplicity */
         node = list.item(idx);
         idx += 2;
@@ -618,6 +647,8 @@ public class IJAXMLParser {
                 toMultiplicity = node.getTextContent();
             }
         }
+
+        toMultiplicity = multiplicityStrToChars(toMultiplicity);
 
         if (toMultiplicity == null) {
             throw new CustomException.IllegalFileFormat("Invalid file syntax.");
