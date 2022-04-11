@@ -1,16 +1,12 @@
 package com.uml;
 
 import com.uml.classdiagram.UMLClass;
-import com.uml.classdiagram.UMLRelationship;
 import com.uml.filehandler.CustomException;
 import com.uml.filehandler.IJAXMLParser;
 import com.uml.filehandler.SaveHandler;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyCode;
@@ -125,6 +121,7 @@ public class MainController extends Parent {
 
     public ClassUML createElement(double x, double y, String name) throws IOException {
         ClassUML el = new ClassUML(x, y, name);
+        childController.className.setText(name);
 
         el.getView().setOnDragDetected(e -> dDetect(e, el));
         el.getView().setOnMouseDragged(e -> drag(e, el));
@@ -137,13 +134,27 @@ public class MainController extends Parent {
         rPane.getChildren().add(el.getView());
     }
 
-    private void contentAction(ActionEvent e, ClassUML el) {
-        System.out.println("tady");
-    }
-
     public void addElement(MouseEvent mouseEvent) throws IOException {
         if (classAct) {
             rPane.getChildren().add(createElement(mouseEvent).getView());
+        }
+    }
+
+    public void addAttribute(ClassUML cls,String name, String dataType, String modifier, String value){
+        ClassController controller = cls.getController();
+        if(controller.classArguments.getText().equals("")){
+            controller.classArguments.setText(controller.classArguments.getText() + ((modifier.equals("")) ? "" : modifier) + " " + name + ((dataType.equals("")) ? "" : " : " + dataType) + ((value.equals("")) ? "" : " = " + value));
+        }else {
+            controller.classArguments.setText(controller.classArguments.getText() + "\n" + ((modifier.equals("")) ? "" : modifier) + " " + name + ((dataType.equals("")) ? "" : " : " + dataType) + ((value.equals("")) ? "" : " = " + value));
+        }
+    }
+
+    public void addOperation(ClassUML cls, String name, String parameters, String ret, String modifier){
+        ClassController controller = cls.getController();
+        if(controller.classMethods.getText().equals("")){
+            controller.classMethods.setText(controller.classMethods.getText() + ((modifier.equals("")) ? "" : modifier) + " " + name + ((parameters.equals("")) ? "()" : " ( " + parameters + " ) ") + ((ret.equals("")) ? "" : " : " + ret));
+        }else {
+            controller.classMethods.setText(controller.classMethods.getText() + "\n" + ((modifier.equals("")) ? "" : modifier) + " " + name + ((parameters.equals("")) ? "()" : " ( " + parameters + " ) ") + ((ret.equals("")) ? "" : " : " + ret));
         }
     }
 

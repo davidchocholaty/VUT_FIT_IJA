@@ -14,6 +14,7 @@ import com.uml.classdiagram.UMLClass;
 public class ClassUML extends Button{
     public Node view;
     public ObservableList<Arrow> edges = FXCollections.observableArrayList();
+    private ClassController controller;
 
     public ClassUML(double x, double y) throws IOException {
         FXMLLoader loader = new FXMLLoader(App.class.getResource("class_uml.fxml"));
@@ -23,6 +24,8 @@ public class ClassUML extends Button{
         getView().setLayoutY(y);
         getView().translateXProperty().bind(loaded.widthProperty().divide(-2));
         getView().translateYProperty().bind(loaded.heightProperty().divide(-2));
+
+        this.controller = loader.getController();
 
         UMLClass cls = MainController.diagram.createDefaultClass();
         cls.setXCoordinate(x);
@@ -44,6 +47,10 @@ public class ClassUML extends Button{
         MainController.diagram.createClass(name);
 
         loaded.setId(name);
+    }
+
+    public ClassController getController(){
+        return this.controller;
     }
 
     public Node getView() {
