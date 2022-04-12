@@ -14,10 +14,10 @@ import com.uml.filehandler.CustomException;
 import com.uml.filehandler.IJAXMLParser;
 import com.uml.filehandler.SaveHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -449,7 +449,6 @@ public class MainController extends Parent {
     }
 
     public void classClick(MouseEvent e, ClassUML classBody) {
-        System.out.println(classBody.getView().getId());
         if (isArrowAct()) {
             if (count == 0) {
                 tmpNode = classBody;
@@ -556,5 +555,18 @@ public class MainController extends Parent {
      * @param mouseEvent Event of mouse.
      */
     public void helpWindow(MouseEvent mouseEvent) {
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("help.fxml"));
+        try {
+            Node node = fxmlLoader.load();
+            Alert dialog = new Alert(Alert.AlertType.INFORMATION);
+            dialog.setTitle("Help");
+            dialog.setHeaderText(null);
+            dialog.setGraphic(null);
+            dialog.getDialogPane().setContent(node);
+            dialog.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

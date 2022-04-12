@@ -80,11 +80,9 @@ public class ClassController extends Parent{
             if (main.diagram.setNewClassName(MainController.tmpNode.getView().getId(),s)) {
                 this.className.setText(s);
                 MainController.tmpNode.getView().setId(s);
-                System.out.println("id: " + MainController.tmpNode.getView().getId());
             } else {
                 warning("This name was used!");
                 addClassNameAction(event);
-                System.out.println("id: " + MainController.tmpNode.getView().getId());
             }
         });
 
