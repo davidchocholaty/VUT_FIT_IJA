@@ -18,7 +18,7 @@ public class UMLAssociation extends UMLInstanceLevel {
 	 * Creates an UMLAssociation instance with start class and end class.
 	 *
 	 * @param from Start class.
-	 * @param to   End class.
+	 * @param to End class.
 	 */
 	public UMLAssociation(UMLClass from, UMLClass to) {
 		super(from, to);

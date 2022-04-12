@@ -17,8 +17,6 @@ package com.uml.classdiagram;
  */
 public class UMLDataType extends UMLClassifier {
 
-	/* TODO user defined jak pouzit */
-
 	/**
 	 * Creates an instance representing a data type.
 	 *

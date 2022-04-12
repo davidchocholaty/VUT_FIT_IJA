@@ -66,7 +66,7 @@ public class ClassDiagram extends Element {
 	 * </p>
 	 *
 	 * @param name Class name.
-	 * @return     If class name is valid, return new UMLClass instance. Otherwise, return null.
+	 * @return If class name is valid, return new UMLClass instance. Otherwise, return null.
 	 */
 	public UMLClass createClass(String name) {
 		for (UMLClass currentClass : diagramClasses) {
@@ -102,7 +102,7 @@ public class ClassDiagram extends Element {
 	 *
 	 * @param oldName Diagram class name.
 	 * @param newName New name for diagram class.
-	 * @return        Return status of operation (true/false).
+	 * @return Return status of operation (true/false).
 	 */
 	public boolean setNewClassName(String oldName, String newName) {
 		for (UMLClass currentClass : diagramClasses) {
@@ -125,7 +125,7 @@ public class ClassDiagram extends Element {
 	 * Delete class from diagram if exists.
 	 *
 	 * @param cls Class to be deleted.
-	 * @return    Status of operation (true/false).
+	 * @return Status of operation (true/false).
 	 */
 	public boolean deleteClass(UMLClass cls) {
 		int idx;
@@ -168,8 +168,8 @@ public class ClassDiagram extends Element {
 	 *     If a class with the same name already exists in the diagram, it does nothing.
 	 * </p>
 	 *
-	 * @param name Class name.
-	 * @return     If class name is valid, return new UMLInterface instance. Otherwise, return null.
+	 * @param name Interface name.
+	 * @return If class name is valid, return new UMLInterface instance. Otherwise, return null.
 	 */
 	public UMLInterface createInterface(String name) {
 		for (UMLClass currentClass : diagramClasses) {
@@ -208,7 +208,7 @@ public class ClassDiagram extends Element {
 	 * </p>
 	 *
 	 * @param dataTypeName Name of data type.
-	 * @return             Return new data type or data type defined in diagram.
+	 * @return Return new data type or data type defined in diagram.
 	 */
 	public UMLDataType dataTypeForName(String dataTypeName) {
 		for (UMLDataType dataType : diagramDataTypes) {
@@ -227,7 +227,7 @@ public class ClassDiagram extends Element {
 	 * Find the class by name in the diagram.
 	 *
 	 * @param name Class name.
-	 * @return     Class object if class was found in diagram. Null otherwise.
+	 * @return Class object if class was found in diagram. Null otherwise.
 	 */
 	public UMLClass findClass(String name) {
 		for (UMLClass currentClass : diagramClasses) {
@@ -242,12 +242,19 @@ public class ClassDiagram extends Element {
 	/**
 	 * Method for obtaining diagram classes.
 	 *
-	 * @return Unmodifiable list with diagram
+	 * @return Unmodifiable list with diagram classes.
 	 */
 	public List<UMLClass> getClasses() {
 		return Collections.unmodifiableList(this.diagramClasses);
 	}
 
+	/**
+	 * Creates an instance of the UML association and inserts it into the diagram.
+	 *
+	 * @param from Class where relationship starts.
+	 * @param to Class where relationship ends.
+	 * @return New instance of an UMLAssociation.
+	 */
 	public UMLAssociation createAssociationRelationship(UMLClass from, UMLClass to) {
 		UMLAssociation newAssociation = new UMLAssociation(from, to);
 		this.diagramRelationships.add(newAssociation);
@@ -255,6 +262,13 @@ public class ClassDiagram extends Element {
 		return newAssociation;
 	}
 
+	/**
+	 * Creates an instance of the UML aggregation and inserts it into the diagram.
+	 *
+	 * @param from Class where relationship starts.
+	 * @param to Class where relationship ends.
+	 * @return New instance of an UMLAggregation.
+	 */
 	public UMLAggregation createAggregationRelationship(UMLClass from, UMLClass to) {
 		UMLAggregation newAggregation = new UMLAggregation(from, to);
 		this.diagramRelationships.add(newAggregation);
@@ -262,6 +276,13 @@ public class ClassDiagram extends Element {
 		return newAggregation;
 	}
 
+	/**
+	 * Creates an instance of the UML composition and inserts it into the diagram.
+	 *
+	 * @param from Class where relationship starts.
+	 * @param to Class where relationship ends.
+	 * @return New instance of an UMLComposition.
+	 */
 	public UMLComposition createCompositionRelationship(UMLClass from, UMLClass to) {
 		UMLComposition newComposition = new UMLComposition(from, to);
 		this.diagramRelationships.add(newComposition);
@@ -269,6 +290,13 @@ public class ClassDiagram extends Element {
 		return newComposition;
 	}
 
+	/**
+	 * Creates an instance of the UML inheritance and inserts it into the diagram.
+	 *
+	 * @param from Class where relationship starts.
+	 * @param to Class where relationship ends.
+	 * @return New instance of an UMLInheritance.
+	 */
 	public UMLInheritance createInheritanceRelationship(UMLClass from, UMLClass to) {
 		UMLInheritance newInheritance = new UMLInheritance(from, to);
 		this.diagramRelationships.add(newInheritance);
@@ -276,6 +304,11 @@ public class ClassDiagram extends Element {
 		return newInheritance;
 	}
 
+	/**
+	 * Method for obtaining diagram relationships.
+	 *
+	 * @return Unmodifiable list with diagram relationships.
+	 */
 	public List<UMLRelationship> getRelationships() {
 		return Collections.unmodifiableList(this.diagramRelationships);
 	}

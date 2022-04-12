@@ -19,7 +19,7 @@ public class UMLAggregation extends UMLInstanceLevel {
 	 * Creates an UMLAggregation instance with start class and end class.
 	 *
 	 * @param from Start class.
-	 * @param to   End class.
+	 * @param to End class.
 	 */
 	public UMLAggregation(UMLClass from, UMLClass to) {
 		super(from, to);

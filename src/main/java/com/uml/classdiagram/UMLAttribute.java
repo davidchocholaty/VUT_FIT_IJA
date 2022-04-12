@@ -77,6 +77,11 @@ public class UMLAttribute extends Element {
 		return newAttribute;
 	}
 
+	/**
+	 * Set attribute default value.
+	 *
+	 * @param defaultValue Attribute default value.
+	 */
 	public void setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;
 	}

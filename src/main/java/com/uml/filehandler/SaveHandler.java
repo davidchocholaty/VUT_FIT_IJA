@@ -1,3 +1,12 @@
+/**
+ * Project for course IJA at FIT BUT.
+ * <p>
+ *     Enum representing UML visibility types.
+ * </p>
+ * @author: David Chocholaty <xchoch09@stud.fit.vutbr.cz>
+ * @author: Adam Kankovsky <xkanko00@stud.fit.vutbr.cz>
+ */
+
 package com.uml.filehandler;
 
 import com.uml.classdiagram.*;
@@ -15,20 +24,37 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
-/* https://mkyong.com/java/how-to-create-xml-file-in-java-dom/ */
+/**
+ * Class representing handler for saving diagram into *.ijaxml or *.ixl file in xml format.
+ * <p>
+ *     The main goal of this class is save diagram into output file.
+ * </p>
+ */
 public class SaveHandler {
     private final ClassDiagram diagram;
     private Document doc;
 
+    /**
+     * Creates a new instance of SaveHandler.
+     *
+     * @param diagram Class diagram.
+     */
     public SaveHandler(ClassDiagram diagram) {
         this.diagram = diagram;
         doc = null;
     }
 
+    /**
+     * Main method for class diagram saving.
+     *
+     * @param destPath Output file destination path.
+     * @throws ParserConfigurationException Parser configuration error.
+     * @throws FileNotFoundException File wasn't found (FileOutputStream).
+     * @throws TransformerException Transformer error.
+     */
     public void saveClassDiagram(String destPath) throws ParserConfigurationException,
             FileNotFoundException, TransformerException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -49,6 +75,12 @@ public class SaveHandler {
         writeXml(this.doc, output);
     }
 
+    /**
+     * Add all diagram classes tags.
+     *
+     * @param rootElement Root element.
+     * @param diagramClasses Classes of diagram.
+     */
     private void addClassTags(Element rootElement, List<UMLClass> diagramClasses) {
         /* Iterate through classes */
         for (UMLClass currentClass : diagramClasses) {
@@ -56,6 +88,12 @@ public class SaveHandler {
         }
     }
 
+    /**
+     * Add all diagram relationships tags.
+     *
+     * @param rootElement Root element.
+     * @param diagramRelationships Relationships of diagram.
+     */
     private void addRelationshipsTags(Element rootElement, List<UMLRelationship> diagramRelationships) {
         /* Iterate through relationships */
         for (UMLRelationship currentRel : diagramRelationships) {
@@ -67,18 +105,36 @@ public class SaveHandler {
     /*                              Class tag members                              */
     /*-----------------------------------------------------------------------------*/
 
+    /**
+     * Add attributes tags.
+     *
+     * @param parent Parent element.
+     * @param attributes List of attributes.
+     */
     private void addAttributesTags(Element parent, List<UMLAttribute> attributes) {
         for (UMLAttribute currentAttr : attributes) {
             addAttributeTag(parent, currentAttr);
         }
     }
 
+    /**
+     * Add operations tags.
+     *
+     * @param diagramClass Class element.
+     * @param operations List of operations.
+     */
     private void addOperationsTags(Element diagramClass, List<UMLOperation> operations) {
         for (UMLOperation currentOper : operations) {
             addOperationTag(diagramClass, currentOper);
         }
     }
 
+    /**
+     * Add class tag.
+     *
+     * @param rootElement Root element.
+     * @param currentClass Current class to be saved.
+     */
     private void addClassTag(Element rootElement, UMLClass currentClass) {
         Element diagramClass;
 
@@ -101,6 +157,12 @@ public class SaveHandler {
         addOperationsTags(diagramClass, classOperations);
     }
 
+    /**
+     * Add abstract tag.
+     *
+     * @param diagramClass Class element.
+     * @param currentClass Current class to be abstract.
+     */
     private void addAbstractTag(Element diagramClass, UMLClass currentClass) {
         Element abstractTag;
 
@@ -115,6 +177,12 @@ public class SaveHandler {
         }
     }
 
+    /**
+     * Add x coordinate tag.
+     *
+     * @param diagramClass Class element.
+     * @param currentClass Current class.
+     */
     private void addXCoordinateTag(Element diagramClass, UMLClass currentClass) {
         Element xCoordinate;
 
@@ -124,6 +192,12 @@ public class SaveHandler {
         xCoordinate.setTextContent(Double.toString(currentClass.getXCoordinate()));
     }
 
+    /**
+     * Add y coordinate tag.
+     *
+     * @param diagramClass Class element.
+     * @param currentClass Current class.
+     */
     private void addYCoordinateTag(Element diagramClass, UMLClass currentClass) {
         Element yCoordinate;
 
@@ -133,6 +207,12 @@ public class SaveHandler {
         yCoordinate.setTextContent(Double.toString(currentClass.getYCoordinate()));
     }
 
+    /**
+     * Add visibility tag.
+     *
+     * @param parent Parent element.
+     * @param current Current element.
+     */
     private void addVisibilityTag(Element parent, com.uml.classdiagram.Element current) {
         Element visibility;
 
@@ -147,6 +227,12 @@ public class SaveHandler {
         }
     }
 
+    /**
+     * Add attribute tag.
+     *
+     * @param parent Parent element.
+     * @param currentAttr Current attribute.
+     */
     private void addAttributeTag(Element parent, UMLAttribute currentAttr) {
         Element attr;
 
@@ -160,6 +246,12 @@ public class SaveHandler {
         addValueTag(attr, currentAttr);
     }
 
+    /**
+     * Add data type tag.
+     *
+     * @param parent Parent element.
+     * @param currentAttr Current attribute.
+     */
     private void addDataTypeTag(Element parent, UMLAttribute currentAttr) {
         Element dataType;
 
@@ -169,6 +261,12 @@ public class SaveHandler {
         dataType.setTextContent(currentAttr.getType().toString());
     }
 
+    /**
+     * Add value tag.
+     *
+     * @param attr Attribute element.
+     * @param currentAttr Current attribute.
+     */
     private void addValueTag(Element attr, UMLAttribute currentAttr) {
         Element value;
 
@@ -179,6 +277,12 @@ public class SaveHandler {
         value.setTextContent(currentAttr.getDefaultValue());
     }
 
+    /**
+     * Add operation tag.
+     *
+     * @param diagramClass Class element.
+     * @param currentOper Current operation.
+     */
     private void addOperationTag(Element diagramClass, UMLOperation currentOper) {
         Element oper;
 
@@ -199,6 +303,12 @@ public class SaveHandler {
     /*                           Relationship tag members                          */
     /*-----------------------------------------------------------------------------*/
 
+    /**
+     * Add relationship tag.
+     *
+     * @param rootElement Root element.
+     * @param currentRel Current relationship.
+     */
     private void addRelationshipTag(Element rootElement, UMLRelationship currentRel) {
         Element diagramRel;
 
@@ -217,6 +327,12 @@ public class SaveHandler {
         }
     }
 
+    /**
+     * Add from tag.
+     *
+     * @param diagramRel Relationship element.
+     * @param currentRel Current relationship.
+     */
     private void addFromTag(Element diagramRel, UMLRelationship currentRel) {
         Element from;
 
@@ -226,6 +342,12 @@ public class SaveHandler {
         from.setTextContent(currentRel.getFrom().getName());
     }
 
+    /**
+     * Add to tag.
+     *
+     * @param diagramRel Relationship element.
+     * @param currentRel Current relationship.
+     */
     private void addToTag(Element diagramRel, UMLRelationship currentRel) {
         Element to;
 
@@ -235,6 +357,11 @@ public class SaveHandler {
         to.setTextContent(currentRel.getTo().getName());
     }
 
+    /**
+     * Add class level tag.
+     *
+     * @param diagramRel Relationship element.
+     */
     private void addClassLevelTag(Element diagramRel) {
         Element classLevel;
 
@@ -245,6 +372,11 @@ public class SaveHandler {
         addInheritanceTag(classLevel);
     }
 
+    /**
+     * Add inheritance tag.
+     *
+     * @param classLevel Class level element.
+     */
     private void addInheritanceTag(Element classLevel) {
         Element inheritance;
 
@@ -253,6 +385,12 @@ public class SaveHandler {
         classLevel.appendChild(inheritance);
     }
 
+    /**
+     * Add instance level tag.
+     *
+     * @param diagramRel Relationship element.
+     * @param currentRel Current relationship.
+     */
     private void addInstanceLevelTag(Element diagramRel, UMLRelationship currentRel) {
         Element instanceLevel;
 
@@ -274,6 +412,12 @@ public class SaveHandler {
         }
     }
 
+    /**
+     * Add from multiplicity.
+     *
+     * @param instanceLevel Instance level element.
+     * @param currentRel Current relationship.
+     */
     private void addFromMultiplicityTag(Element instanceLevel, UMLRelationship currentRel) {
         Element fromMultiplicity;
 
@@ -283,6 +427,12 @@ public class SaveHandler {
         fromMultiplicity.setTextContent(((UMLInstanceLevel)currentRel).getFromMultiplicity().name());
     }
 
+    /**
+     * Add to multiplicity.
+     *
+     * @param instanceLevel Instance level element.
+     * @param currentRel Current relationship.
+     */
     private void addToMultiplicityTag(Element instanceLevel, UMLRelationship currentRel) {
         Element toMultiplicity;
 
@@ -292,6 +442,12 @@ public class SaveHandler {
         toMultiplicity.setTextContent(((UMLInstanceLevel)currentRel).getToMultiplicity().name());
     }
 
+    /**
+     * Add from role tag.
+     *
+     * @param instanceLevel Instance level element.
+     * @param currentRel Current relationship.
+     */
     private void addFromRoleTag(Element instanceLevel, UMLRelationship currentRel) {
         Element fromRole;
 
@@ -301,6 +457,12 @@ public class SaveHandler {
         fromRole.setTextContent(((UMLInstanceLevel)currentRel).getFromRole());
     }
 
+    /**
+     * Add to role tag.
+     *
+     * @param instanceLevel Instance level element.
+     * @param currentRel Current relationship.
+     */
     private void addToRoleTag(Element instanceLevel, UMLRelationship currentRel) {
         Element toRole;
 
@@ -310,6 +472,11 @@ public class SaveHandler {
         toRole.setTextContent(((UMLInstanceLevel)currentRel).getToRole());
     }
 
+    /**
+     * Add association tag.
+     *
+     * @param instanceLevel Instance level element.
+     */
     private void addAssociationTag(Element instanceLevel) {
         Element association;
 
@@ -318,6 +485,11 @@ public class SaveHandler {
         instanceLevel.appendChild(association);
     }
 
+    /**
+     * Add aggregation tag.
+     *
+     * @param instanceLevel Instance level element.
+     */
     private void addAggregationTag(Element instanceLevel) {
         Element aggregation;
 
@@ -326,6 +498,11 @@ public class SaveHandler {
         instanceLevel.appendChild(aggregation);
     }
 
+    /**
+     * Add composition tag.
+     *
+     * @param instanceLevel Instance level element.
+     */
     private void addCompositionTag(Element instanceLevel) {
         Element composition;
 
@@ -339,6 +516,13 @@ public class SaveHandler {
     /*                                  Write xml                                  */
     /*-----------------------------------------------------------------------------*/
 
+    /**
+     * Write xml to output file.
+     *
+     * @param doc Document.
+     * @param output Output stream.
+     * @throws TransformerException Transformer error.
+     */
     private static void writeXml(Document doc,
                                  OutputStream output)
             throws TransformerException {

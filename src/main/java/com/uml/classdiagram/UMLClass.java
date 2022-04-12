@@ -64,6 +64,15 @@ public class UMLClass extends UMLClassifier {
 		this.isAbstract = isAbstract;
 	}
 
+	/**
+	 * Add attribute to class.
+	 * <p>
+	 *     Attribute is added to class if attribute with same name wasn't found in class.
+	 * </p>
+	 *
+	 * @param attr Attribute to be added.
+	 * @return Status of operation (true/false).
+	 */
 	public boolean addAttribute(UMLAttribute attr) {
 		for (UMLAttribute listAttr : classAttributes) {
 			if (listAttr.getName().equals(attr.getName())) {
@@ -76,22 +85,48 @@ public class UMLClass extends UMLClassifier {
 		return true;
 	}
 
+	/**
+	 * Set x coordinate of class on frontend scene.
+	 *
+	 * @param xCoordinate Class x coordinate.
+	 */
 	public void setXCoordinate(double xCoordinate) {
 		this.xCoordinate = xCoordinate;
 	}
 
+	/**
+	 * Set y coordinate of class on frontend scene.
+	 *
+	 * @param yCoordinate Class y coordinate.
+	 */
 	public void setYCoordinate(double yCoordinate) {
 		this.yCoordinate = yCoordinate;
 	}
 
+	/**
+	 * Get x coordinate of class on frontend scene.
+	 *
+	 * @return Class x coordinate.
+	 */
 	public double getXCoordinate() {
 		return this.xCoordinate;
 	}
 
+	/**
+	 * Get y coordinate of class on frontend scene.
+	 *
+	 * @return Class y coordinate.
+	 */
 	public double getYCoordinate() {
 		return this.yCoordinate;
 	}
 
+	/**
+	 * Delete class attribute.
+	 *
+	 * @param attr Class attribute to be deleted.
+	 * @return Status of operation. True if attribute was found and deleted, false otherwise.
+	 */
 	public boolean deleteAttribute(UMLAttribute attr) {
 		int idx;
 
@@ -106,7 +141,7 @@ public class UMLClass extends UMLClassifier {
 	/**
 	 * Return unmodifiable list of class attributes.
 	 *
-	 * @return Unmodifiable list of class attributes
+	 * @return Unmodifiable list of class attributes.
 	 */
 	public List<UMLAttribute> getAttributes() {
 		return Collections.unmodifiableList(classAttributes);
@@ -119,8 +154,8 @@ public class UMLClass extends UMLClassifier {
 	 *     If the class does not contain the given attribute, it returns -1.
 	 * </p>
 	 *
-	 * @param attr Searched attribute
-	 * @return Position of attribute
+	 * @param attr Searched attribute.
+	 * @return Position of attribute.
 	 */
 	public int getAttrPosition(UMLAttribute attr) {
 		return this.classAttributes.indexOf(attr);
@@ -148,6 +183,15 @@ public class UMLClass extends UMLClassifier {
 		return -1;
 	}
 
+	/**
+	 * Add operation to class.
+	 * <p>
+	 *     Operation is added to class if an identical operation wasn't found in class.
+	 * </p>
+	 *
+	 * @param oper Operation to be added.
+	 * @return Exit status (true/false).
+	 */
 	public boolean addOperation(UMLOperation oper) {
 		for (UMLOperation listOper : classOperations) {
 			if (listOper.getName().equals(oper.getName())) {
@@ -160,6 +204,12 @@ public class UMLClass extends UMLClassifier {
 		return true;
 	}
 
+	/**
+	 * Delete class operation.
+	 *
+	 * @param oper Class operation to be deleted.
+	 * @return Exit status. True if class operation was found and deleted, false otherwise.
+	 */
 	public boolean deleteOperation(UMLOperation oper) {
 		int idx;
 
@@ -173,6 +223,7 @@ public class UMLClass extends UMLClassifier {
 
 	/**
 	 * Return unmodifiable list of class operations.
+	 *
 	 * @return Unmodifiable list of class operations.
 	 */
 	public List<UMLOperation> getOperations() {
@@ -186,8 +237,8 @@ public class UMLClass extends UMLClassifier {
 	 *     If the class does not contain the given operation, it returns -1.
 	 * </p>
 	 *
-	 * @param operation Searched operation
-	 * @return Position of operation
+	 * @param operation Searched operation.
+	 * @return Position of operation.
 	 */
 	public int getOperationPosition(UMLOperation operation) {
 		return this.classOperations.indexOf(operation);
