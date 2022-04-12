@@ -82,6 +82,8 @@
     </dependencies>
 
     <build>
+        <directory>${project.basedir}/build</directory>
+        <outputDirectory>${project.build.directory}/classes</outputDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -104,7 +106,7 @@
                         </goals>
                         <configuration>
                             <outputDirectory>
-                                ${project.build.directory}/lib
+                                lib
                             </outputDirectory>
                         </configuration>
                     </execution>
@@ -121,7 +123,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <classpathPrefix>${project.build.directory}/lib</classpathPrefix>
+                            <classpathPrefix>${project.basedir}/lib</classpathPrefix>
                             <mainClass>com.uml.AppLauncher</mainClass>
                         </manifest>
                     </archive>
