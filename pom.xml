@@ -111,6 +111,7 @@
                 <configuration>
                     <outputDirectory>dest</outputDirectory>
                     <alias>UML_designer</alias>
+                    <finalName>ija-app</finalName>
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
