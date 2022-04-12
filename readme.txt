@@ -1,4 +1,4 @@
-JA UML designer - README
+IJA UML designer - README
 --------------------------
 
 Pro překlad a spuštění aplikace je zapotřebí:
