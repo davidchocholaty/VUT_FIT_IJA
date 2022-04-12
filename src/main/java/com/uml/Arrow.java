@@ -1,3 +1,12 @@
+/**
+ * Project for course IJA at FIT BUT.
+ * <p>
+ *     Class representing relationship on frontend.
+ * </p>
+ * @author: David Chocholaty <xchoch09@stud.fit.vutbr.cz>
+ * @author: Adam Kankovsky <xkanko00@stud.fit.vutbr.cz>
+ */
+
 package com.uml;
 
 import com.uml.classdiagram.*;
@@ -11,6 +20,9 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Polyline;
 import javafx.util.Pair;
 
+/**
+ * Class represents arrow representing relationship in UML class diagram.
+ */
 public class Arrow extends Group {
     @FXML
     private final Polyline mainLine = new Polyline();
@@ -35,6 +47,18 @@ public class Arrow extends Group {
 
     //TODO delsi argument arrow scale
 
+    /**
+     * Creates new Arrow instance.
+     *
+     * @param x1 From x coordinate.
+     * @param y1 From y coordinate.
+     * @param x2 To x coordinate.
+     * @param y2 To y coordinate.
+     * @param arrowID Identifier of arrow.
+     * @param from From class.
+     * @param to To class.
+     * @param controller Current main controller.
+     */
     public Arrow(double x1, double y1, double x2, double y2, String arrowID, ClassUML from, ClassUML to, MainController controller){
         this.x1.set(x1);
         this.x2.set(x2);
@@ -121,6 +145,19 @@ public class Arrow extends Group {
         update();
     }
 
+    /**
+     * Creates new Arrow instance.
+     * <p>
+     *     This constructor is used for creating instance level relationships while loading saved class diagram.
+     * </p>
+     *
+     * @param from From class.
+     * @param to To class.
+     * @param controller Current main controler.
+     * @param fromText From multiplicity.
+     * @param toText To multiplicity.
+     * @param relType Relationship type (association, aggregation, composition).
+     */
     public Arrow(ClassUML from, ClassUML to, MainController controller, String fromText, String toText, String relType){
         this.x1.set(from.getView().getLayoutX());
         this.x2.set(to.getView().getLayoutX());
@@ -165,6 +202,17 @@ public class Arrow extends Group {
         update();
     }
 
+    /**
+     * Creates new Arrow instance.
+     * <p>
+     *     This constructor is used for creating class level relationships (inheritance)
+     *     while loading saved class diagram.
+     * </p>
+     * @param from From class.
+     * @param to To class.
+     * @param controller Current main controller.
+     * @param relType Relationship type (inheritance).
+     */
     public Arrow(ClassUML from, ClassUML to, MainController controller, String relType){
         this.x1.set(from.getView().getLayoutX());
         this.x2.set(to.getView().getLayoutX());
@@ -191,6 +239,18 @@ public class Arrow extends Group {
         update();
     }
 
+    /**
+     * Set multiplicity type from string.
+     * <p>
+     *     Possible conversions are: null -> UMLMultiplicityType.UNSPECIFIED, "0" -> UMLMultiplicityType.ZERO,
+     *     "0..1" -> UMLMultiplicityType.ZERO_OR_ONE, "1" -> UMLMultiplicityType.ONE,
+     *     "0..*" -> UMLMultiplicityType.ZERO_OR_MANY, "1..*" -> UMLMultiplicityType.ONE_OR_MANY.
+     * </p>
+     *
+     * @param relationship UML instance level relationship.
+     * @param fromMultiplicity From multiplicity String value to convert.
+     * @param toMultiplicity To multiplicity String value to convert.
+     */
     private void setMultiplicityTypes(UMLInstanceLevel relationship, String fromMultiplicity, String toMultiplicity) {
         /* From multiplicity */
         if (fromMultiplicity == null) {
@@ -239,6 +299,9 @@ public class Arrow extends Group {
         }
     }
 
+    /**
+     * Set arrow style for line and for end.
+     */
     private void setUpClassStyle() {
         mainLine.getStyleClass().setAll("arrow");
         dashedLine.getStyleClass().setAll("arrow");
@@ -251,6 +314,9 @@ public class Arrow extends Group {
         headC3.getStyleClass().setAll("arrow");
     }
 
+    /**
+     * Update arrow position.
+     */
     private void update(){
         double[] start = scale(x1.get(), y1.get(), x2.get(), y2.get());
         double[] end = scale(x2.get(), y2.get(), x1.get(), y1.get());
@@ -298,6 +364,15 @@ public class Arrow extends Group {
         relB.setTranslateY(y1);
     }
 
+    /**
+     * Calculate scale for relationship for visible indent.
+     *
+     * @param x2 x2 coordinate.
+     * @param y2 y2 coordinate.
+     * @param x1 x1 coordinate.
+     * @param y1 y1 coordinate.
+     * @return Returns an array with x and y scale.
+     */
     private double[] scaleRel(double x2, double y2, double x1, double y1) {
         double theta = Math.atan2(y2-y1, x2-x1);
         return new double[]{
@@ -306,6 +381,15 @@ public class Arrow extends Group {
         };
     }
 
+    /**
+     * Calculate scale for arrow to show indent of class block.
+     *
+     * @param x1 x1 coordinate.
+     * @param y1 y1 coordinate.
+     * @param x2 x2 coordinate.
+     * @param y2 y2 coordinate.
+     * @return Returns an array with x and y scale.
+     */
     private double[] scale(double x1, double y1, double x2, double y2){
         double theta = Math.atan2(y2-y1, x2-x1);
         return new double[]{
@@ -314,50 +398,110 @@ public class Arrow extends Group {
         };
     }
 
+    /**
+     * Get x1 coordinate.
+     *
+     * @return x1 coordinate.
+     */
     public double getX1() {
         return x1.get();
     }
 
+    /**
+     * Get x1 coordinate property.
+     *
+     * @return x1 property.
+     */
     public SimpleDoubleProperty x1Property() {
         return x1;
     }
 
+    /**
+     * Set x1 coordinate.
+     *
+     * @param x1 New value to x1 coordinate.
+     */
     public void setX1(double x1) {
         this.x1.set(x1);
     }
 
+    /**
+     * Get y1 coordinate.
+     *
+     * @return y1 coordinate.
+     */
     public double getY1() {
         return y1.get();
     }
 
+    /**
+     * Get y1 coordinate property.
+     *
+     * @return y1 property.
+     */
     public SimpleDoubleProperty y1Property() {
         return y1;
     }
 
+    /**
+     * Set y1 coordinate.
+     *
+     * @param y1 New value to y1 coordinate.
+     */
     public void setY1(double y1) {
         this.y1.set(y1);
     }
 
+    /**
+     * Get x2 coordinate.
+     *
+     * @return x2 coordinate.
+     */
     public double getX2() {
         return x2.get();
     }
 
+    /**
+     * Get x2 coordinate property.
+     *
+     * @return x2 property.
+     */
     public SimpleDoubleProperty x2Property() {
         return x2;
     }
 
+    /**
+     * Set x2 coordinate.
+     *
+     * @param x2 New value to x2 coordinate.
+     */
     public void setX2(double x2) {
         this.x2.set(x2);
     }
 
+    /**
+     * Get y2 coordinate.
+     *
+     * @return y2 coordinate.
+     */
     public double getY2() {
         return y2.get();
     }
 
+    /**
+     * Get y2 coordinate property.
+     *
+     * @return y2 property.
+     */
     public SimpleDoubleProperty y2Property() {
         return y2;
     }
 
+    /**
+     * Set y2 coordinate.
+     *
+     * @param y2 New value to y2 coordinate.
+     */
     public void setY2(double y2) {
         this.y2.set(y2);
     }
