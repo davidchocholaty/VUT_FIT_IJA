@@ -1,3 +1,12 @@
+/**
+ * Project for course IJA at FIT BUT.
+ * <p>
+ *     Class representing UML class on frontend of application.
+ * </p>
+ * @author: David Chocholaty <xchoch09@stud.fit.vutbr.cz>
+ * @author: Adam Kankovsky <xkanko00@stud.fit.vutbr.cz>
+ */
+
 package com.uml;
 
 import javafx.collections.FXCollections;
@@ -11,6 +20,9 @@ import java.io.IOException;
 
 import com.uml.classdiagram.UMLClass;
 
+/**
+ * Class represents UML class in class diagram on frontend.
+ */
 public class ClassUML extends Button{
     public Node view;
     public ObservableList<Arrow> edges = FXCollections.observableArrayList();
@@ -36,6 +48,15 @@ public class ClassUML extends Button{
 
     }
 
+    /**
+     * Creates and instance of ClassUML for current main controller.
+     *
+     * @param x Class x coordinate.
+     * @param y Class y coordinate.
+     * @param name Class name.
+     * @param controller Current main controller.
+     * @throws IOException FXMLLoader error.
+     */
     public ClassUML(double x, double y, String name, MainController controller) throws IOException {
         FXMLLoader loader = new FXMLLoader(App.class.getResource("class_uml.fxml"));
         Button loaded = loader.load();
@@ -55,18 +76,38 @@ public class ClassUML extends Button{
         loaded.setId(name);
     }
 
+    /**
+     * Get class controller.
+     *
+     * @return Class controller.
+     */
     public ClassController getController(){
         return this.controller;
     }
 
+    /**
+     * Get view of class.
+     *
+     * @return Returns view.
+     */
     public Node getView() {
         return view;
     }
 
+    /**
+     * Set view of class.
+     *
+     * @param view New view.
+     */
     public void setView(Node view) {
         this.view = view;
     }
 
+    /**
+     * Get current node.
+     *
+     * @return Returns current node.
+     */
     public Node getThis(){
         return (Node) this.getChildren();
     }

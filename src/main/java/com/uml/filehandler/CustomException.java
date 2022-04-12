@@ -1,7 +1,7 @@
 /**
  * Project for course IJA at FIT BUT.
  * <p>
- *     Enum representing UML visibility types.
+ *     Class representing custom exception.
  * </p>
  * @author: David Chocholaty <xchoch09@stud.fit.vutbr.cz>
  * @author: Adam Kankovsky <xkanko00@stud.fit.vutbr.cz>

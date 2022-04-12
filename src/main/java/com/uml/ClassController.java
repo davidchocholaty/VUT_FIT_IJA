@@ -1,3 +1,12 @@
+/**
+ * Project for course IJA at FIT BUT.
+ * <p>
+ *     Class representing class controller for frontend.
+ * </p>
+ * @author: David Chocholaty <xchoch09@stud.fit.vutbr.cz>
+ * @author: Adam Kankovsky <xkanko00@stud.fit.vutbr.cz>
+ */
+
 package com.uml;
 
 import com.uml.classdiagram.*;
@@ -15,6 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Class represents controller for classes on frontend.
+ */
 public class ClassController extends Parent{
     @FXML
     public Pane classBody;
@@ -30,16 +42,30 @@ public class ClassController extends Parent{
     @FXML
     public Label className;
 
+    /**
+     * Set parent controller.
+     *
+     * @param parentController New parent controller.
+     */
     public void setParentController(MainController parentController) {
         this.main = parentController;
     }
 
+    /**
+     * Initialize class frontend block for class name,
+     * class arguments and class operations.
+     */
     public void initialize(){
         className.getStyleClass().add("classHead");
         classArguments.getStyleClass().add("classBody");
         classMethods.getStyleClass().add("classBody");
     }
 
+    /**
+     * Add class name to frontend class block.
+     *
+     * @param event Action event.
+     */
     @FXML
     private void addClassNameAction(ActionEvent event){
         TextInputDialog dialog = new TextInputDialog();
@@ -62,7 +88,11 @@ public class ClassController extends Parent{
 
     }
 
-
+    /**
+     * Add class attribute into class frontend block.
+     *
+     * @param actionEvent Action event.
+     */
     public void addArgumentAction(ActionEvent actionEvent) {
 
         Dialog<Pair<String, String>> dialog = new Dialog<>();
@@ -95,8 +125,6 @@ public class ClassController extends Parent{
         grid.add(new Label("Default:"), 3, 0);
         grid.add(def, 3, 1);
 
-
-        // Convert the result to a username-password-pair when the login button is clicked.
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == loginButtonType) {
 
@@ -150,6 +178,11 @@ public class ClassController extends Parent{
 
     }
 
+    /**
+     * Add method into frontend class block.
+     *
+     * @param actionEvent Action event.
+     */
     public void addMethod(ActionEvent actionEvent) {
 
         Dialog<Pair<String, String>> dialog = new Dialog<>();
@@ -273,6 +306,11 @@ public class ClassController extends Parent{
         dialog.showAndWait();
     }
 
+    /**
+     * Show warning window with error message.
+     *
+     * @param message Error message.
+     */
     public void warning(String message){
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Warning");
