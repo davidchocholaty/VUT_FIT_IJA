@@ -21,6 +21,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <javafs.version>11.0.2</javafs.version>
         <junit.version>5.8.1</junit.version>
     </properties>
 
@@ -28,6 +29,11 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
+            <version>11.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
             <version>11.0.2</version>
         </dependency>
         <dependency>
@@ -88,6 +94,25 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.directory}/lib
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
@@ -96,8 +121,8 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <classpathPrefix>../build/classes</classpathPrefix>
-                            <mainClass>com.uml.App</mainClass>
+                            <classpathPrefix>${project.build.directory}/lib</classpathPrefix>
+                            <mainClass>com.uml.AppLauncher</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -112,7 +137,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.uml/com.uml.App
+                                com.uml.AppLauncher
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

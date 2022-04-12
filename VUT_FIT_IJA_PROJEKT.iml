@@ -30,5 +30,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-engine:5.8.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-engine:1.8.1" level="project" />
     <orderEntry type="library" name="Maven: de.jensd:fontawesomefx:8.9" level="project" />
+    <orderEntry type="library" name="openjfx.javafx.graphics" level="project" />
+    <orderEntry type="library" name="openjfx.javafx.maven.plugin" level="project" />
   </component>
 </module>
