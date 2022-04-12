@@ -4,10 +4,20 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.example</groupId>
-    <artifactId>VUT_FIT_IJA_PROJEKT</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <name>VUT_FIT_IJA_PROJEKT</name>
+    <profiles>
+        <profile>
+            <id>IJA_UML_designer</id>
+            <build>
+                <directory>build</directory>
+            </build>
+        </profile>
+    </profiles>
+
+    <packaging>jar</packaging>
+    <groupId>com.uml</groupId>
+    <artifactId>VUT_FIT_IJA</artifactId>
+    <version>1.0</version>
+    <name>IJA_UML_designer</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -74,6 +84,22 @@
                 <configuration>
                     <source>11</source>
                     <target>11</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <outputDirectory>dest</outputDirectory>
+                    <alias>UML_designer</alias>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>../build/classes</classpathPrefix>
+                            <mainClass>com.uml.App</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
             <plugin>

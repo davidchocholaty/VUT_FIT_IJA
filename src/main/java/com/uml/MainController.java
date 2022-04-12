@@ -51,6 +51,8 @@ public class MainController extends Parent {
     public ClassDiagram diagram = new ClassDiagram("Class diagram");
     /*************************************/
 
+    //todo spravit ukladani
+
     public void initialize() {
         group.getToggles().addAll(compositionButton, realizationButton, aggregationButton, classButton, arrowButton);
     }
@@ -381,5 +383,8 @@ public class MainController extends Parent {
         }else{
             return null;
         }
+    }
+
+    public void helpWindow(MouseEvent mouseEvent) {
     }
 }

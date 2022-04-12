@@ -36,3 +36,6 @@
 .toggle-button:selected{
     -fx-background-color: #FCA311;
 }
+.helpButton{
+    -fx-font-weight: bold;
+}

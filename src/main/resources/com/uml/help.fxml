@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="602.0" prefWidth="856.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox alignment="TOP_CENTER" prefHeight="140.0" prefWidth="856.0">
+         <children>
+            <Label alignment="TOP_CENTER" text="Help" textAlignment="CENTER" underline="true">
+               <font>
+                  <Font name="System Bold" size="42.0" />
+               </font>
+            </Label>
+            <HBox prefHeight="100.0" prefWidth="805.0">
+               <children>
+                  <Label text="Commisioned Buttons:">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="805.0">
+               <children>
+                  <ImageView fitHeight="150.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../images/icons8-file-30.png" />
+                     </image>
+                  </ImageView>
+                  <Label text=" - Load Button">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="805.0">
+               <children>
+                  <ImageView fitHeight="150.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../images/icons8-save-30.png" />
+                     </image>
+                  </ImageView>
+                  <Label text=" - Save button">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="805.0">
+               <children>
+                  <Label text="On the right side there is a menu for events with classes.">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label text="Working with classes:">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox prefHeight="91.0" prefWidth="856.0">
+               <children>
+                  <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../images/class.png" />
+                     </image>
+                  </ImageView>
+                  <VBox>
+                     <children>
+                        <Label text="- with the selected class button and after clicking on the free area, an empty class will be inserted." wrapText="true">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text=" - arguments and operations can be added with the right mouse click." wrapText="true">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="805.0">
+               <children>
+                  <Label>
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="805.0" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
