@@ -1,3 +1,12 @@
+/**
+ * Project for course IJA at FIT BUT.
+ * <p>
+ *     Enum representing UML visibility types.
+ * </p>
+ * @author: David Chocholaty <xchoch09@stud.fit.vutbr.cz>
+ * @author: Adam Kankovsky <xkanko00@stud.fit.vutbr.cz>
+ */
+
 package com.uml.filehandler;
 
 import com.uml.App;
@@ -17,7 +26,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/* https://mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/ */
+/**
+ * Class representing parser for input *.ijaxml or *.ixl files in xml format.
+ * <p>
+ *     The main goal of this class is parse input file and specific methods
+ *     for recreate frontend and backend structure saved in input file.
+ * </p>
+ */
 public class IJAXMLParser {
     private final String filePath;
     private Document doc;
@@ -27,6 +42,11 @@ public class IJAXMLParser {
     private MainController controller;
     private NodeList firstLevelList;
 
+    /**
+     * Creates a new instance of IJAXMLParser.
+     *
+     * @param filePath Path to file to be parsed.
+     */
     public IJAXMLParser(String filePath) {
         this.filePath = filePath;
         this.doc = null;
@@ -37,6 +57,20 @@ public class IJAXMLParser {
         this.firstLevelList = null;
     }
 
+    /**
+     * Main method for input file parsing.
+     * <p>
+     *     Method creates new app and prepare inner structure for following file parsing.
+     * </p>
+     *
+     * @throws ParserConfigurationException Parser configuration error.
+     * @throws SAXException Parser configuration error.
+     * @throws IOException Invalid input file path.
+     * @throws CustomException.IllegalFileExtension Invalid file extension.
+     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     * @throws NullPointerException Null pointer based on invalid file format.
+     * @throws NumberFormatException Invalid number format based on invalid file format.
+     */
     public void parse() throws ParserConfigurationException, SAXException,
             IOException, CustomException.IllegalFileExtension, CustomException.IllegalFileFormat,
             NullPointerException, NumberFormatException {
@@ -53,11 +87,9 @@ public class IJAXMLParser {
             DocumentBuilder db = dbf.newDocumentBuilder();
             this.doc = db.parse(new File(this.filePath));
 
-            /* http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work */
             this.doc.getDocumentElement().normalize();
 
             /* Create frontend app */
-
             App app = new App();
             app.start(new Stage());
             this.controller = app.getController();
@@ -80,6 +112,12 @@ public class IJAXMLParser {
         }
     }
 
+    /**
+     * Function returns an instance of ClassUML with the specified name.
+     *
+     * @param name Name of class.
+     * @return Found ClassUML instance. Null otherwise.
+     */
     private ClassUML getClassByName(String name) {
         for (ClassUML currentClass : this.diagramClasses) {
             if (currentClass.getView().getId().equals(name)) {
@@ -90,7 +128,18 @@ public class IJAXMLParser {
         return null;
     }
 
-    /* https://stackoverflow.com/questions/3571223/how-do-i-get-the-file-extension-of-a-file-in-java */
+    /*
+     * This method is based on code from following source.
+     *
+     * Source: https://stackoverflow.com/questions/3571223/how-do-i-get-the-file-extension-of-a-file-in-java
+     * Author: EboMike
+     * Editor: Tombart
+     */
+    /**
+     * Get file extension from input file path.
+     *
+     * @return File extension.
+     */
     private String getFileExtension() {
         String ext = "";
 
@@ -104,6 +153,14 @@ public class IJAXMLParser {
         return ext;
     }
 
+    /**
+     * Parse attribute of xml tag.
+     *
+     * @param node Input node to be parsed.
+     * @param attrName Expected xml tag attribute name.
+     * @return Value of xml tag attribute. Null otherwise.
+     * @throws CustomException.IllegalFileFormat Invalid xml tag attribute.
+     */
     private String parseXmlAttribute(Node node, String attrName) throws CustomException.IllegalFileFormat {
         String attrValue = null;
 
@@ -114,13 +171,21 @@ public class IJAXMLParser {
                     !nodeMap.item(0).getNodeName().equals(attrName)) {
                 throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             }
-             /* TODO attribute tag attribute name */
+
             attrValue = nodeMap.item(0).getNodeValue();
         }
 
         return attrValue;
     }
 
+    /**
+     * Parse saved diagram classes.
+     *
+     * @throws CustomException.IllegalFileFormat Invalid input file format.
+     * @throws NullPointerException Null pointer based on invalid file format.
+     * @throws NumberFormatException Invalid number format based on invalid file format.
+     * @throws IOException Error during writing on frontend.
+     */
     private void parseClasses() throws CustomException.IllegalFileFormat,
             NullPointerException, NumberFormatException, IOException {
         /* Iterate through classes */
@@ -149,6 +214,19 @@ public class IJAXMLParser {
         }
     }
 
+    /**
+     * Parse class children.
+     * <p>
+     *     As class children are parsed x and y coordinates, attributes and operations.
+     * </p>
+     *
+     * @param classNode Node of class to be parsed.
+     * @param attrValue Value of class tag name attribute.
+     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     * @throws NullPointerException Null pointer based on invalid file format.
+     * @throws NumberFormatException Invalid number format based on invalid file format.
+     * @throws IOException Error during writing on frontend.
+     */
     private void parseClassChildren(Node classNode, String attrValue) throws CustomException.IllegalFileFormat,
             NullPointerException, NumberFormatException, IOException {
         NodeList list = classNode.getChildNodes();
@@ -164,15 +242,15 @@ public class IJAXMLParser {
         node = list.item(this.secondLevelOrder);
         this.secondLevelOrder += 2;
 
-/*
+        /*
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("abstract")) {
                 throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             } else {
-                // TODO abstract tag
+
             }
         }
-*/
+        */
 
         /* xCoordinate tag */
         node = list.item(this.secondLevelOrder);
@@ -206,22 +284,30 @@ public class IJAXMLParser {
         /* visibility tag */
         node = list.item(this.secondLevelOrder);
         this.secondLevelOrder += 2;
+
         /*
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("visibility")) {
                 throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             } else {
-                // TODO visibility tag
+
             }
         }
         */
-        // attributes tags
+
+        /* Attributes tags */
         parseAttributes(list);
 
-        // operations tags
+        /* Operations tags */
         parseOperations(list);
     }
 
+    /**
+     * Parse class attributes.
+     *
+     * @param list List of class attributes.
+     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     */
     private void parseAttributes(NodeList list) throws CustomException.IllegalFileFormat {
         Node node;
 
@@ -248,6 +334,13 @@ public class IJAXMLParser {
         }
     }
 
+    /**
+     * Parse data type tag.
+     *
+     * @param node Data type node.
+     * @return Parsed data type. Null otherwise.
+     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     */
     private String parseDataTypeTag(Node node) throws CustomException.IllegalFileFormat {
         String dataType = null;
         if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -261,6 +354,13 @@ public class IJAXMLParser {
         return dataType;
     }
 
+    /**
+     * Parse visibility tag.
+     *
+     * @param node Visibility node.
+     * @return Parset visibility. Null otherwise.
+     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     */
     private String parseVisibilityTag(Node node) throws CustomException.IllegalFileFormat {
         String visibility = null;
 
@@ -275,6 +375,13 @@ public class IJAXMLParser {
         return visibility;
     }
 
+    /**
+     * Parse value tag (default value).
+     *
+     * @param node Value node.
+     * @return Attribute default value. Null otherwise.
+     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     */
     private String parseValueTag(Node node) throws CustomException.IllegalFileFormat {
         String value = null;
 
@@ -289,6 +396,16 @@ public class IJAXMLParser {
         return value;
     }
 
+    /**
+     * Converts inner string representation of visibility to convention format.
+     * <p>
+     *     Possible converts are: "UNSPECIFIED" -> "", "PUBLIC" -> "+", "PRIVATE", -> "-",
+     *     "PROTECTED" -> "#", "PACKAGE" -> "~".
+     * </p>
+     *
+     * @param visibility Input inner representation string of visibility.
+     * @return Convention version of visibility type. Null otherwise.
+     */
     private String visibility2SingleChar(String visibility) {
         String visibilitySingleChar = null;
 
@@ -315,6 +432,16 @@ public class IJAXMLParser {
         return visibilitySingleChar;
     }
 
+    /**
+     * Parse attribute children.
+     * <p>
+     *     As attribute children is parsed data type, visibility and default value.
+     * </p>
+     *
+     * @param attrNode Attribute node.
+     * @param attrValue Attribute name.
+     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     */
     private void parseAttributeChildren(Node attrNode, String attrValue) throws CustomException.IllegalFileFormat {
         NodeList list = attrNode.getChildNodes();
         Node node;
@@ -355,6 +482,12 @@ public class IJAXMLParser {
         this.controller.addAttribute(cls, attrValue, dataType, visibility, value);
     }
 
+    /**
+     * Parse class operation.
+     *
+     * @param list List of class operations.
+     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     */
     private void parseOperations(NodeList list) throws CustomException.IllegalFileFormat {
         Node node;
 
@@ -381,6 +514,16 @@ public class IJAXMLParser {
         }
     }
 
+    /**
+     * Parse operation children.
+     * <p>
+     *     As operation children is parsed return data type and visibility.
+     * </p>
+     *
+     * @param operNode Operation node.
+     * @param attrValue Operation tag name attribute value.
+     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     */
     private void parseOperationChildren(Node operNode, String attrValue) throws CustomException.IllegalFileFormat {
         NodeList list = operNode.getChildNodes();
         Node node;
@@ -412,6 +555,16 @@ public class IJAXMLParser {
         parseOperationAttributesTags(list, idx, attrValue, retDataType, visibility);
     }
 
+    /**
+     * Parse operation arguments.
+     *
+     * @param list List of operation attributes.
+     * @param idx Index in list of operation children.
+     * @param operName Operation name.
+     * @param operRetDataType Operation return data type.
+     * @param operVisibility Operation visibility.
+     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     */
     private void parseOperationAttributesTags(NodeList list,
                                               int idx,
                                               String operName,
@@ -452,6 +605,13 @@ public class IJAXMLParser {
         this.controller.addOperation(cls, operName, params.toString(), operRetDataType, operVisibility);
     }
 
+    /**
+     * Parse operation argument.
+     *
+     * @param attrNode Attribute node.
+     * @return Data type of an attribute.
+     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     */
     private String parseOperationArgument(Node attrNode) throws CustomException.IllegalFileFormat {
         NodeList list = attrNode.getChildNodes();
         Node node;
@@ -471,7 +631,14 @@ public class IJAXMLParser {
     }
 
     /*--------------------------------------------------------------------------*/
+    /*                            RELATIONSHIPS                                 */
+    /*--------------------------------------------------------------------------*/
 
+    /**
+     * Parse saved diagram relationships.
+     *
+     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     */
     private void parseRelationships() throws CustomException.IllegalFileFormat {
         /* Iterate through relationships */
         Node node;
@@ -501,6 +668,16 @@ public class IJAXMLParser {
         }
     }
 
+    /**
+     * Parse relationship children.
+     * <p>
+     *     As relationship children are parsed from and to classes and
+     *     type of relationship (class level or instance level).
+     * </p>
+     *
+     * @param relNode Relationship node.
+     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     */
     private void parseRelationshipChildren(Node relNode) throws CustomException.IllegalFileFormat {
         NodeList list = relNode.getChildNodes();
         Node node;
@@ -555,6 +732,14 @@ public class IJAXMLParser {
         }
     }
 
+    /**
+     * Parse class level tag children.
+     *
+     * @param classLevel Class level node.
+     * @param from From class.
+     * @param to To class.
+     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     */
     private void parseClassLevel(Node classLevel, String from, String to) throws CustomException.IllegalFileFormat {
         NodeList list = classLevel.getChildNodes();
         int expectedListLen = 3;
@@ -567,6 +752,16 @@ public class IJAXMLParser {
         }
     }
 
+    /**
+     * Parse inheritance tag.
+     * <p>
+     *     This method create specific method that creates inheritance relationship on frontend and in backend too.
+     * </p>
+     *
+     * @param from From class.
+     * @param to To class.
+     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     */
     private void parseInheritanceTag(String from, String to) throws CustomException.IllegalFileFormat {
         ClassUML clsFrom = getClassByName(from);
         ClassUML clsTo = getClassByName(to);
@@ -578,6 +773,16 @@ public class IJAXMLParser {
         this.controller.createAndAddRelationship(clsFrom, clsTo, "inheritance");
     }
 
+    /**
+     * Converts inner string representation of multiplicity to convention string type.
+     * <p>
+     *     Possible conversion are: "UNSPECIFIED" -> "", "ZERO" -> "0", "ZERO_OR_ONE" -> "0..1",
+     *     "ONE" -> "1", "ZERO_OR_MANY" -> "0..*", "ONE_OR_MANY" -> "1..*".
+     * </p>
+     *
+     * @param multiplicity Inner string representation of multiplicity.
+     * @return Convention string type of multiplicity. Null otherwise.
+     */
     private String multiplicityStrToChars(String multiplicity) {
         String multiplicityChars = null;
 
@@ -607,18 +812,30 @@ public class IJAXMLParser {
         return multiplicityChars;
     }
 
+    /**
+     * Parse all instance level relationships (association, aggregation and composition).
+     *
+     * @param instanceLevel Instance level node.
+     * @param from From class.
+     * @param to To class.
+     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     */
     private void parseInstanceLevel(Node instanceLevel, String from, String to) throws CustomException.IllegalFileFormat {
         NodeList list = instanceLevel.getChildNodes();
         Node node;
         String fromMultiplicity = null;
         String toMultiplicity = null;
         int idx = 1;
-        //final int instLevelTagsCnt = 5;
 
-        //if (list.getLength() != instLevelTagsCnt) {
-        //    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
-        //} else {
-            /* fromMultiplicity */
+        /*
+        final int instLevelTagsCnt = 5;
+
+        if (list.getLength() != instLevelTagsCnt) {
+            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+        } else {
+        */
+
+        /* fromMultiplicity */
         node = list.item(idx);
         idx += 2;
 
@@ -665,27 +882,27 @@ public class IJAXMLParser {
         /* fromRole */
         node = list.item(idx);
         idx += 2;
-/*
+        /*
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("fromRole")) {
                 throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             } else {
-                // TODO
+
             }
         }
-*/
+        */
         /* toRole */
         node = list.item(idx);
         idx += 2;
-/*
+        /*
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("toRole")) {
                 throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             } else {
-                // TODO
+
             }
         }
-*/
+        */
 
         ClassUML clsFrom = getClassByName(from);
         ClassUML clsTo = getClassByName(to);
@@ -715,6 +932,5 @@ public class IJAXMLParser {
                     throw new CustomException.IllegalFileFormat("Invalid file syntax.");
             }
         }
-        //}
     }
 }

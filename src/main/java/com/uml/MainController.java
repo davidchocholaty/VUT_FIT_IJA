@@ -146,7 +146,7 @@ public class MainController extends Parent {
     public void addAttribute(ClassUML uml,String name, String dataType, String modifier, String value){
         ClassController controller = uml.getController();
 
-        UMLClass cls = this.diagram.findClass(MainController.tmpNode.getView().getId());
+        UMLClass cls = this.diagram.findClass(uml.getView().getId());
         UMLDataType type = this.diagram.dataTypeForName(dataType);
         UMLAttribute attr = new UMLAttribute(name, type);
 
@@ -183,7 +183,7 @@ public class MainController extends Parent {
     public void addOperation(ClassUML uml, String name, String parameters, String ret, String modifier){
         ClassController controller = uml.getController();
 
-        UMLClass cls = this.diagram.findClass(MainController.tmpNode.getView().getId());
+        UMLClass cls = this.diagram.findClass(uml.getView().getId());
         UMLDataType retDataType = this.diagram.dataTypeForName(ret);
         List<UMLAttribute> classAttributes = new ArrayList<UMLAttribute>();
 
@@ -226,6 +226,8 @@ public class MainController extends Parent {
                     break;
             }
         }
+
+        cls.addOperation(operation);
 
         if(controller.classMethods.getText().equals("")){
             controller.classMethods.setText(controller.classMethods.getText() + ((modifier.equals("")) ? "" : modifier) + " " + name + ((parameters.equals("")) ? "()" : " ( " + parameters + " ) ") + ((ret.equals("")) ? "" : " : " + ret));

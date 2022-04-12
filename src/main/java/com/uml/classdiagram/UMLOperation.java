@@ -103,6 +103,11 @@ public class UMLOperation extends UMLAttribute {
 		return false;
 	}
 
+	/**
+	 * Creates an instance of the UML operation with default name and inserts it into the diagram.
+	 *
+	 * @return New default UMLOperation instance.
+	 */
 	public static UMLOperation createDefault() {
 		UMLOperation newOperation = new UMLOperation(null, UMLDataType.forName("None"));
 		newOperation.setDefaultName();
@@ -110,6 +115,12 @@ public class UMLOperation extends UMLAttribute {
 		return newOperation;
 	}
 
+	/**
+	 * Creates an instance of the UML operation with default name and arguments and inserts it into the diagram.
+	 *
+	 * @param args Operation arguments.
+	 * @return New default UMLOperation instance.
+	 */
 	public static UMLOperation createDefault(UMLAttribute... args) {
 		UMLOperation newOperation = create(null, UMLDataType.forName("None"), args);
 		newOperation.setDefaultName();
@@ -135,6 +146,12 @@ public class UMLOperation extends UMLAttribute {
 		defaultOperationId++;
 	}
 
+	/**
+	 * Returns a string representing the operation
+	 * in the form "operationName(arg1 : dataType1, arg : dataType2, etc.)"
+	 *
+	 * @return String representing the operation.
+	 */
 	@Override
 	public String toString() {
 		StringBuilder str = new StringBuilder();

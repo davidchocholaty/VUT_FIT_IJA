@@ -50,8 +50,6 @@ public class ClassController extends Parent{
 
         Optional<String> name = dialog.showAndWait();
 
-        System.out.println(MainController.tmpNode.getView().getId());
-
         name.ifPresent(s -> {
             if (main.diagram.setNewClassName(MainController.tmpNode.getView().getId(),s)) {
                 this.className.setText(s);
