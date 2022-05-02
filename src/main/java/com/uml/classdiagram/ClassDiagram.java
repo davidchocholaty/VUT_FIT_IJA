@@ -164,6 +164,59 @@ public class ClassDiagram extends Element {
 		}
 	}
 
+	public boolean isOverridenMethod(UMLClass operationClass, UMLOperation operation) {
+		List<UMLAttribute> currentOperationArguments;
+		List<UMLAttribute> operationArguments;
+		boolean isOverriden;
+		boolean identicalArguments;
+
+		operationArguments = operation.getArguments();
+
+		// List through all relationships.
+		for (UMLRelationship currentRelationship : diagramRelationships) {
+			// If the operationClass is TO class of current relationship
+			// and the type of relationship is inheritance.
+			if (currentRelationship.getFrom().equals(operationClass) &&
+					currentRelationship instanceof UMLInheritance) {
+				// List through class operations.
+				for (UMLOperation currentOperation : currentRelationship.getTo().getOperations()) {
+					if (currentOperation.getName().equals(operation.getName()) &&
+							currentOperation.getType().equals(operation.getType())) {
+						// Operations names and return types are identical.
+						currentOperationArguments = currentOperation.getArguments();
+
+						if (currentOperationArguments.size() == operationArguments.size()) {
+							// Count of parameters is the same.
+							identicalArguments = true;
+
+							for (int i = 0; i < currentOperationArguments.size(); i++) {
+								// Types of arguments are not the same.
+								if (!currentOperationArguments.get(i).getType().equals(operationArguments.get(i).getType())) {
+									identicalArguments = false;
+									break;
+								}
+							}
+
+							if (identicalArguments) {
+								return true;
+							}
+						}
+					}
+				}
+
+				// Overriden method was not found in current class.
+				// Check the parent classes to see if this is their method.
+				isOverriden = isOverridenMethod(currentRelationship.getTo(), operation);
+
+				if (isOverriden) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
 	/**
 	 * Creates an instance of the UML interface and inserts it into the diagram.
 	 * <p>
