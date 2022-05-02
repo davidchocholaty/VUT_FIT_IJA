@@ -10,6 +10,7 @@
 package com.uml.filehandler;
 
 import com.uml.classdiagram.*;
+import com.uml.sequencediagram.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -25,6 +26,8 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -34,70 +37,83 @@ import java.util.List;
  * </p>
  */
 public class SaveHandler {
-    private final ClassDiagram diagram;
+    private final ClassDiagram classDiagram;
+    private List<SequenceDiagram> sequenceDiagrams;
     private Document doc;
 
     /**
      * Creates a new instance of SaveHandler.
      *
-     * @param diagram Class diagram.
+     * @param classDiagram Class diagram.
+     * @param sequenceDiagrams Sequence diagrams.
      */
-    public SaveHandler(ClassDiagram diagram) {
-        this.diagram = diagram;
+    public SaveHandler(ClassDiagram classDiagram, SequenceDiagram... sequenceDiagrams) {
+        this.classDiagram = classDiagram;
+        this.sequenceDiagrams = new ArrayList<SequenceDiagram>();
         doc = null;
+
+        Collections.addAll(this.sequenceDiagrams, sequenceDiagrams);
     }
 
-    /**
-     * Main method for class diagram saving.
-     *
-     * @param destPath Output file destination path.
-     * @throws ParserConfigurationException Parser configuration error.
-     * @throws FileNotFoundException File wasn't found (FileOutputStream).
-     * @throws TransformerException Transformer error.
-     */
-    public void saveClassDiagram(String destPath) throws ParserConfigurationException,
-            FileNotFoundException, TransformerException {
+    public void save(String destPath) throws ParserConfigurationException, FileNotFoundException, TransformerException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = dbf.newDocumentBuilder();
         this.doc = docBuilder.newDocument();
 
-        Element rootElement = this.doc.createElement("classDiagram");
+        Element rootElement = this.doc.createElement("ijaUml");
         this.doc.appendChild(rootElement);
-        rootElement.setAttribute("name", this.diagram.getName());
 
-        List<UMLClass> diagramClasses = this.diagram.getClasses();
-        List<UMLRelationship> diagramRelationships = this.diagram.getRelationships();
-
-        addClassTags(rootElement, diagramClasses);
-        addRelationshipsTags(rootElement, diagramRelationships);
+        this.saveClassDiagram(rootElement);
+        this.saveSequenceDiagrams(rootElement);
 
         FileOutputStream output = new FileOutputStream(destPath);
         writeXml(this.doc, output);
     }
 
+    /*-------------------------------------------------------------------------------------------------*/
+    /*                                          CLASS DIAGRAM                                          */
+    /*-------------------------------------------------------------------------------------------------*/
+
+    /**
+     * Main method for class diagram saving.
+     *
+     * @param rootElement Root element.
+     */
+    private void saveClassDiagram(Element rootElement) {
+        Element classDiagramElement = this.doc.createElement("classDiagram");
+        rootElement.appendChild(classDiagramElement);
+        classDiagramElement.setAttribute("name", this.classDiagram.getName());
+
+        List<UMLClass> diagramClasses = this.classDiagram.getClasses();
+        List<UMLRelationship> diagramRelationships = this.classDiagram.getRelationships();
+
+        addClassTags(classDiagramElement, diagramClasses);
+        addRelationshipsTags(classDiagramElement, diagramRelationships);
+    }
+
     /**
      * Add all diagram classes tags.
      *
-     * @param rootElement Root element.
+     * @param classDiagramElement Class element.
      * @param diagramClasses Classes of diagram.
      */
-    private void addClassTags(Element rootElement, List<UMLClass> diagramClasses) {
+    private void addClassTags(Element classDiagramElement, List<UMLClass> diagramClasses) {
         /* Iterate through classes */
         for (UMLClass currentClass : diagramClasses) {
-            addClassTag(rootElement, currentClass);
+            addClassTag(classDiagramElement, currentClass);
         }
     }
 
     /**
      * Add all diagram relationships tags.
      *
-     * @param rootElement Root element.
+     * @param classDiagramElement Class element.
      * @param diagramRelationships Relationships of diagram.
      */
-    private void addRelationshipsTags(Element rootElement, List<UMLRelationship> diagramRelationships) {
+    private void addRelationshipsTags(Element classDiagramElement, List<UMLRelationship> diagramRelationships) {
         /* Iterate through relationships */
         for (UMLRelationship currentRel : diagramRelationships) {
-            addRelationshipTag(rootElement, currentRel);
+            addRelationshipTag(classDiagramElement, currentRel);
         }
     }
 
@@ -132,15 +148,15 @@ public class SaveHandler {
     /**
      * Add class tag.
      *
-     * @param rootElement Root element.
+     * @param classDiagramElement Class diagram element.
      * @param currentClass Current class to be saved.
      */
-    private void addClassTag(Element rootElement, UMLClass currentClass) {
+    private void addClassTag(Element classDiagramElement, UMLClass currentClass) {
         Element diagramClass;
 
         /* Create class tag */
         diagramClass = this.doc.createElement("class");
-        rootElement.appendChild(diagramClass);
+        classDiagramElement.appendChild(diagramClass);
         diagramClass.setAttribute("name", currentClass.getName());
 
         addAbstractTag(diagramClass, currentClass);
@@ -306,15 +322,15 @@ public class SaveHandler {
     /**
      * Add relationship tag.
      *
-     * @param rootElement Root element.
+     * @param classDiagramElement Root element.
      * @param currentRel Current relationship.
      */
-    private void addRelationshipTag(Element rootElement, UMLRelationship currentRel) {
+    private void addRelationshipTag(Element classDiagramElement, UMLRelationship currentRel) {
         Element diagramRel;
 
         /* Create relationship tag */
         diagramRel = this.doc.createElement("relationship");
-        rootElement.appendChild(diagramRel);
+        classDiagramElement.appendChild(diagramRel);
         diagramRel.setAttribute("id", Long.toString(currentRel.getId()));
 
         addFromTag(diagramRel, currentRel);
@@ -511,6 +527,198 @@ public class SaveHandler {
         instanceLevel.appendChild(composition);
     }
 
+
+    /*-------------------------------------------------------------------------------------------------*/
+    /*                                        SEQUENCE DIAGRAM                                         */
+    /*-------------------------------------------------------------------------------------------------*/
+
+    private void saveSequenceDiagrams(Element rootElement) {
+        Element sequenceDiagramElement;
+
+        for (SequenceDiagram currentSequenceDiagram : this.sequenceDiagrams) {
+            sequenceDiagramElement = this.doc.createElement("sequenceDiagram");
+            rootElement.appendChild(sequenceDiagramElement);
+            sequenceDiagramElement.setAttribute("name", currentSequenceDiagram.getName());
+
+            List<UMLLifeline> diagramLifelines = currentSequenceDiagram.getLifelines();
+            List<UMLMessage> diagramMessages = currentSequenceDiagram.getMessages();
+
+            addLifelinesTags(sequenceDiagramElement, diagramLifelines);
+            addMessagesTags(sequenceDiagramElement, diagramMessages);
+        }
+    }
+
+    private void addLifelinesTags(Element sequenceDiagramElement,
+                                  List<UMLLifeline> diagramLifelines) {
+        for (UMLLifeline currentLifeline : diagramLifelines) {
+            addLifelineTag(sequenceDiagramElement, currentLifeline);
+        }
+    }
+
+    private void addLifelineTag(Element sequenceDiagramElement, UMLLifeline currentLifeline) {
+        Element diagramLifeline;
+
+        /* Create lifeline tag */
+        diagramLifeline = this.doc.createElement("lifeline");
+        sequenceDiagramElement.appendChild(diagramLifeline);
+        diagramLifeline.setAttribute("name", currentLifeline.getObjectClass().getName());
+        diagramLifeline.setAttribute("id", Long.toString(currentLifeline.getId()));
+
+        addHeightTag(diagramLifeline, currentLifeline);
+        addXCoordinateTag(diagramLifeline, currentLifeline);
+    }
+
+    private void addHeightTag(Element diagramLifeline, UMLLifeline currentLifeline) {
+        Element height;
+
+        /* height tag */
+        height = this.doc.createElement("height");
+        diagramLifeline.appendChild(height);
+        height.setTextContent(Double.toString(currentLifeline.getHeight()));
+    }
+
+    private void addXCoordinateTag(Element diagramLifeline, UMLLifeline currentLifeline) {
+        Element xCoordinate;
+
+        /* xCoordinate tag */
+        xCoordinate = this.doc.createElement("xCoordinate");
+        diagramLifeline.appendChild(xCoordinate);
+        xCoordinate.setTextContent(Double.toString(currentLifeline.getXCoordinate()));
+    }
+
+    private void addMessagesTags(Element sequenceDiagramElement,
+                                 List<UMLMessage> diagramMessages) {
+        for (UMLMessage currentMessage : diagramMessages) {
+            addMessageTag(sequenceDiagramElement, currentMessage);
+        }
+    }
+
+    private void addMessageTag(Element sequenceDiagramElement, UMLMessage currentMessage) {
+        Element diagramMessage;
+
+        /* Create message tag */
+        diagramMessage = this.doc.createElement("message");
+        sequenceDiagramElement.appendChild(diagramMessage);
+        diagramMessage.setAttribute("name", currentMessage.getLabel());
+        diagramMessage.setAttribute("id", Long.toString(currentMessage.getId()));
+
+        addFromTag(diagramMessage, currentMessage);
+        addToTag(diagramMessage, currentMessage);
+        addYCoordinateTag(diagramMessage, currentMessage);
+
+        if (currentMessage instanceof UMLMessageLabelType) {
+            addLabelTypeTag(diagramMessage, currentMessage);
+        } else {
+            addOperationTypeTag(diagramMessage, currentMessage);
+        }
+    }
+
+    private void addFromTag(Element diagramMessage, UMLMessage currentMessage) {
+        Element from;
+
+        /* from tag */
+        from = this.doc.createElement("from");
+        diagramMessage.appendChild(from);
+        from.setTextContent(currentMessage.getFromLifeline().getObjectClass().getName());
+    }
+
+    private void addToTag(Element diagramMessage, UMLMessage currentMessage) {
+        Element to;
+
+        /* to tag */
+        to = this.doc.createElement("to");
+        diagramMessage.appendChild(to);
+        to.setTextContent(currentMessage.getFromLifeline().getObjectClass().getName());
+    }
+
+    private void addYCoordinateTag(Element diagramMessage, UMLMessage currentMessage) {
+        Element yCoordinate;
+
+        /* yCoordinate tag */
+        yCoordinate = this.doc.createElement("yCoordinate");
+        diagramMessage.appendChild(yCoordinate);
+        yCoordinate.setTextContent(Double.toString(currentMessage.getYCoordinate()));
+    }
+
+    private void addLabelTypeTag(Element diagramMessage, UMLMessage currentMessage) {
+        Element labelType;
+
+        /* labelType tag */
+        labelType = this.doc.createElement("labelType");
+        diagramMessage.appendChild(labelType);
+
+        if (currentMessage instanceof UMLReturnMessage) {
+            addReturnMessageTag(labelType);
+        } else if (currentMessage instanceof UMLDestroyMessage) {
+            addDestroyMessageTag(labelType);
+        }
+    }
+
+    private void addReturnMessageTag(Element labelType) {
+        Element returnMessage;
+
+        /* returnMessage tag */
+        returnMessage = this.doc.createElement("returnMessage");
+        labelType.appendChild(returnMessage);
+    }
+
+    private void addDestroyMessageTag(Element labelType) {
+        Element destroyMessage;
+
+        /* destroyMessage tag */
+        destroyMessage = this.doc.createElement("destroyMessage");
+        labelType.appendChild(destroyMessage);
+    }
+
+    private void addOperationTypeTag(Element diagramMessage, UMLMessage currentMessage) {
+        Element operationType;
+
+        /* operationType tag */
+        operationType = this.doc.createElement("operationType");
+        diagramMessage.appendChild(operationType);
+
+        if (currentMessage instanceof UMLSynchronousMessage) {
+            addSynchronousMessageTag(operationType);
+        } else if (currentMessage instanceof UMLAsynchronousMessage) {
+            addAsynchronousMessageTag(operationType);
+        } else if (currentMessage instanceof UMLSelfMessage) {
+            addSelfMessageTag(operationType);
+        } else if (currentMessage instanceof UMLCreateMessage) {
+            addCreateMessageTag(operationType);
+        }
+    }
+
+    private void addSynchronousMessageTag(Element operationType) {
+        Element synchronousMessage;
+
+        /* synchronousMessage tag */
+        synchronousMessage = this.doc.createElement("synchronousMessage");
+        operationType.appendChild(synchronousMessage);
+    }
+
+    private void addAsynchronousMessageTag(Element operationType) {
+        Element asynchronousMessage;
+
+        /* asynchronousMessage tag */
+        asynchronousMessage = this.doc.createElement("asynchronousMessage");
+        operationType.appendChild(asynchronousMessage);
+    }
+
+    private void addSelfMessageTag(Element operationType) {
+        Element selfMessage;
+
+        /* selfMessage tag */
+        selfMessage = this.doc.createElement("selfMessage");
+        operationType.appendChild(selfMessage);
+    }
+
+    private void addCreateMessageTag(Element operationType) {
+        Element createMessage;
+
+        /* createMessage tag */
+        createMessage = this.doc.createElement("createMessage");
+        operationType.appendChild(createMessage);
+    }
 
     /*-----------------------------------------------------------------------------*/
     /*                                  Write xml                                  */

@@ -106,6 +106,22 @@ public class SequenceDiagram extends Element {
 		return newSelfMessage;
 	}
 
+	public UMLCreateMessage createCreateMessage(UMLLifeline fromLifeline,
+												UMLLifeline toLifeline,
+												String[] operationArguments) throws InvalidOperationLabel {
+		UMLCreateMessage newCreateMessage = new UMLCreateMessage(fromLifeline, toLifeline);
+
+		boolean exitSuccess = newCreateMessage.setOperation(null, operationArguments);
+
+		if (!exitSuccess) {
+			throw new InvalidOperationLabel("Invalid create message operation arguments.");
+		}
+
+		this.diagramMessages.add(newCreateMessage);
+
+		return newCreateMessage;
+	}
+
 	public UMLReturnMessage createReturnMessage(UMLLifeline fromLifeline,
 	                                            UMLLifeline toLifeline,
 												String label) {
@@ -113,15 +129,6 @@ public class SequenceDiagram extends Element {
 		this.diagramMessages.add(newReturnMessage);
 
 		return newReturnMessage;
-	}	
-
-	public UMLCreateMessage createCreateMessage(UMLLifeline fromLifeline,
-	                                            UMLLifeline toLifeline,
-											    String label) {
-		UMLCreateMessage newCreateMessage = new UMLCreateMessage(fromLifeline, toLifeline, label);
-		this.diagramMessages.add(newCreateMessage);
-
-		return newCreateMessage;
 	}
 
 	public UMLDestroyMessage createDestroyMessage(UMLLifeline fromLifeline,
