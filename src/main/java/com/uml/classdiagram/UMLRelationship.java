@@ -13,7 +13,7 @@ package com.uml.classdiagram;
 /**
  * A class represents a relationship that has start UMLClass (from) and end UMLClass (to).
  * <p>
- *     For identifying relationship it has unique identifier in class diagram.
+ *     For identifying relationship it has an unique identifier in class diagram.
  * </p>
  */
 public abstract class UMLRelationship extends Element {
