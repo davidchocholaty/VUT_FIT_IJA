@@ -37,10 +37,12 @@ import java.util.List;
 public class IJAXMLParser {
     private final String filePath;
     private Document doc;
+    private int zeroLevelOrder;
     private int firstLevelOrder;
     private int secondLevelOrder;
     private List<ClassUML> diagramClasses;
     private MainController controller;
+    private NodeList zeroLevelList;
     private NodeList firstLevelList;
 
     /**
@@ -51,10 +53,12 @@ public class IJAXMLParser {
     public IJAXMLParser(String filePath) {
         this.filePath = filePath;
         this.doc = null;
+        this.zeroLevelOrder = 1;
         this.firstLevelOrder = 1;
         this.secondLevelOrder = 1;
         this.diagramClasses = new ArrayList<ClassUML>();
         this.controller = null;
+        this.zeroLevelList = null;
         this.firstLevelList = null;
     }
 
@@ -90,6 +94,11 @@ public class IJAXMLParser {
 
             this.doc.getDocumentElement().normalize();
 
+            /* If the root element is invalid. */
+            if (!doc.getDocumentElement().getNodeName().equals("ijaUml")) {
+                throw new IllegalFileFormat("Invalid root element.");
+            }
+
             /* Create frontend app */
             App app = new App();
             app.start(new Stage());
@@ -97,18 +106,69 @@ public class IJAXMLParser {
 
             if (this.doc.hasChildNodes()) {
                 NodeList list = this.doc.getChildNodes();
-                /*
-                if (list.getLength() != 1 || !list.item(0).getNodeName().equals("classDiagram")) {
 
-                } else {
+                this.zeroLevelList = list.item(0).getChildNodes();
 
+                /* Iterate through diagrams */
+                Node node;
+
+                /* Class diagram*/
+                while (this.zeroLevelOrder < this.zeroLevelList.getLength()) {
+                    node = this.zeroLevelList.item(this.zeroLevelOrder);
+
+                    if (node.getNodeType() == Node.ELEMENT_NODE) {
+                        if (!node.getNodeName().equals("classDiagram")) {
+                            break;
+                        }
+
+                        if (this.zeroLevelOrder > 1) {
+                            throw new IllegalFileFormat("Multiple class diagram occurence.");
+                        }
+
+                        String attrValue = parseXmlAttribute(node, "name");
+
+                        if (attrValue == null) {
+                            throw new IllegalFileFormat("Missing class diagram name.");
+                        }
+
+                        if (node.hasChildNodes()) {
+                            this.firstLevelList = node.getChildNodes();
+                            this.firstLevelOrder = 1;
+
+                            parseClasses();
+                            parseRelationships();
+                        }
+                    }
+
+                    this.zeroLevelOrder += 2;
                 }
-                */
 
-                this.firstLevelList = list.item(0).getChildNodes();
+                /* Sequence diagrams */
+                while (this.zeroLevelOrder < this.zeroLevelList.getLength()) {
+                    node = this.zeroLevelList.item(this.zeroLevelOrder);
 
-                parseClasses();
-                parseRelationships();
+                    if (node.getNodeType() == Node.ELEMENT_NODE) {
+                        if (!node.getNodeName().equals("sequenceDiagram")) {
+                            throw new IllegalFileFormat("Invalid diagram tag.");
+                        }
+
+                        String attrValue = parseXmlAttribute(node, "name");
+
+                        if (attrValue == null) {
+                            throw new IllegalFileFormat("Missing sequence diagram name.");
+                        }
+
+                        if (node.hasChildNodes()) {
+                            this.firstLevelList = node.getChildNodes();
+                            this.firstLevelOrder = 1;
+
+                            parseLifelines();
+                            parseMessages();
+                        }
+                    }
+
+                    this.zeroLevelOrder += 2;
+                }
             }
         }
     }
@@ -178,6 +238,10 @@ public class IJAXMLParser {
 
         return attrValue;
     }
+
+    /*-------------------------------------------------------------------------------------------------*/
+    /*                                          CLASS DIAGRAM                                          */
+    /*-------------------------------------------------------------------------------------------------*/
 
     /**
      * Parse saved diagram classes.
@@ -746,7 +810,7 @@ public class IJAXMLParser {
         int expectedListLen = 3;
 
         if (list.getLength() != expectedListLen ||
-                list.item(1).getNodeName().equals("instance")) {
+                !list.item(1).getNodeName().equals("inheritance")) {
             throw new IllegalFileFormat("Invalid file syntax.");
         } else {
             parseInheritanceTag(from, to);
@@ -928,6 +992,197 @@ public class IJAXMLParser {
                 case "composition":
                     this.controller.createAndAddRelationship(clsFrom, clsTo,
                             fromMultiplicity, toMultiplicity, "composition");
+                    break;
+                default:
+                    throw new IllegalFileFormat("Invalid file syntax.");
+            }
+        }
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+    /*                                        SEQUENCE DIAGRAM                                         */
+    /*-------------------------------------------------------------------------------------------------*/
+
+    private void parseLifelines() throws IllegalFileFormat {
+        Node node;
+
+        while (this.firstLevelOrder < this.firstLevelList.getLength()) {
+            node = this.firstLevelList.item(this.firstLevelOrder);
+
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                if (!node.getNodeName().equals("lifeline")) {
+                    break;
+                }
+
+                String attrValue = parseXmlAttribute(node, "name");
+
+                if (attrValue == null) {
+                    throw new IllegalFileFormat("Invalid file syntax.");
+                }
+
+                if (node.hasChildNodes()) {
+                    parseLifelineChildren(node, attrValue);
+                }
+            }
+
+            this.firstLevelOrder += 2;
+        }
+    }
+
+    private void parseLifelineChildren(Node lifelineNode, String attrValue) throws IllegalFileFormat {
+        NodeList list = lifelineNode.getChildNodes();
+
+        Node node;
+        double height;
+        double x;
+        int order;
+
+        order = 1;
+
+        height = 0.0;
+        x = 0.0;
+
+        /* Height tag */
+        node = list.item(this.secondLevelOrder);
+        order += 2;
+
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (!node.getNodeName().equals("height")) {
+                throw new IllegalFileFormat("Invalid file syntax.");
+            } else {
+                height = Double.parseDouble(node.getTextContent());
+            }
+        }
+
+        /* xCoordinate tag */
+        node = list.item(this.secondLevelOrder);
+        order += 2;
+
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (!node.getNodeName().equals("xCoordinate")) {
+                throw new IllegalFileFormat("Invalid file syntax.");
+            } else {
+                x = Double.parseDouble(node.getTextContent());
+            }
+        }
+
+        /* Call frontend method for creating lifeline element */
+        // TODO
+    }
+
+    private void parseMessages() throws IllegalFileFormat {
+        /* Iterate through messages */
+        Node node;
+
+        while (this.firstLevelOrder < this.firstLevelList.getLength()) {
+            node = this.firstLevelList.item(this.firstLevelOrder);
+
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                if (!node.getNodeName().equals("message")) {
+                    throw new IllegalFileFormat("Invalid file syntax.");
+                }
+
+                if (node.hasChildNodes()) {
+                    parseMessageChildren(node);
+                }
+            }
+
+            this.firstLevelOrder += 2;
+        }
+    }
+
+    private void parseMessageChildren(Node messageNode) throws IllegalFileFormat {
+        NodeList list = messageNode.getChildNodes();
+        Node node;
+        String from = null;
+        String to = null;
+        this.secondLevelOrder = 1;
+
+        /* From tag */
+        node = list.item(this.secondLevelOrder);
+        this.secondLevelOrder += 2;
+
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (!node.getNodeName().equals("from")) {
+                throw new IllegalFileFormat("Invalid file syntax");
+            } else {
+                from = node.getTextContent();
+            }
+        }
+
+        if (from == null) {
+            throw new IllegalFileFormat("Invalid file syntax.");
+        }
+
+        /* To tag */
+        node = list.item(this.secondLevelOrder);
+        this.secondLevelOrder += 2;
+
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (!node.getNodeName().equals("to")) {
+                throw new IllegalFileFormat("Invalid file syntax.");
+            }
+        }
+
+        if (to == null) {
+            throw new IllegalFileFormat("Invalid file syntax.");
+        }
+
+        node = list.item(this.secondLevelOrder);
+        this.secondLevelOrder += 2;
+
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (node.getNodeName().equals("labelType")) {
+                parseLabelType(node, from, to);
+            } else if (node.getNodeName().equals("operationType")) {
+                parseOperationType(node, from, to);
+            } else {
+                throw new IllegalFileFormat("Invalid file syntax");
+            }
+        }
+    }
+
+    private void parseLabelType(Node labelType, String from, String to) throws IllegalFileFormat {
+        NodeList list = labelType.getChildNodes();
+        int expectedListLen = 3;
+
+        if (list.getLength() != expectedListLen) {
+            throw new IllegalFileFormat("Invalid file syntax.");
+        } else {
+
+            switch (list.item(1).getNodeName()) {
+                case "returnMessage":
+                    // TODO frontend
+                    break;
+                case "destroyMessage":
+                    // TODO frontend
+                    break;
+                default:
+                    throw new IllegalFileFormat("Invalid file syntax.");
+            }
+        }
+    }
+
+    private void parseOperationType(Node operationType, String from, String to) throws IllegalFileFormat {
+        NodeList list = operationType.getChildNodes();
+        int expectedListLen = 3;
+
+        if (list.getLength() != expectedListLen) {
+            throw new IllegalFileFormat("Invalid file syntax.");
+        } else {
+
+            switch (list.item(1).getNodeName()) {
+                case "synchronousMessage":
+                    // TODO frontend
+                    break;
+                case "asynchronousMessage":
+                    // TODO frontend
+                    break;
+                case "selfMessage":
+                    // TODO frontend
+                    break;
+                case "createMessage":
+                    // TODO frontend
                     break;
                 default:
                     throw new IllegalFileFormat("Invalid file syntax.");
