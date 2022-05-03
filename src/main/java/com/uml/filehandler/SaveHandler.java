@@ -10,6 +10,7 @@
 package com.uml.filehandler;
 
 import com.uml.classdiagram.*;
+import com.uml.sequencediagram.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -25,6 +26,8 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -34,70 +37,91 @@ import java.util.List;
  * </p>
  */
 public class SaveHandler {
-    private final ClassDiagram diagram;
+    private final ClassDiagram classDiagram;
+    private List<SequenceDiagram> sequenceDiagrams;
     private Document doc;
 
     /**
      * Creates a new instance of SaveHandler.
      *
-     * @param diagram Class diagram.
+     * @param classDiagram Class diagram.
+     * @param sequenceDiagrams Sequence diagrams.
      */
-    public SaveHandler(ClassDiagram diagram) {
-        this.diagram = diagram;
+    public SaveHandler(ClassDiagram classDiagram, SequenceDiagram... sequenceDiagrams) {
+        this.classDiagram = classDiagram;
+        this.sequenceDiagrams = new ArrayList<SequenceDiagram>();
         doc = null;
+
+        Collections.addAll(this.sequenceDiagrams, sequenceDiagrams);
     }
 
     /**
-     * Main method for class diagram saving.
+     * Main method for diagrams saving.
      *
      * @param destPath Output file destination path.
      * @throws ParserConfigurationException Parser configuration error.
-     * @throws FileNotFoundException File wasn't found (FileOutputStream).
+     * @throws FileNotFoundException File was not found (FileOutputStream).
      * @throws TransformerException Transformer error.
      */
-    public void saveClassDiagram(String destPath) throws ParserConfigurationException,
-            FileNotFoundException, TransformerException {
+    public void save(String destPath) throws ParserConfigurationException, FileNotFoundException, TransformerException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = dbf.newDocumentBuilder();
         this.doc = docBuilder.newDocument();
 
-        Element rootElement = this.doc.createElement("classDiagram");
+        Element rootElement = this.doc.createElement("ijaUml");
         this.doc.appendChild(rootElement);
-        rootElement.setAttribute("name", this.diagram.getName());
 
-        List<UMLClass> diagramClasses = this.diagram.getClasses();
-        List<UMLRelationship> diagramRelationships = this.diagram.getRelationships();
-
-        addClassTags(rootElement, diagramClasses);
-        addRelationshipsTags(rootElement, diagramRelationships);
+        this.saveClassDiagram(rootElement);
+        this.saveSequenceDiagrams(rootElement);
 
         FileOutputStream output = new FileOutputStream(destPath);
         writeXml(this.doc, output);
     }
 
+    /*-------------------------------------------------------------------------------------------------*/
+    /*                                          CLASS DIAGRAM                                          */
+    /*-------------------------------------------------------------------------------------------------*/
+
+    /**
+     * Main method for class diagram saving.
+     *
+     * @param rootElement Root element.
+     */
+    private void saveClassDiagram(Element rootElement) {
+        Element classDiagramElement = this.doc.createElement("classDiagram");
+        rootElement.appendChild(classDiagramElement);
+        classDiagramElement.setAttribute("name", this.classDiagram.getName());
+
+        List<UMLClass> diagramClasses = this.classDiagram.getClasses();
+        List<UMLRelationship> diagramRelationships = this.classDiagram.getRelationships();
+
+        addClassTags(classDiagramElement, diagramClasses);
+        addRelationshipsTags(classDiagramElement, diagramRelationships);
+    }
+
     /**
      * Add all diagram classes tags.
      *
-     * @param rootElement Root element.
+     * @param classDiagramElement Class diagram element.
      * @param diagramClasses Classes of diagram.
      */
-    private void addClassTags(Element rootElement, List<UMLClass> diagramClasses) {
+    private void addClassTags(Element classDiagramElement, List<UMLClass> diagramClasses) {
         /* Iterate through classes */
         for (UMLClass currentClass : diagramClasses) {
-            addClassTag(rootElement, currentClass);
+            addClassTag(classDiagramElement, currentClass);
         }
     }
 
     /**
      * Add all diagram relationships tags.
      *
-     * @param rootElement Root element.
+     * @param classDiagramElement Class diagram element.
      * @param diagramRelationships Relationships of diagram.
      */
-    private void addRelationshipsTags(Element rootElement, List<UMLRelationship> diagramRelationships) {
+    private void addRelationshipsTags(Element classDiagramElement, List<UMLRelationship> diagramRelationships) {
         /* Iterate through relationships */
         for (UMLRelationship currentRel : diagramRelationships) {
-            addRelationshipTag(rootElement, currentRel);
+            addRelationshipTag(classDiagramElement, currentRel);
         }
     }
 
@@ -132,15 +156,15 @@ public class SaveHandler {
     /**
      * Add class tag.
      *
-     * @param rootElement Root element.
+     * @param classDiagramElement Class diagram element.
      * @param currentClass Current class to be saved.
      */
-    private void addClassTag(Element rootElement, UMLClass currentClass) {
+    private void addClassTag(Element classDiagramElement, UMLClass currentClass) {
         Element diagramClass;
 
         /* Create class tag */
         diagramClass = this.doc.createElement("class");
-        rootElement.appendChild(diagramClass);
+        classDiagramElement.appendChild(diagramClass);
         diagramClass.setAttribute("name", currentClass.getName());
 
         addAbstractTag(diagramClass, currentClass);
@@ -306,16 +330,15 @@ public class SaveHandler {
     /**
      * Add relationship tag.
      *
-     * @param rootElement Root element.
+     * @param classDiagramElement Class diagram element.
      * @param currentRel Current relationship.
      */
-    private void addRelationshipTag(Element rootElement, UMLRelationship currentRel) {
+    private void addRelationshipTag(Element classDiagramElement, UMLRelationship currentRel) {
         Element diagramRel;
 
         /* Create relationship tag */
         diagramRel = this.doc.createElement("relationship");
-        rootElement.appendChild(diagramRel);
-        diagramRel.setAttribute("id", Long.toString(currentRel.getId()));
+        classDiagramElement.appendChild(diagramRel);
 
         addFromTag(diagramRel, currentRel);
         addToTag(diagramRel, currentRel);
@@ -400,8 +423,6 @@ public class SaveHandler {
 
         addFromMultiplicityTag(instanceLevel, currentRel);
         addToMultiplicityTag(instanceLevel, currentRel);
-        addFromRoleTag(instanceLevel, currentRel);
-        addToRoleTag(instanceLevel, currentRel);
 
         if (currentRel instanceof UMLAssociation) {
             addAssociationTag(instanceLevel);
@@ -443,36 +464,6 @@ public class SaveHandler {
     }
 
     /**
-     * Add from role tag.
-     *
-     * @param instanceLevel Instance level element.
-     * @param currentRel Current relationship.
-     */
-    private void addFromRoleTag(Element instanceLevel, UMLRelationship currentRel) {
-        Element fromRole;
-
-        /* fromRole tag */
-        fromRole = this.doc.createElement("fromRole");
-        instanceLevel.appendChild(fromRole);
-        fromRole.setTextContent(((UMLInstanceLevel)currentRel).getFromRole());
-    }
-
-    /**
-     * Add to role tag.
-     *
-     * @param instanceLevel Instance level element.
-     * @param currentRel Current relationship.
-     */
-    private void addToRoleTag(Element instanceLevel, UMLRelationship currentRel) {
-        Element toRole;
-
-        /* toRole tag */
-        toRole = this.doc.createElement("toRole");
-        instanceLevel.appendChild(toRole);
-        toRole.setTextContent(((UMLInstanceLevel)currentRel).getToRole());
-    }
-
-    /**
      * Add association tag.
      *
      * @param instanceLevel Instance level element.
@@ -511,6 +502,309 @@ public class SaveHandler {
         instanceLevel.appendChild(composition);
     }
 
+
+    /*-------------------------------------------------------------------------------------------------*/
+    /*                                        SEQUENCE DIAGRAM                                         */
+    /*-------------------------------------------------------------------------------------------------*/
+
+    /**
+     * Main method for sequence diagrams saving.
+     *
+     * @param rootElement Root element.
+     */
+    private void saveSequenceDiagrams(Element rootElement) {
+        Element sequenceDiagramElement;
+
+        for (SequenceDiagram currentSequenceDiagram : this.sequenceDiagrams) {
+            sequenceDiagramElement = this.doc.createElement("sequenceDiagram");
+            rootElement.appendChild(sequenceDiagramElement);
+            sequenceDiagramElement.setAttribute("name", currentSequenceDiagram.getName());
+
+            List<UMLLifeline> diagramLifelines = currentSequenceDiagram.getLifelines();
+            List<UMLMessage> diagramMessages = currentSequenceDiagram.getMessages();
+
+            addLifelinesTags(sequenceDiagramElement, diagramLifelines);
+            addMessagesTags(sequenceDiagramElement, diagramMessages);
+        }
+    }
+
+    /**
+     * Add all sequence diagram lifelines tags.
+     *
+     * @param sequenceDiagramElement Sequence diagram element.
+     * @param diagramLifelines Sequence diagram lifelines.
+     */
+    private void addLifelinesTags(Element sequenceDiagramElement,
+                                  List<UMLLifeline> diagramLifelines) {
+        for (UMLLifeline currentLifeline : diagramLifelines) {
+            addLifelineTag(sequenceDiagramElement, currentLifeline);
+        }
+    }
+
+    /**
+     * Add lifeline tag.
+     *
+     * @param sequenceDiagramElement Sequence diagram element.
+     * @param currentLifeline Current lifeline to be saved.
+     */
+    private void addLifelineTag(Element sequenceDiagramElement, UMLLifeline currentLifeline) {
+        Element diagramLifeline;
+
+        /* Create lifeline tag */
+        diagramLifeline = this.doc.createElement("lifeline");
+        sequenceDiagramElement.appendChild(diagramLifeline);
+        diagramLifeline.setAttribute("name", currentLifeline.getObjectClass().getName());
+
+        addHeightTag(diagramLifeline, currentLifeline);
+        addXCoordinateTag(diagramLifeline, currentLifeline);
+    }
+
+    /**
+     * Add height tag.
+     *
+     * @param diagramLifeline Lifeline element.
+     * @param currentLifeline Current lifeline to be saved.
+     */
+    private void addHeightTag(Element diagramLifeline, UMLLifeline currentLifeline) {
+        Element height;
+
+        /* height tag */
+        height = this.doc.createElement("height");
+        diagramLifeline.appendChild(height);
+        height.setTextContent(Double.toString(currentLifeline.getHeight()));
+    }
+
+    /**
+     * Add x coordinate tag.
+     * <p>
+     *     This method is overridden method of the class diagram method version for sequence diagram.
+     * </p>
+     *
+     * @param diagramLifeline Lifeline element.
+     * @param currentLifeline Current lifeline to be saved.
+     */
+    private void addXCoordinateTag(Element diagramLifeline, UMLLifeline currentLifeline) {
+        Element xCoordinate;
+
+        /* xCoordinate tag */
+        xCoordinate = this.doc.createElement("xCoordinate");
+        diagramLifeline.appendChild(xCoordinate);
+        xCoordinate.setTextContent(Double.toString(currentLifeline.getXCoordinate()));
+    }
+
+    /**
+     * Add all diagram messages tags.
+     *
+     * @param sequenceDiagramElement Sequence diagram element.
+     * @param diagramMessages Messages of diagram.
+     */
+    private void addMessagesTags(Element sequenceDiagramElement,
+                                 List<UMLMessage> diagramMessages) {
+        for (UMLMessage currentMessage : diagramMessages) {
+            addMessageTag(sequenceDiagramElement, currentMessage);
+        }
+    }
+
+    /**
+     * Add message tag.
+     *
+     * @param sequenceDiagramElement Sequence diagram element.
+     * @param currentMessage Current message to be saved.
+     */
+    private void addMessageTag(Element sequenceDiagramElement, UMLMessage currentMessage) {
+        Element diagramMessage;
+
+        /* Create message tag */
+        diagramMessage = this.doc.createElement("message");
+        sequenceDiagramElement.appendChild(diagramMessage);
+        diagramMessage.setAttribute("name", currentMessage.getLabel());
+
+        addFromTag(diagramMessage, currentMessage);
+        addToTag(diagramMessage, currentMessage);
+        addYCoordinateTag(diagramMessage, currentMessage);
+
+        if (currentMessage instanceof UMLMessageLabelType) {
+            addLabelTypeTag(diagramMessage, currentMessage);
+        } else {
+            addOperationTypeTag(diagramMessage, currentMessage);
+        }
+    }
+
+    /**
+     * Add from tag.
+     * <p>
+     *     This method is overridden method of the class diagram method version for sequence diagram.
+     * </p>
+     *
+     * @param diagramMessage Message element.
+     * @param currentMessage Current message.
+     */
+    private void addFromTag(Element diagramMessage, UMLMessage currentMessage) {
+        Element from;
+
+        /* from tag */
+        from = this.doc.createElement("from");
+        diagramMessage.appendChild(from);
+        from.setTextContent(currentMessage.getFromLifeline().getObjectClass().getName());
+    }
+
+    /**
+     * Add to tag.
+     * <p>
+     *     This method is overridden method of the class diagram method version for sequence diagram.
+     * </p>
+     *
+     * @param diagramMessage Message element.
+     * @param currentMessage Current message.
+     */
+    private void addToTag(Element diagramMessage, UMLMessage currentMessage) {
+        Element to;
+
+        /* to tag */
+        to = this.doc.createElement("to");
+        diagramMessage.appendChild(to);
+        to.setTextContent(currentMessage.getFromLifeline().getObjectClass().getName());
+    }
+
+    /**
+     * Add y coordinate tag.
+     * <p>
+     *     This method is overridden method of the class diagram method version for sequence diagram.
+     * </p>
+     *
+     * @param diagramMessage Message element.
+     * @param currentMessage Current message.
+     */
+    private void addYCoordinateTag(Element diagramMessage, UMLMessage currentMessage) {
+        Element yCoordinate;
+
+        /* yCoordinate tag */
+        yCoordinate = this.doc.createElement("yCoordinate");
+        diagramMessage.appendChild(yCoordinate);
+        yCoordinate.setTextContent(Double.toString(currentMessage.getYCoordinate()));
+    }
+
+    /**
+     * Add label type tag.
+     *
+     * @param diagramMessage Message element.
+     * @param currentMessage Current message.
+     */
+    private void addLabelTypeTag(Element diagramMessage, UMLMessage currentMessage) {
+        Element labelType;
+
+        /* labelType tag */
+        labelType = this.doc.createElement("labelType");
+        diagramMessage.appendChild(labelType);
+
+        if (currentMessage instanceof UMLReturnMessage) {
+            addReturnMessageTag(labelType);
+        } else if (currentMessage instanceof UMLDestroyMessage) {
+            addDestroyMessageTag(labelType);
+        }
+    }
+
+    /**
+     * Add return message tag.
+     *
+     * @param labelType Label type element.
+     */
+    private void addReturnMessageTag(Element labelType) {
+        Element returnMessage;
+
+        /* returnMessage tag */
+        returnMessage = this.doc.createElement("returnMessage");
+        labelType.appendChild(returnMessage);
+    }
+
+    /**
+     * Add destroy message tag.
+     *
+     * @param labelType Label type element.
+     */
+    private void addDestroyMessageTag(Element labelType) {
+        Element destroyMessage;
+
+        /* destroyMessage tag */
+        destroyMessage = this.doc.createElement("destroyMessage");
+        labelType.appendChild(destroyMessage);
+    }
+
+    /**
+     * Add operation type tag.
+     *
+     * @param diagramMessage Message element.
+     * @param currentMessage Current message.
+     */
+    private void addOperationTypeTag(Element diagramMessage, UMLMessage currentMessage) {
+        Element operationType;
+
+        /* operationType tag */
+        operationType = this.doc.createElement("operationType");
+        diagramMessage.appendChild(operationType);
+
+        if (currentMessage instanceof UMLSynchronousMessage) {
+            addSynchronousMessageTag(operationType);
+        } else if (currentMessage instanceof UMLAsynchronousMessage) {
+            addAsynchronousMessageTag(operationType);
+        } else if (currentMessage instanceof UMLSelfMessage) {
+            addSelfMessageTag(operationType);
+        } else if (currentMessage instanceof UMLCreateMessage) {
+            addCreateMessageTag(operationType);
+        }
+    }
+
+    /**
+     * Add synchronous message tag.
+     *
+     * @param operationType Label type element.
+     */
+    private void addSynchronousMessageTag(Element operationType) {
+        Element synchronousMessage;
+
+        /* synchronousMessage tag */
+        synchronousMessage = this.doc.createElement("synchronousMessage");
+        operationType.appendChild(synchronousMessage);
+    }
+
+    /**
+     * Add asynchronous message tag.
+     *
+     * @param operationType Label type element.
+     */
+    private void addAsynchronousMessageTag(Element operationType) {
+        Element asynchronousMessage;
+
+        /* asynchronousMessage tag */
+        asynchronousMessage = this.doc.createElement("asynchronousMessage");
+        operationType.appendChild(asynchronousMessage);
+    }
+
+    /**
+     * Add self message tag.
+     *
+     * @param operationType Label type element.
+     */
+    private void addSelfMessageTag(Element operationType) {
+        Element selfMessage;
+
+        /* selfMessage tag */
+        selfMessage = this.doc.createElement("selfMessage");
+        operationType.appendChild(selfMessage);
+    }
+
+    /**
+     * Add create message tag.
+     *
+     * @param operationType Label type element.
+     */
+    private void addCreateMessageTag(Element operationType) {
+        Element createMessage;
+
+        /* createMessage tag */
+        createMessage = this.doc.createElement("createMessage");
+        operationType.appendChild(createMessage);
+    }
 
     /*-----------------------------------------------------------------------------*/
     /*                                  Write xml                                  */

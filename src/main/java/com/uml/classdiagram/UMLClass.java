@@ -30,7 +30,7 @@ public class UMLClass extends UMLClassifier {
 	private static int defaultClassId = 1;
 
 	/**
-	 * Creates an instance representing a UML class model.
+	 * Creates an instance representing an UML class model.
 	 * <p>
 	 *     Class is not abstract.
 	 * </p>

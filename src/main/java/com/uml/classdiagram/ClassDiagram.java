@@ -139,9 +139,9 @@ public class ClassDiagram extends Element {
 	}
 
 	/**
-	 * Delete all relationship which use class to be deleted.
+	 * Delete all relationships which use the class to be deleted.
 	 * <p>
-	 *     A class is in from or to attribute of relationship.
+	 *     The class is in from or to attribute of relationship.
 	 * </p>
 	 *
 	 * @param cls Class which relationships should be deleted.
@@ -162,6 +162,69 @@ public class ClassDiagram extends Element {
 			idx = diagramRelationships.indexOf(currentRel);
 			diagramRelationships.remove(idx);
 		}
+	}
+
+	/**
+	 * Check if concrete method in concrete operation is overridden.
+	 * <p>
+	 *     The method checks all parent classes via inheritance relationship.
+	 * </p>
+	 *
+	 * @param operationClass Class that contains searched method.
+	 * @param operation Searched method.
+	 * @return True if searched method is overridden, false otherwise.
+	 */
+	public boolean isOverriddenMethod(UMLClass operationClass, UMLOperation operation) {
+		List<UMLAttribute> currentOperationArguments;
+		List<UMLAttribute> operationArguments;
+		boolean isOverridden;
+		boolean identicalArguments;
+
+		operationArguments = operation.getArguments();
+
+		/* List through all relationships. */
+		for (UMLRelationship currentRelationship : diagramRelationships) {
+			/* If the operationClass is TO class of current relationship */
+			/* and the type of relationship is inheritance. */
+			if (currentRelationship.getFrom().equals(operationClass) &&
+					currentRelationship instanceof UMLInheritance) {
+				/* List through class operations. */
+				for (UMLOperation currentOperation : currentRelationship.getTo().getOperations()) {
+					if (currentOperation.getName().equals(operation.getName()) &&
+							currentOperation.getType().equals(operation.getType())) {
+						/* Operation names and return types are identical. */
+						currentOperationArguments = currentOperation.getArguments();
+
+						if (currentOperationArguments.size() == operationArguments.size()) {
+							/* Count of parameters is the same. */
+							identicalArguments = true;
+
+							for (int i = 0; i < currentOperationArguments.size(); i++) {
+								/* Types of arguments are not the same. */
+								if (!currentOperationArguments.get(i).getType().equals(operationArguments.get(i).getType())) {
+									identicalArguments = false;
+									break;
+								}
+							}
+
+							if (identicalArguments) {
+								return true;
+							}
+						}
+					}
+				}
+
+				/* Overridden method was not found in current class. */
+				/* Check the parent classes to see if this is their method. */
+				isOverridden = isOverriddenMethod(currentRelationship.getTo(), operation);
+
+				if (isOverridden) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -248,6 +311,21 @@ public class ClassDiagram extends Element {
 	 */
 	public List<UMLClass> getClasses() {
 		return Collections.unmodifiableList(this.diagramClasses);
+	}
+
+	/**
+	 * Method for obtaining diagram classes names.
+	 *
+	 * @return Unmodifiable list with diagram classes names.
+	 */
+	public List<String> getClassesNames() {
+		List<String> classesNames = new ArrayList<String>();
+
+		for (UMLClass currentClass : this.diagramClasses) {
+			classesNames.add(currentClass.getName());
+		}
+
+		return Collections.unmodifiableList(classesNames);
 	}
 
 	/**

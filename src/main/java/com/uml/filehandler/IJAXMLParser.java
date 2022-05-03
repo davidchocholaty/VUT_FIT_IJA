@@ -9,6 +9,7 @@
 
 package com.uml.filehandler;
 
+import com.uml.customexception.*;
 import com.uml.App;
 import com.uml.ClassUML;
 import com.uml.MainController;
@@ -36,10 +37,12 @@ import java.util.List;
 public class IJAXMLParser {
     private final String filePath;
     private Document doc;
+    private int zeroLevelOrder;
     private int firstLevelOrder;
     private int secondLevelOrder;
     private List<ClassUML> diagramClasses;
     private MainController controller;
+    private NodeList zeroLevelList;
     private NodeList firstLevelList;
 
     /**
@@ -50,10 +53,12 @@ public class IJAXMLParser {
     public IJAXMLParser(String filePath) {
         this.filePath = filePath;
         this.doc = null;
+        this.zeroLevelOrder = 1;
         this.firstLevelOrder = 1;
         this.secondLevelOrder = 1;
         this.diagramClasses = new ArrayList<ClassUML>();
         this.controller = null;
+        this.zeroLevelList = null;
         this.firstLevelList = null;
     }
 
@@ -66,19 +71,19 @@ public class IJAXMLParser {
      * @throws ParserConfigurationException Parser configuration error.
      * @throws SAXException Parser configuration error.
      * @throws IOException Invalid input file path.
-     * @throws CustomException.IllegalFileExtension Invalid file extension.
-     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     * @throws IllegalFileExtension Invalid file extension.
+     * @throws IllegalFileFormat Invalid format of input file.
      * @throws NullPointerException Null pointer based on invalid file format.
      * @throws NumberFormatException Invalid number format based on invalid file format.
      */
     public void parse() throws ParserConfigurationException, SAXException,
-            IOException, CustomException.IllegalFileExtension, CustomException.IllegalFileFormat,
+            IOException, IllegalFileExtension, IllegalFileFormat,
             NullPointerException, NumberFormatException {
         String ext = getFileExtension();
 
         /* Wrong file extension test */
         if (!ext.equals("ijaxml") && !ext.equals("ixl")) {
-            throw new CustomException.IllegalFileExtension("Unsupported file format.");
+            throw new IllegalFileExtension("Unsupported file format.");
         }
         else {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -89,6 +94,11 @@ public class IJAXMLParser {
 
             this.doc.getDocumentElement().normalize();
 
+            /* If the root element is invalid. */
+            if (!doc.getDocumentElement().getNodeName().equals("ijaUml")) {
+                throw new IllegalFileFormat("Invalid root element.");
+            }
+
             /* Create frontend app */
             App app = new App();
             app.start(new Stage());
@@ -96,18 +106,69 @@ public class IJAXMLParser {
 
             if (this.doc.hasChildNodes()) {
                 NodeList list = this.doc.getChildNodes();
-                /*
-                if (list.getLength() != 1 || !list.item(0).getNodeName().equals("classDiagram")) {
 
-                } else {
+                this.zeroLevelList = list.item(0).getChildNodes();
 
+                /* Iterate through diagrams */
+                Node node;
+
+                /* Class diagram*/
+                while (this.zeroLevelOrder < this.zeroLevelList.getLength()) {
+                    node = this.zeroLevelList.item(this.zeroLevelOrder);
+
+                    if (node.getNodeType() == Node.ELEMENT_NODE) {
+                        if (!node.getNodeName().equals("classDiagram")) {
+                            break;
+                        }
+
+                        if (this.zeroLevelOrder > 1) {
+                            throw new IllegalFileFormat("Multiple class diagram occurence.");
+                        }
+
+                        String attrValue = parseXmlAttribute(node, "name");
+
+                        if (attrValue == null) {
+                            throw new IllegalFileFormat("Missing class diagram name.");
+                        }
+
+                        if (node.hasChildNodes()) {
+                            this.firstLevelList = node.getChildNodes();
+                            this.firstLevelOrder = 1;
+
+                            parseClasses();
+                            parseRelationships();
+                        }
+                    }
+
+                    this.zeroLevelOrder += 2;
                 }
-                */
 
-                this.firstLevelList = list.item(0).getChildNodes();
+                /* Sequence diagrams */
+                while (this.zeroLevelOrder < this.zeroLevelList.getLength()) {
+                    node = this.zeroLevelList.item(this.zeroLevelOrder);
 
-                parseClasses();
-                parseRelationships();
+                    if (node.getNodeType() == Node.ELEMENT_NODE) {
+                        if (!node.getNodeName().equals("sequenceDiagram")) {
+                            throw new IllegalFileFormat("Invalid diagram tag.");
+                        }
+
+                        String attrValue = parseXmlAttribute(node, "name");
+
+                        if (attrValue == null) {
+                            throw new IllegalFileFormat("Missing sequence diagram name.");
+                        }
+
+                        if (node.hasChildNodes()) {
+                            this.firstLevelList = node.getChildNodes();
+                            this.firstLevelOrder = 1;
+
+                            parseLifelines();
+                            parseMessages();
+                        }
+                    }
+
+                    this.zeroLevelOrder += 2;
+                }
             }
         }
     }
@@ -159,9 +220,9 @@ public class IJAXMLParser {
      * @param node Input node to be parsed.
      * @param attrName Expected xml tag attribute name.
      * @return Value of xml tag attribute. Null otherwise.
-     * @throws CustomException.IllegalFileFormat Invalid xml tag attribute.
+     * @throws IllegalFileFormat Invalid xml tag attribute.
      */
-    private String parseXmlAttribute(Node node, String attrName) throws CustomException.IllegalFileFormat {
+    private String parseXmlAttribute(Node node, String attrName) throws IllegalFileFormat {
         String attrValue = null;
 
         if (node.hasAttributes()) {
@@ -169,7 +230,7 @@ public class IJAXMLParser {
 
             if (nodeMap.getLength() != 1 ||
                     !nodeMap.item(0).getNodeName().equals(attrName)) {
-                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+                throw new IllegalFileFormat("Invalid file syntax.");
             }
 
             attrValue = nodeMap.item(0).getNodeValue();
@@ -178,15 +239,19 @@ public class IJAXMLParser {
         return attrValue;
     }
 
+    /*-------------------------------------------------------------------------------------------------*/
+    /*                                          CLASS DIAGRAM                                          */
+    /*-------------------------------------------------------------------------------------------------*/
+
     /**
      * Parse saved diagram classes.
      *
-     * @throws CustomException.IllegalFileFormat Invalid input file format.
+     * @throws IllegalFileFormat Invalid input file format.
      * @throws NullPointerException Null pointer based on invalid file format.
      * @throws NumberFormatException Invalid number format based on invalid file format.
      * @throws IOException Error during writing on frontend.
      */
-    private void parseClasses() throws CustomException.IllegalFileFormat,
+    private void parseClasses() throws IllegalFileFormat,
             NullPointerException, NumberFormatException, IOException {
         /* Iterate through classes */
         Node node;
@@ -202,7 +267,7 @@ public class IJAXMLParser {
                 String attrValue = parseXmlAttribute(node, "name");
 
                 if (attrValue == null) {
-                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+                    throw new IllegalFileFormat("Invalid file syntax.");
                 }
 
                 if (node.hasChildNodes()) {
@@ -222,12 +287,12 @@ public class IJAXMLParser {
      *
      * @param classNode Node of class to be parsed.
      * @param attrValue Value of class tag name attribute.
-     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     * @throws IllegalFileFormat Invalid format of input file.
      * @throws NullPointerException Null pointer based on invalid file format.
      * @throws NumberFormatException Invalid number format based on invalid file format.
      * @throws IOException Error during writing on frontend.
      */
-    private void parseClassChildren(Node classNode, String attrValue) throws CustomException.IllegalFileFormat,
+    private void parseClassChildren(Node classNode, String attrValue) throws IllegalFileFormat,
             NullPointerException, NumberFormatException, IOException {
         NodeList list = classNode.getChildNodes();
 
@@ -245,7 +310,7 @@ public class IJAXMLParser {
         /*
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("abstract")) {
-                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+                throw new IllegalFileFormat("Invalid file syntax.");
             } else {
 
             }
@@ -258,7 +323,7 @@ public class IJAXMLParser {
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("xCoordinate")) {
-                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+                throw new IllegalFileFormat("Invalid file syntax.");
             } else {
                 x = Double.parseDouble(node.getTextContent());
             }
@@ -270,7 +335,7 @@ public class IJAXMLParser {
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("yCoordinate")) {
-                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+                throw new IllegalFileFormat("Invalid file syntax.");
             } else {
                 y = Double.parseDouble(node.getTextContent());
             }
@@ -288,7 +353,7 @@ public class IJAXMLParser {
         /*
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("visibility")) {
-                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+                throw new IllegalFileFormat("Invalid file syntax.");
             } else {
 
             }
@@ -306,9 +371,9 @@ public class IJAXMLParser {
      * Parse class attributes.
      *
      * @param list List of class attributes.
-     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     * @throws IllegalFileFormat Invalid format of input file.
      */
-    private void parseAttributes(NodeList list) throws CustomException.IllegalFileFormat {
+    private void parseAttributes(NodeList list) throws IllegalFileFormat {
         Node node;
 
         while (this.secondLevelOrder < list.getLength()) {
@@ -322,7 +387,7 @@ public class IJAXMLParser {
                 String attrValue = parseXmlAttribute(node, "name");
 
                 if (attrValue == null) {
-                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+                    throw new IllegalFileFormat("Invalid file syntax.");
                 }
 
                 if (node.hasChildNodes()) {
@@ -339,13 +404,13 @@ public class IJAXMLParser {
      *
      * @param node Data type node.
      * @return Parsed data type. Null otherwise.
-     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     * @throws IllegalFileFormat Invalid format of input file.
      */
-    private String parseDataTypeTag(Node node) throws CustomException.IllegalFileFormat {
+    private String parseDataTypeTag(Node node) throws IllegalFileFormat {
         String dataType = null;
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("dataType")) {
-                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+                throw new IllegalFileFormat("Invalid file syntax.");
             } else {
                 dataType = node.getTextContent();
             }
@@ -359,14 +424,14 @@ public class IJAXMLParser {
      *
      * @param node Visibility node.
      * @return Parset visibility. Null otherwise.
-     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     * @throws IllegalFileFormat Invalid format of input file.
      */
-    private String parseVisibilityTag(Node node) throws CustomException.IllegalFileFormat {
+    private String parseVisibilityTag(Node node) throws IllegalFileFormat {
         String visibility = null;
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("visibility")) {
-                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+                throw new IllegalFileFormat("Invalid file syntax.");
             } else {
                 visibility = node.getTextContent();
             }
@@ -380,14 +445,14 @@ public class IJAXMLParser {
      *
      * @param node Value node.
      * @return Attribute default value. Null otherwise.
-     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     * @throws IllegalFileFormat Invalid format of input file.
      */
-    private String parseValueTag(Node node) throws CustomException.IllegalFileFormat {
+    private String parseValueTag(Node node) throws IllegalFileFormat {
         String value = null;
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("value")) {
-                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+                throw new IllegalFileFormat("Invalid file syntax.");
             } else {
                 value = node.getTextContent();
             }
@@ -440,9 +505,9 @@ public class IJAXMLParser {
      *
      * @param attrNode Attribute node.
      * @param attrValue Attribute name.
-     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     * @throws IllegalFileFormat Invalid format of input file.
      */
-    private void parseAttributeChildren(Node attrNode, String attrValue) throws CustomException.IllegalFileFormat {
+    private void parseAttributeChildren(Node attrNode, String attrValue) throws IllegalFileFormat {
         NodeList list = attrNode.getChildNodes();
         Node node;
         String dataType, visibility, value;
@@ -455,7 +520,7 @@ public class IJAXMLParser {
         dataType = parseDataTypeTag(node);
 
         if (dataType == null) {
-            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+            throw new IllegalFileFormat("Invalid file syntax.");
         }
 
         /* visibility tag */
@@ -466,7 +531,7 @@ public class IJAXMLParser {
         visibility = visibility2SingleChar(visibility);
 
         if (visibility == null) {
-            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+            throw new IllegalFileFormat("Invalid file syntax.");
         }
 
         /* value tag */
@@ -475,7 +540,7 @@ public class IJAXMLParser {
         value = parseValueTag(node);
 
         if (value == null) {
-            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+            throw new IllegalFileFormat("Invalid file syntax.");
         }
 
         ClassUML cls = this.diagramClasses.get(this.diagramClasses.size() - 1);
@@ -486,9 +551,9 @@ public class IJAXMLParser {
      * Parse class operation.
      *
      * @param list List of class operations.
-     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     * @throws IllegalFileFormat Invalid format of input file.
      */
-    private void parseOperations(NodeList list) throws CustomException.IllegalFileFormat {
+    private void parseOperations(NodeList list) throws IllegalFileFormat {
         Node node;
 
         while (this.secondLevelOrder < list.getLength()) {
@@ -502,7 +567,7 @@ public class IJAXMLParser {
                 String attrValue = parseXmlAttribute(node, "name");
 
                 if (attrValue == null) {
-                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+                    throw new IllegalFileFormat("Invalid file syntax.");
                 }
 
                 if (node.hasChildNodes()) {
@@ -522,9 +587,9 @@ public class IJAXMLParser {
      *
      * @param operNode Operation node.
      * @param attrValue Operation tag name attribute value.
-     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     * @throws IllegalFileFormat Invalid format of input file.
      */
-    private void parseOperationChildren(Node operNode, String attrValue) throws CustomException.IllegalFileFormat {
+    private void parseOperationChildren(Node operNode, String attrValue) throws IllegalFileFormat {
         NodeList list = operNode.getChildNodes();
         Node node;
         String retDataType, visibility;
@@ -537,7 +602,7 @@ public class IJAXMLParser {
         retDataType = parseDataTypeTag(node);
 
         if (retDataType == null) {
-            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+            throw new IllegalFileFormat("Invalid file syntax.");
         }
 
         /* visibility tag */
@@ -548,7 +613,7 @@ public class IJAXMLParser {
         visibility = visibility2SingleChar(visibility);
 
         if (visibility == null) {
-            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+            throw new IllegalFileFormat("Invalid file syntax.");
         }
 
         /* attributes tags */
@@ -563,14 +628,14 @@ public class IJAXMLParser {
      * @param operName Operation name.
      * @param operRetDataType Operation return data type.
      * @param operVisibility Operation visibility.
-     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     * @throws IllegalFileFormat Invalid format of input file.
      */
     private void parseOperationAttributesTags(NodeList list,
                                               int idx,
                                               String operName,
                                               String operRetDataType,
                                               String operVisibility)
-            throws CustomException.IllegalFileFormat {
+            throws IllegalFileFormat {
         Node node;
 
         List<Pair<String, String>> attrList = new ArrayList<Pair<String, String>>();
@@ -581,25 +646,25 @@ public class IJAXMLParser {
 
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 if (!node.getNodeName().equals("attribute")) {
-                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+                    throw new IllegalFileFormat("Invalid file syntax.");
                 }
 
                 String attrValue = parseXmlAttribute(node, "name");
 
                 if (attrValue == null) {
-                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+                    throw new IllegalFileFormat("Invalid file syntax.");
                 }
 
                 if (node.hasChildNodes()) {
                     String dataType = parseOperationArgument(node);
-                    params.append(attrValue + " : " + dataType + ", ");
+                    params.append(attrValue).append(" : ").append(dataType).append(", ");
                 }
             }
 
             idx += 2;
         }
 
-        params.setLength(params.length() - 2); // delete last ", "
+        params.setLength(params.length() - 2); /* delete last ", " */
 
         ClassUML cls = this.diagramClasses.get(this.diagramClasses.size() - 1);
         this.controller.addOperation(cls, operName, params.toString(), operRetDataType, operVisibility);
@@ -610,9 +675,9 @@ public class IJAXMLParser {
      *
      * @param attrNode Attribute node.
      * @return Data type of an attribute.
-     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     * @throws IllegalFileFormat Invalid format of input file.
      */
-    private String parseOperationArgument(Node attrNode) throws CustomException.IllegalFileFormat {
+    private String parseOperationArgument(Node attrNode) throws IllegalFileFormat {
         NodeList list = attrNode.getChildNodes();
         Node node;
         String dataType;
@@ -624,7 +689,7 @@ public class IJAXMLParser {
         dataType = parseDataTypeTag(node);
 
         if (dataType == null) {
-            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+            throw new IllegalFileFormat("Invalid file syntax.");
         }
 
         return dataType;
@@ -637,9 +702,9 @@ public class IJAXMLParser {
     /**
      * Parse saved diagram relationships.
      *
-     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     * @throws IllegalFileFormat Invalid format of input file.
      */
-    private void parseRelationships() throws CustomException.IllegalFileFormat {
+    private void parseRelationships() throws IllegalFileFormat {
         /* Iterate through relationships */
         Node node;
 
@@ -648,16 +713,8 @@ public class IJAXMLParser {
 
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 if (!node.getNodeName().equals("relationship")) {
-                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+                    throw new IllegalFileFormat("Invalid file syntax.");
                 }
-
-                /*
-                String attrValue = parseXmlAttribute(node, "id");
-
-                if (attrValue == null) {
-                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
-                }
-                */
 
                 if (node.hasChildNodes()) {
                     parseRelationshipChildren(node);
@@ -676,9 +733,9 @@ public class IJAXMLParser {
      * </p>
      *
      * @param relNode Relationship node.
-     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     * @throws IllegalFileFormat Invalid format of input file.
      */
-    private void parseRelationshipChildren(Node relNode) throws CustomException.IllegalFileFormat {
+    private void parseRelationshipChildren(Node relNode) throws IllegalFileFormat {
         NodeList list = relNode.getChildNodes();
         Node node;
         String from = null;
@@ -691,14 +748,14 @@ public class IJAXMLParser {
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("from")) {
-                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+                throw new IllegalFileFormat("Invalid file syntax.");
             } else {
                 from = node.getTextContent();
             }
         }
 
         if (from == null) {
-            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+            throw new IllegalFileFormat("Invalid file syntax.");
         }
 
 
@@ -708,14 +765,14 @@ public class IJAXMLParser {
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("to")) {
-                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+                throw new IllegalFileFormat("Invalid file syntax.");
             } else {
                 to = node.getTextContent();
             }
         }
 
         if (to == null) {
-            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+            throw new IllegalFileFormat("Invalid file syntax.");
         }
 
         node = list.item(this.secondLevelOrder);
@@ -727,26 +784,26 @@ public class IJAXMLParser {
             } else if(node.getNodeName().equals("instanceLevel")) {
                 parseInstanceLevel(node, from, to);
             } else {
-                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+                throw new IllegalFileFormat("Invalid file syntax.");
             }
         }
     }
 
     /**
-     * Parse class level tag children.
+     * Parse class level tag child.
      *
      * @param classLevel Class level node.
      * @param from From class.
      * @param to To class.
-     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     * @throws IllegalFileFormat Invalid format of input file.
      */
-    private void parseClassLevel(Node classLevel, String from, String to) throws CustomException.IllegalFileFormat {
+    private void parseClassLevel(Node classLevel, String from, String to) throws IllegalFileFormat {
         NodeList list = classLevel.getChildNodes();
         int expectedListLen = 3;
 
         if (list.getLength() != expectedListLen ||
-                list.item(1).getNodeName().equals("instance")) {
-            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+                !list.item(1).getNodeName().equals("inheritance")) {
+            throw new IllegalFileFormat("Invalid file syntax.");
         } else {
             parseInheritanceTag(from, to);
         }
@@ -760,14 +817,14 @@ public class IJAXMLParser {
      *
      * @param from From class.
      * @param to To class.
-     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     * @throws IllegalFileFormat Invalid format of input file.
      */
-    private void parseInheritanceTag(String from, String to) throws CustomException.IllegalFileFormat {
+    private void parseInheritanceTag(String from, String to) throws IllegalFileFormat {
         ClassUML clsFrom = getClassByName(from);
         ClassUML clsTo = getClassByName(to);
 
         if (clsFrom == null || clsTo == null) {
-            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+            throw new IllegalFileFormat("Invalid file syntax.");
         }
 
         this.controller.createAndAddRelationship(clsFrom, clsTo, "inheritance");
@@ -818,9 +875,9 @@ public class IJAXMLParser {
      * @param instanceLevel Instance level node.
      * @param from From class.
      * @param to To class.
-     * @throws CustomException.IllegalFileFormat Invalid format of input file.
+     * @throws IllegalFileFormat Invalid format of input file.
      */
-    private void parseInstanceLevel(Node instanceLevel, String from, String to) throws CustomException.IllegalFileFormat {
+    private void parseInstanceLevel(Node instanceLevel, String from, String to) throws IllegalFileFormat {
         NodeList list = instanceLevel.getChildNodes();
         Node node;
         String fromMultiplicity = null;
@@ -831,7 +888,7 @@ public class IJAXMLParser {
         final int instLevelTagsCnt = 5;
 
         if (list.getLength() != instLevelTagsCnt) {
-            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+            throw new IllegalFileFormat("Invalid file syntax.");
         } else {
         */
 
@@ -841,20 +898,20 @@ public class IJAXMLParser {
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("fromMultiplicity")) {
-                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+                throw new IllegalFileFormat("Invalid file syntax.");
             } else {
                 fromMultiplicity = node.getTextContent();
             }
         }
 
         if (fromMultiplicity == null) {
-            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+            throw new IllegalFileFormat("Invalid file syntax.");
         }
 
         fromMultiplicity = multiplicityStrToChars(fromMultiplicity);
 
         if (fromMultiplicity == null) {
-            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+            throw new IllegalFileFormat("Invalid file syntax.");
         }
 
         /* toMultiplicity */
@@ -863,52 +920,27 @@ public class IJAXMLParser {
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("toMultiplicity")) {
-                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+                throw new IllegalFileFormat("Invalid file syntax.");
             } else {
                 toMultiplicity = node.getTextContent();
             }
         }
 
         if (toMultiplicity == null) {
-            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+            throw new IllegalFileFormat("Invalid file syntax.");
         }
 
         toMultiplicity = multiplicityStrToChars(toMultiplicity);
 
         if (toMultiplicity == null) {
-            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+            throw new IllegalFileFormat("Invalid file syntax.");
         }
-
-        /* fromRole */
-        node = list.item(idx);
-        idx += 2;
-        /*
-        if (node.getNodeType() == Node.ELEMENT_NODE) {
-            if (!node.getNodeName().equals("fromRole")) {
-                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
-            } else {
-
-            }
-        }
-        */
-        /* toRole */
-        node = list.item(idx);
-        idx += 2;
-        /*
-        if (node.getNodeType() == Node.ELEMENT_NODE) {
-            if (!node.getNodeName().equals("toRole")) {
-                throw new CustomException.IllegalFileFormat("Invalid file syntax.");
-            } else {
-
-            }
-        }
-        */
 
         ClassUML clsFrom = getClassByName(from);
         ClassUML clsTo = getClassByName(to);
 
         if (clsFrom == null || clsTo == null) {
-            throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+            throw new IllegalFileFormat("Invalid file syntax.");
         }
 
         /* association or aggregation or composition */
@@ -929,7 +961,245 @@ public class IJAXMLParser {
                             fromMultiplicity, toMultiplicity, "composition");
                     break;
                 default:
-                    throw new CustomException.IllegalFileFormat("Invalid file syntax.");
+                    throw new IllegalFileFormat("Invalid file syntax.");
+            }
+        }
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+    /*                                        SEQUENCE DIAGRAM                                         */
+    /*-------------------------------------------------------------------------------------------------*/
+
+    /**
+     * Parse saved sequence diagram lifelines.
+     *
+     * @throws IllegalFileFormat Invalid format of input file.
+     */
+    private void parseLifelines() throws IllegalFileFormat {
+        Node node;
+
+        while (this.firstLevelOrder < this.firstLevelList.getLength()) {
+            node = this.firstLevelList.item(this.firstLevelOrder);
+
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                if (!node.getNodeName().equals("lifeline")) {
+                    break;
+                }
+
+                String attrValue = parseXmlAttribute(node, "name");
+
+                if (attrValue == null) {
+                    throw new IllegalFileFormat("Invalid file syntax.");
+                }
+
+                if (node.hasChildNodes()) {
+                    parseLifelineChildren(node, attrValue);
+                }
+            }
+
+            this.firstLevelOrder += 2;
+        }
+    }
+
+    /**
+     * Parse lifeline children.
+     * <p>
+     *     As a lifeline children are parsed height and yCoordinate tags.
+     * </p>
+     *
+     * @param lifelineNode Node of lifeline to be parsed.
+     * @param attrValue Value of lifeline tag name attribute.
+     * @throws IllegalFileFormat Invalid format of input file.
+     */
+    private void parseLifelineChildren(Node lifelineNode, String attrValue) throws IllegalFileFormat {
+        NodeList list = lifelineNode.getChildNodes();
+
+        Node node;
+        double height;
+        double x;
+        int order;
+
+        order = 1;
+
+        height = 0.0;
+        x = 0.0;
+
+        /* Height tag */
+        node = list.item(this.secondLevelOrder);
+        order += 2;
+
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (!node.getNodeName().equals("height")) {
+                throw new IllegalFileFormat("Invalid file syntax.");
+            } else {
+                height = Double.parseDouble(node.getTextContent());
+            }
+        }
+
+        /* xCoordinate tag */
+        node = list.item(this.secondLevelOrder);
+        order += 2;
+
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (!node.getNodeName().equals("xCoordinate")) {
+                throw new IllegalFileFormat("Invalid file syntax.");
+            } else {
+                x = Double.parseDouble(node.getTextContent());
+            }
+        }
+
+        /* Call frontend method for creating lifeline element */
+        // TODO
+    }
+
+    /**
+     * Parse saved sequence diagram messages.
+     *
+     * @throws IllegalFileFormat Invalid format of input file.
+     */
+    private void parseMessages() throws IllegalFileFormat {
+        /* Iterate through messages */
+        Node node;
+
+        while (this.firstLevelOrder < this.firstLevelList.getLength()) {
+            node = this.firstLevelList.item(this.firstLevelOrder);
+
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                if (!node.getNodeName().equals("message")) {
+                    throw new IllegalFileFormat("Invalid file syntax.");
+                }
+
+                if (node.hasChildNodes()) {
+                    parseMessageChildren(node);
+                }
+            }
+
+            this.firstLevelOrder += 2;
+        }
+    }
+
+    /**
+     * Parse message children.
+     * <p>
+     *     As message children are parsed from ant to lifelines,
+     *     type of message and concrete message.
+     * </p>
+     *
+     * @param messageNode Message node.
+     * @throws IllegalFileFormat Invalid format of input file.
+     */
+    private void parseMessageChildren(Node messageNode) throws IllegalFileFormat {
+        NodeList list = messageNode.getChildNodes();
+        Node node;
+        String from = null;
+        String to = null;
+        this.secondLevelOrder = 1;
+
+        /* From tag */
+        node = list.item(this.secondLevelOrder);
+        this.secondLevelOrder += 2;
+
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (!node.getNodeName().equals("from")) {
+                throw new IllegalFileFormat("Invalid file syntax");
+            } else {
+                from = node.getTextContent();
+            }
+        }
+
+        if (from == null) {
+            throw new IllegalFileFormat("Invalid file syntax.");
+        }
+
+        /* To tag */
+        node = list.item(this.secondLevelOrder);
+        this.secondLevelOrder += 2;
+
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (!node.getNodeName().equals("to")) {
+                throw new IllegalFileFormat("Invalid file syntax.");
+            } else {
+                to = node.getTextContent();
+            }
+        }
+
+        if (to == null) {
+            throw new IllegalFileFormat("Invalid file syntax.");
+        }
+
+        node = list.item(this.secondLevelOrder);
+        this.secondLevelOrder += 2;
+
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (node.getNodeName().equals("labelType")) {
+                parseLabelType(node, from, to);
+            } else if (node.getNodeName().equals("operationType")) {
+                parseOperationType(node, from, to);
+            } else {
+                throw new IllegalFileFormat("Invalid file syntax");
+            }
+        }
+    }
+
+    /**
+     * Parse label type tag child.
+     *
+     * @param labelType Label type node.
+     * @param from From lifeline.
+     * @param to To lifeline.
+     * @throws IllegalFileFormat Invalid format of input file.
+     */
+    private void parseLabelType(Node labelType, String from, String to) throws IllegalFileFormat {
+        NodeList list = labelType.getChildNodes();
+        int expectedListLen = 3;
+
+        if (list.getLength() != expectedListLen) {
+            throw new IllegalFileFormat("Invalid file syntax.");
+        } else {
+
+            switch (list.item(1).getNodeName()) {
+                case "returnMessage":
+                    // TODO frontend
+                    break;
+                case "destroyMessage":
+                    // TODO frontend
+                    break;
+                default:
+                    throw new IllegalFileFormat("Invalid file syntax.");
+            }
+        }
+    }
+
+    /**
+     * Parse operation type tag child.
+     *
+     * @param operationType Operation type tag.
+     * @param from From lifeline.
+     * @param to To lifeline.
+     * @throws IllegalFileFormat Invalid format of input file.
+     */
+    private void parseOperationType(Node operationType, String from, String to) throws IllegalFileFormat {
+        NodeList list = operationType.getChildNodes();
+        int expectedListLen = 3;
+
+        if (list.getLength() != expectedListLen) {
+            throw new IllegalFileFormat("Invalid file syntax.");
+        } else {
+            switch (list.item(1).getNodeName()) {
+                case "synchronousMessage":
+                    // TODO frontend
+                    break;
+                case "asynchronousMessage":
+                    // TODO frontend
+                    break;
+                case "selfMessage":
+                    // TODO frontend
+                    break;
+                case "createMessage":
+                    // TODO frontend
+                    break;
+                default:
+                    throw new IllegalFileFormat("Invalid file syntax.");
             }
         }
     }

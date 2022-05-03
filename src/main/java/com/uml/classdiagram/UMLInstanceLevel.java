@@ -20,8 +20,6 @@ public abstract class UMLInstanceLevel extends UMLRelationship {
 
 	private UMLMultiplicityType fromMultiplicity;
 	private UMLMultiplicityType toMultiplicity;
-	private String fromRole;
-	private String toRole;
 
 	/**
 	 * Creates an UMLInstanceLevel instance with start class and end class.
@@ -33,8 +31,6 @@ public abstract class UMLInstanceLevel extends UMLRelationship {
 		super(from, to);
 		this.fromMultiplicity = UMLMultiplicityType.UNSPECIFIED;
 		this.toMultiplicity = UMLMultiplicityType.UNSPECIFIED;
-		this.fromRole = "";
-		this.toRole = "";
 	}
 
 	/**
@@ -69,40 +65,6 @@ public abstract class UMLInstanceLevel extends UMLRelationship {
 	 */
 	public void setToMultiplicity(UMLMultiplicityType toMultiplicity) {
 		this.toMultiplicity = toMultiplicity;
-	}
-
-	/**
-	 * Returns the role of the starting class.
-	 * @return Starting class role.
-	 */
-	public String getFromRole() {
-		return this.fromRole;
-	}
-
-	/**
-	 * Set the role of the starting class.
-	 *
-	 * @param fromRole Starting class role.
-	 */
-	public void setFromRole(String fromRole) {
-		this.fromRole = fromRole;
-	}
-
-	/**
-	 * Returns the role of the ending class.
-	 * @return Ending class role.
-	 */
-	public String getToRole() {
-		return this.toRole;
-	}
-
-	/**
-	 * Set the role of the ending class.
-	 *
-	 * @param toRole Ending class role.
-	 */
-	public void setToRole(String toRole) {
-		this.toRole = toRole;
 	}
 
 }
