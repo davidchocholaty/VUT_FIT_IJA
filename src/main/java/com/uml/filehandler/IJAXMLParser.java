@@ -716,14 +716,6 @@ public class IJAXMLParser {
                     throw new IllegalFileFormat("Invalid file syntax.");
                 }
 
-                /*
-                String attrValue = parseXmlAttribute(node, "id");
-
-                if (attrValue == null) {
-                    throw new IllegalFileFormat("Invalid file syntax.");
-                }
-                */
-
                 if (node.hasChildNodes()) {
                     parseRelationshipChildren(node);
                 }

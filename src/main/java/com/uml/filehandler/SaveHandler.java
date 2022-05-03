@@ -339,7 +339,6 @@ public class SaveHandler {
         /* Create relationship tag */
         diagramRel = this.doc.createElement("relationship");
         classDiagramElement.appendChild(diagramRel);
-        diagramRel.setAttribute("id", Long.toString(currentRel.getId()));
 
         addFromTag(diagramRel, currentRel);
         addToTag(diagramRel, currentRel);
@@ -555,7 +554,6 @@ public class SaveHandler {
         diagramLifeline = this.doc.createElement("lifeline");
         sequenceDiagramElement.appendChild(diagramLifeline);
         diagramLifeline.setAttribute("name", currentLifeline.getObjectClass().getName());
-        diagramLifeline.setAttribute("id", Long.toString(currentLifeline.getId()));
 
         addHeightTag(diagramLifeline, currentLifeline);
         addXCoordinateTag(diagramLifeline, currentLifeline);
@@ -620,7 +618,6 @@ public class SaveHandler {
         diagramMessage = this.doc.createElement("message");
         sequenceDiagramElement.appendChild(diagramMessage);
         diagramMessage.setAttribute("name", currentMessage.getLabel());
-        diagramMessage.setAttribute("id", Long.toString(currentMessage.getId()));
 
         addFromTag(diagramMessage, currentMessage);
         addToTag(diagramMessage, currentMessage);
