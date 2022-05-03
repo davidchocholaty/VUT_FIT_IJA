@@ -139,9 +139,9 @@ public class ClassDiagram extends Element {
 	}
 
 	/**
-	 * Delete all relationship which use class to be deleted.
+	 * Delete all relationships which use the class to be deleted.
 	 * <p>
-	 *     A class is in from or to attribute of relationship.
+	 *     The class is in from or to attribute of relationship.
 	 * </p>
 	 *
 	 * @param cls Class which relationships should be deleted.
