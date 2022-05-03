@@ -1126,6 +1126,8 @@ public class IJAXMLParser {
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (!node.getNodeName().equals("to")) {
                 throw new IllegalFileFormat("Invalid file syntax.");
+            } else {
+                to = node.getTextContent();
             }
         }
 
