@@ -494,8 +494,7 @@ public class MainController extends Parent {
         if(path != null){
             SaveHandler saveHandler = new SaveHandler(diagram);
             try{
-                // TODO
-                //saveHandler.saveClassDiagram(path);
+                saveHandler.save(path);
             } catch (ParserConfigurationException | FileNotFoundException | TransformerException e) {
                 childController.warning("Invalid file path.");
             }
