@@ -944,31 +944,6 @@ public class IJAXMLParser {
             throw new IllegalFileFormat("Invalid file syntax.");
         }
 
-        /* fromRole */
-        node = list.item(idx);
-        idx += 2;
-        /*
-        if (node.getNodeType() == Node.ELEMENT_NODE) {
-            if (!node.getNodeName().equals("fromRole")) {
-                throw new IllegalFileFormat("Invalid file syntax.");
-            } else {
-
-            }
-        }
-        */
-        /* toRole */
-        node = list.item(idx);
-        idx += 2;
-        /*
-        if (node.getNodeType() == Node.ELEMENT_NODE) {
-            if (!node.getNodeName().equals("toRole")) {
-                throw new IllegalFileFormat("Invalid file syntax.");
-            } else {
-
-            }
-        }
-        */
-
         ClassUML clsFrom = getClassByName(from);
         ClassUML clsTo = getClassByName(to);
 

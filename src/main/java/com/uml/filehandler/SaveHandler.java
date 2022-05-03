@@ -416,8 +416,6 @@ public class SaveHandler {
 
         addFromMultiplicityTag(instanceLevel, currentRel);
         addToMultiplicityTag(instanceLevel, currentRel);
-        addFromRoleTag(instanceLevel, currentRel);
-        addToRoleTag(instanceLevel, currentRel);
 
         if (currentRel instanceof UMLAssociation) {
             addAssociationTag(instanceLevel);
@@ -456,36 +454,6 @@ public class SaveHandler {
         toMultiplicity = this.doc.createElement("toMultiplicity");
         instanceLevel.appendChild(toMultiplicity);
         toMultiplicity.setTextContent(((UMLInstanceLevel)currentRel).getToMultiplicity().name());
-    }
-
-    /**
-     * Add from role tag.
-     *
-     * @param instanceLevel Instance level element.
-     * @param currentRel Current relationship.
-     */
-    private void addFromRoleTag(Element instanceLevel, UMLRelationship currentRel) {
-        Element fromRole;
-
-        /* fromRole tag */
-        fromRole = this.doc.createElement("fromRole");
-        instanceLevel.appendChild(fromRole);
-        fromRole.setTextContent(((UMLInstanceLevel)currentRel).getFromRole());
-    }
-
-    /**
-     * Add to role tag.
-     *
-     * @param instanceLevel Instance level element.
-     * @param currentRel Current relationship.
-     */
-    private void addToRoleTag(Element instanceLevel, UMLRelationship currentRel) {
-        Element toRole;
-
-        /* toRole tag */
-        toRole = this.doc.createElement("toRole");
-        instanceLevel.appendChild(toRole);
-        toRole.setTextContent(((UMLInstanceLevel)currentRel).getToRole());
     }
 
     /**
