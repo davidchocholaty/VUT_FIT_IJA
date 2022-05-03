@@ -573,9 +573,13 @@ public class MainController extends Parent {
 
     public void addTab(Event event) {
         try{
+            //TODO jmeno sequence diagram
             String tabText = String.format("Sequence diagram %d", tabIndex++);
             Tab tab = new Tab(tabText);
+            tab.setId(tabText);
             FXMLLoader loader = new FXMLLoader(App.class.getResource("sequencePage.fxml"));
+            SequenceController sequenceController = new SequenceController();
+            loader.setController(sequenceController);
             tab.setContent((Node) loader.load());
             tabPane.getTabs().add(tabPane.getTabs().size() - 1, tab);
             tabPane.getSelectionModel().select(tabPane.getTabs().size() - 2);
