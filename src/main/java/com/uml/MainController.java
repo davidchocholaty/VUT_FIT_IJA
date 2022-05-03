@@ -13,6 +13,7 @@ import com.uml.classdiagram.*;
 import com.uml.filehandler.CustomException;
 import com.uml.filehandler.IJAXMLParser;
 import com.uml.filehandler.SaveHandler;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -45,6 +46,7 @@ public class MainController extends Parent {
     public ToggleButton compositionButton;
     public ToggleButton realizationButton;
     public ToggleButton aggregationButton;
+    public TabPane tabPane;
     private Node view;
     public Pane rPane;
     private Node button;
@@ -58,6 +60,7 @@ public class MainController extends Parent {
     static ClassUML tmpNode;
     static Arrow tmpArrow;
     static ToggleGroup group = new ToggleGroup();
+    static  int tabIndex = 1;
 
     public ClassDiagram diagram = new ClassDiagram("Class diagram");
 
@@ -159,8 +162,6 @@ public class MainController extends Parent {
      */
     public ClassUML createElement(MouseEvent mouseEvent) throws IOException {
 
-        double x = mouseEvent.getX();
-        double y = mouseEvent.getY();
         ClassUML el = new ClassUML(mouseEvent.getX(), mouseEvent.getY(), this);
 
         el.getView().setOnDragDetected(e -> dDetect(e, el));
@@ -440,7 +441,7 @@ public class MainController extends Parent {
     }
 
     /**
-     * Detect drag in class diagram.
+     * Detect drag in class gram.
      *
      * @param mouseEvent Event of mouse.
      */
@@ -568,5 +569,18 @@ public class MainController extends Parent {
             e.printStackTrace();
         }
 
+    }
+
+    public void addTab(Event event) {
+        try{
+            String tabText = String.format("Sequence diagram %d", tabIndex++);
+            Tab tab = new Tab(tabText);
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("sequencePage.fxml"));
+            tab.setContent((Node) loader.load());
+            tabPane.getTabs().add(tabPane.getTabs().size() - 1, tab);
+            tabPane.getSelectionModel().select(tabPane.getTabs().size() - 2);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -39,3 +39,10 @@
 .helpButton{
     -fx-font-weight: bold;
 }
+.WindowSeparator{
+    -fx-stroke-width: 5;
+}
+.sequence{
+    -fx-font-style: 13;
+    -fx-padding: 15,15,15,15;
+}
