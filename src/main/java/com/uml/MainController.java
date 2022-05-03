@@ -10,7 +10,7 @@
 package com.uml;
 
 import com.uml.classdiagram.*;
-import com.uml.filehandler.CustomException;
+import com.uml.customexception.*;
 import com.uml.filehandler.IJAXMLParser;
 import com.uml.filehandler.SaveHandler;
 import javafx.fxml.FXML;
@@ -514,9 +514,9 @@ public class MainController extends Parent {
             IJAXMLParser parser = new IJAXMLParser(path);
             try {
                 parser.parse();
-            } catch (ParserConfigurationException | CustomException.IllegalFileExtension | IOException | SAXException e) {
+            } catch (ParserConfigurationException | IllegalFileExtension | IOException | SAXException e) {
                 childController.warning("Invalid file path.");
-            } catch (CustomException.IllegalFileFormat e) {
+            } catch (IllegalFileFormat e) {
                 childController.warning("Invalid file syntax.");
             }
         }

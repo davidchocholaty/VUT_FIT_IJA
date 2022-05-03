@@ -1,7 +1,7 @@
 package com.uml.sequencediagram;
 
 import com.uml.classdiagram.UMLClass;
-import com.uml.customexceptions.InvalidOperationLabel;
+import com.uml.customexception.InvalidOperationLabel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
