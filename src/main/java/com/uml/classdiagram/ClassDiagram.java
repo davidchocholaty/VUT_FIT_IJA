@@ -304,6 +304,21 @@ public class ClassDiagram extends Element {
 	}
 
 	/**
+	 * Method for obtaining diagram classes names.
+	 *
+	 * @return Unmodifiable list with diagram classes names.
+	 */
+	public List<String> getClassesNames() {
+		List<String> classesNames = new ArrayList<String>();
+
+		for (UMLClass currentClass : this.diagramClasses) {
+			classesNames.add(currentClass.getName());
+		}
+
+		return Collections.unmodifiableList(classesNames);
+	}
+
+	/**
 	 * Creates an instance of the UML association and inserts it into the diagram.
 	 *
 	 * @param from Class where relationship starts.
