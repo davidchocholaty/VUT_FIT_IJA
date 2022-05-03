@@ -164,10 +164,20 @@ public class ClassDiagram extends Element {
 		}
 	}
 
-	public boolean isOverridenMethod(UMLClass operationClass, UMLOperation operation) {
+	/**
+	 * Check if concrete method in concrete operation is overridden.
+	 * <p>
+	 *     The method checks all parent classes via inheritance relationship.
+	 * </p>
+	 *
+	 * @param operationClass Class that contains searched method.
+	 * @param operation Searched method.
+	 * @return True if searched method is overridden, false otherwise.
+	 */
+	public boolean isOverriddenMethod(UMLClass operationClass, UMLOperation operation) {
 		List<UMLAttribute> currentOperationArguments;
 		List<UMLAttribute> operationArguments;
-		boolean isOverriden;
+		boolean isOverridden;
 		boolean identicalArguments;
 
 		operationArguments = operation.getArguments();
@@ -182,7 +192,7 @@ public class ClassDiagram extends Element {
 				for (UMLOperation currentOperation : currentRelationship.getTo().getOperations()) {
 					if (currentOperation.getName().equals(operation.getName()) &&
 							currentOperation.getType().equals(operation.getType())) {
-						// Operations names and return types are identical.
+						// Operation names and return types are identical.
 						currentOperationArguments = currentOperation.getArguments();
 
 						if (currentOperationArguments.size() == operationArguments.size()) {
@@ -204,11 +214,11 @@ public class ClassDiagram extends Element {
 					}
 				}
 
-				// Overriden method was not found in current class.
+				// Overridden method was not found in current class.
 				// Check the parent classes to see if this is their method.
-				isOverriden = isOverridenMethod(currentRelationship.getTo(), operation);
+				isOverridden = isOverriddenMethod(currentRelationship.getTo(), operation);
 
-				if (isOverriden) {
+				if (isOverridden) {
 					return true;
 				}
 			}
