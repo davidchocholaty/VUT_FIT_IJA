@@ -182,25 +182,25 @@ public class ClassDiagram extends Element {
 
 		operationArguments = operation.getArguments();
 
-		// List through all relationships.
+		/* List through all relationships. */
 		for (UMLRelationship currentRelationship : diagramRelationships) {
-			// If the operationClass is TO class of current relationship
-			// and the type of relationship is inheritance.
+			/* If the operationClass is TO class of current relationship */
+			/* and the type of relationship is inheritance. */
 			if (currentRelationship.getFrom().equals(operationClass) &&
 					currentRelationship instanceof UMLInheritance) {
-				// List through class operations.
+				/* List through class operations. */
 				for (UMLOperation currentOperation : currentRelationship.getTo().getOperations()) {
 					if (currentOperation.getName().equals(operation.getName()) &&
 							currentOperation.getType().equals(operation.getType())) {
-						// Operation names and return types are identical.
+						/* Operation names and return types are identical. */
 						currentOperationArguments = currentOperation.getArguments();
 
 						if (currentOperationArguments.size() == operationArguments.size()) {
-							// Count of parameters is the same.
+							/* Count of parameters is the same. */
 							identicalArguments = true;
 
 							for (int i = 0; i < currentOperationArguments.size(); i++) {
-								// Types of arguments are not the same.
+								/* Types of arguments are not the same. */
 								if (!currentOperationArguments.get(i).getType().equals(operationArguments.get(i).getType())) {
 									identicalArguments = false;
 									break;
@@ -214,8 +214,8 @@ public class ClassDiagram extends Element {
 					}
 				}
 
-				// Overridden method was not found in current class.
-				// Check the parent classes to see if this is their method.
+				/* Overridden method was not found in current class. */
+				/* Check the parent classes to see if this is their method. */
 				isOverridden = isOverriddenMethod(currentRelationship.getTo(), operation);
 
 				if (isOverridden) {

@@ -657,14 +657,14 @@ public class IJAXMLParser {
 
                 if (node.hasChildNodes()) {
                     String dataType = parseOperationArgument(node);
-                    params.append(attrValue + " : " + dataType + ", ");
+                    params.append(attrValue).append(" : ").append(dataType).append(", ");
                 }
             }
 
             idx += 2;
         }
 
-        params.setLength(params.length() - 2); // delete last ", "
+        params.setLength(params.length() - 2); /* delete last ", " */
 
         ClassUML cls = this.diagramClasses.get(this.diagramClasses.size() - 1);
         this.controller.addOperation(cls, operName, params.toString(), operRetDataType, operVisibility);
@@ -798,7 +798,7 @@ public class IJAXMLParser {
     }
 
     /**
-     * Parse class level tag children.
+     * Parse class level tag child.
      *
      * @param classLevel Class level node.
      * @param from From class.
@@ -978,6 +978,11 @@ public class IJAXMLParser {
     /*                                        SEQUENCE DIAGRAM                                         */
     /*-------------------------------------------------------------------------------------------------*/
 
+    /**
+     * Parse saved sequence diagram lifelines.
+     *
+     * @throws IllegalFileFormat Invalid format of input file.
+     */
     private void parseLifelines() throws IllegalFileFormat {
         Node node;
 
@@ -1004,6 +1009,16 @@ public class IJAXMLParser {
         }
     }
 
+    /**
+     * Parse lifeline children.
+     * <p>
+     *     As a lifeline children are parsed height and yCoordinate tags.
+     * </p>
+     *
+     * @param lifelineNode Node of lifeline to be parsed.
+     * @param attrValue Value of lifeline tag name attribute.
+     * @throws IllegalFileFormat Invalid format of input file.
+     */
     private void parseLifelineChildren(Node lifelineNode, String attrValue) throws IllegalFileFormat {
         NodeList list = lifelineNode.getChildNodes();
 
@@ -1045,6 +1060,11 @@ public class IJAXMLParser {
         // TODO
     }
 
+    /**
+     * Parse saved sequence diagram messages.
+     *
+     * @throws IllegalFileFormat Invalid format of input file.
+     */
     private void parseMessages() throws IllegalFileFormat {
         /* Iterate through messages */
         Node node;
@@ -1066,6 +1086,16 @@ public class IJAXMLParser {
         }
     }
 
+    /**
+     * Parse message children.
+     * <p>
+     *     As message children are parsed from ant to lifelines,
+     *     type of message and concrete message.
+     * </p>
+     *
+     * @param messageNode Message node.
+     * @throws IllegalFileFormat Invalid format of input file.
+     */
     private void parseMessageChildren(Node messageNode) throws IllegalFileFormat {
         NodeList list = messageNode.getChildNodes();
         Node node;
@@ -1117,6 +1147,14 @@ public class IJAXMLParser {
         }
     }
 
+    /**
+     * Parse label type tag child.
+     *
+     * @param labelType Label type node.
+     * @param from From lifeline.
+     * @param to To lifeline.
+     * @throws IllegalFileFormat Invalid format of input file.
+     */
     private void parseLabelType(Node labelType, String from, String to) throws IllegalFileFormat {
         NodeList list = labelType.getChildNodes();
         int expectedListLen = 3;
@@ -1138,6 +1176,14 @@ public class IJAXMLParser {
         }
     }
 
+    /**
+     * Parse operation type tag child.
+     *
+     * @param operationType Operation type tag.
+     * @param from From lifeline.
+     * @param to To lifeline.
+     * @throws IllegalFileFormat Invalid format of input file.
+     */
     private void parseOperationType(Node operationType, String from, String to) throws IllegalFileFormat {
         NodeList list = operationType.getChildNodes();
         int expectedListLen = 3;
@@ -1145,7 +1191,6 @@ public class IJAXMLParser {
         if (list.getLength() != expectedListLen) {
             throw new IllegalFileFormat("Invalid file syntax.");
         } else {
-
             switch (list.item(1).getNodeName()) {
                 case "synchronousMessage":
                     // TODO frontend

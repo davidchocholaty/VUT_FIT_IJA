@@ -55,6 +55,14 @@ public class SaveHandler {
         Collections.addAll(this.sequenceDiagrams, sequenceDiagrams);
     }
 
+    /**
+     * Main method for diagrams saving.
+     *
+     * @param destPath Output file destination path.
+     * @throws ParserConfigurationException Parser configuration error.
+     * @throws FileNotFoundException File was not found (FileOutputStream).
+     * @throws TransformerException Transformer error.
+     */
     public void save(String destPath) throws ParserConfigurationException, FileNotFoundException, TransformerException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = dbf.newDocumentBuilder();
@@ -94,7 +102,7 @@ public class SaveHandler {
     /**
      * Add all diagram classes tags.
      *
-     * @param classDiagramElement Class element.
+     * @param classDiagramElement Class diagram element.
      * @param diagramClasses Classes of diagram.
      */
     private void addClassTags(Element classDiagramElement, List<UMLClass> diagramClasses) {
@@ -107,7 +115,7 @@ public class SaveHandler {
     /**
      * Add all diagram relationships tags.
      *
-     * @param classDiagramElement Class element.
+     * @param classDiagramElement Class diagram element.
      * @param diagramRelationships Relationships of diagram.
      */
     private void addRelationshipsTags(Element classDiagramElement, List<UMLRelationship> diagramRelationships) {
@@ -322,7 +330,7 @@ public class SaveHandler {
     /**
      * Add relationship tag.
      *
-     * @param classDiagramElement Root element.
+     * @param classDiagramElement Class diagram element.
      * @param currentRel Current relationship.
      */
     private void addRelationshipTag(Element classDiagramElement, UMLRelationship currentRel) {
@@ -500,6 +508,11 @@ public class SaveHandler {
     /*                                        SEQUENCE DIAGRAM                                         */
     /*-------------------------------------------------------------------------------------------------*/
 
+    /**
+     * Main method for sequence diagrams saving.
+     *
+     * @param rootElement Root element.
+     */
     private void saveSequenceDiagrams(Element rootElement) {
         Element sequenceDiagramElement;
 
@@ -516,6 +529,12 @@ public class SaveHandler {
         }
     }
 
+    /**
+     * Add all sequence diagram lifelines tags.
+     *
+     * @param sequenceDiagramElement Sequence diagram element.
+     * @param diagramLifelines Sequence diagram lifelines.
+     */
     private void addLifelinesTags(Element sequenceDiagramElement,
                                   List<UMLLifeline> diagramLifelines) {
         for (UMLLifeline currentLifeline : diagramLifelines) {
@@ -523,6 +542,12 @@ public class SaveHandler {
         }
     }
 
+    /**
+     * Add lifeline tag.
+     *
+     * @param sequenceDiagramElement Sequence diagram element.
+     * @param currentLifeline Current lifeline to be saved.
+     */
     private void addLifelineTag(Element sequenceDiagramElement, UMLLifeline currentLifeline) {
         Element diagramLifeline;
 
@@ -536,6 +561,12 @@ public class SaveHandler {
         addXCoordinateTag(diagramLifeline, currentLifeline);
     }
 
+    /**
+     * Add height tag.
+     *
+     * @param diagramLifeline Lifeline element.
+     * @param currentLifeline Current lifeline to be saved.
+     */
     private void addHeightTag(Element diagramLifeline, UMLLifeline currentLifeline) {
         Element height;
 
@@ -545,6 +576,15 @@ public class SaveHandler {
         height.setTextContent(Double.toString(currentLifeline.getHeight()));
     }
 
+    /**
+     * Add x coordinate tag.
+     * <p>
+     *     This method is overridden method of the class diagram method version for sequence diagram.
+     * </p>
+     *
+     * @param diagramLifeline Lifeline element.
+     * @param currentLifeline Current lifeline to be saved.
+     */
     private void addXCoordinateTag(Element diagramLifeline, UMLLifeline currentLifeline) {
         Element xCoordinate;
 
@@ -554,6 +594,12 @@ public class SaveHandler {
         xCoordinate.setTextContent(Double.toString(currentLifeline.getXCoordinate()));
     }
 
+    /**
+     * Add all diagram messages tags.
+     *
+     * @param sequenceDiagramElement Sequence diagram element.
+     * @param diagramMessages Messages of diagram.
+     */
     private void addMessagesTags(Element sequenceDiagramElement,
                                  List<UMLMessage> diagramMessages) {
         for (UMLMessage currentMessage : diagramMessages) {
@@ -561,6 +607,12 @@ public class SaveHandler {
         }
     }
 
+    /**
+     * Add message tag.
+     *
+     * @param sequenceDiagramElement Sequence diagram element.
+     * @param currentMessage Current message to be saved.
+     */
     private void addMessageTag(Element sequenceDiagramElement, UMLMessage currentMessage) {
         Element diagramMessage;
 
@@ -581,6 +633,15 @@ public class SaveHandler {
         }
     }
 
+    /**
+     * Add from tag.
+     * <p>
+     *     This method is overridden method of the class diagram method version for sequence diagram.
+     * </p>
+     *
+     * @param diagramMessage Message element.
+     * @param currentMessage Current message.
+     */
     private void addFromTag(Element diagramMessage, UMLMessage currentMessage) {
         Element from;
 
@@ -590,6 +651,15 @@ public class SaveHandler {
         from.setTextContent(currentMessage.getFromLifeline().getObjectClass().getName());
     }
 
+    /**
+     * Add to tag.
+     * <p>
+     *     This method is overridden method of the class diagram method version for sequence diagram.
+     * </p>
+     *
+     * @param diagramMessage Message element.
+     * @param currentMessage Current message.
+     */
     private void addToTag(Element diagramMessage, UMLMessage currentMessage) {
         Element to;
 
@@ -599,6 +669,15 @@ public class SaveHandler {
         to.setTextContent(currentMessage.getFromLifeline().getObjectClass().getName());
     }
 
+    /**
+     * Add y coordinate tag.
+     * <p>
+     *     This method is overridden method of the class diagram method version for sequence diagram.
+     * </p>
+     *
+     * @param diagramMessage Message element.
+     * @param currentMessage Current message.
+     */
     private void addYCoordinateTag(Element diagramMessage, UMLMessage currentMessage) {
         Element yCoordinate;
 
@@ -608,6 +687,12 @@ public class SaveHandler {
         yCoordinate.setTextContent(Double.toString(currentMessage.getYCoordinate()));
     }
 
+    /**
+     * Add label type tag.
+     *
+     * @param diagramMessage Message element.
+     * @param currentMessage Current message.
+     */
     private void addLabelTypeTag(Element diagramMessage, UMLMessage currentMessage) {
         Element labelType;
 
@@ -622,6 +707,11 @@ public class SaveHandler {
         }
     }
 
+    /**
+     * Add return message tag.
+     *
+     * @param labelType Label type element.
+     */
     private void addReturnMessageTag(Element labelType) {
         Element returnMessage;
 
@@ -630,6 +720,11 @@ public class SaveHandler {
         labelType.appendChild(returnMessage);
     }
 
+    /**
+     * Add destroy message tag.
+     *
+     * @param labelType Label type element.
+     */
     private void addDestroyMessageTag(Element labelType) {
         Element destroyMessage;
 
@@ -638,6 +733,12 @@ public class SaveHandler {
         labelType.appendChild(destroyMessage);
     }
 
+    /**
+     * Add operation type tag.
+     *
+     * @param diagramMessage Message element.
+     * @param currentMessage Current message.
+     */
     private void addOperationTypeTag(Element diagramMessage, UMLMessage currentMessage) {
         Element operationType;
 
@@ -656,6 +757,11 @@ public class SaveHandler {
         }
     }
 
+    /**
+     * Add synchronous message tag.
+     *
+     * @param operationType Label type element.
+     */
     private void addSynchronousMessageTag(Element operationType) {
         Element synchronousMessage;
 
@@ -664,6 +770,11 @@ public class SaveHandler {
         operationType.appendChild(synchronousMessage);
     }
 
+    /**
+     * Add asynchronous message tag.
+     *
+     * @param operationType Label type element.
+     */
     private void addAsynchronousMessageTag(Element operationType) {
         Element asynchronousMessage;
 
@@ -672,6 +783,11 @@ public class SaveHandler {
         operationType.appendChild(asynchronousMessage);
     }
 
+    /**
+     * Add self message tag.
+     *
+     * @param operationType Label type element.
+     */
     private void addSelfMessageTag(Element operationType) {
         Element selfMessage;
 
@@ -680,6 +796,11 @@ public class SaveHandler {
         operationType.appendChild(selfMessage);
     }
 
+    /**
+     * Add create message tag.
+     *
+     * @param operationType Label type element.
+     */
     private void addCreateMessageTag(Element operationType) {
         Element createMessage;
 
