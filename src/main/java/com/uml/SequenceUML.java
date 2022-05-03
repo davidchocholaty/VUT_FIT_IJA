@@ -1,5 +1,7 @@
 package com.uml;
 
+import com.uml.classdiagram.UMLClass;
+import com.uml.sequencediagram.UMLLifeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
@@ -29,6 +31,8 @@ public class SequenceUML extends Parent {
     public final Glow glow = new Glow(0.8);
     public ObservableList<Message> edges = FXCollections.observableArrayList();
 
+    public UMLLifeline lifeline;
+
     public Polyline getClickLine() {
         return clickLine;
     }
@@ -41,7 +45,7 @@ public class SequenceUML extends Parent {
         return this.view;
     }
 
-    public SequenceUML(double x, double y, String name, Pane rpane) throws IOException {
+    public SequenceUML(double x, double y, UMLClass cls, Pane rpane) throws IOException {
         this.x1.set(x);
         this.y1.set(y);
         this.x2.set(x);
@@ -49,7 +53,7 @@ public class SequenceUML extends Parent {
         FXMLLoader loader = new FXMLLoader(App.class.getResource("sequence_uml.fxml"));
         Button sequence = loader.load();
         setView(sequence);
-        sequence.setText(name);
+        sequence.setText(cls.getName());
         getView().setLayoutX(x);
         getView().setLayoutY(y);
         getView().translateXProperty().bind(sequence.widthProperty().divide(-2));

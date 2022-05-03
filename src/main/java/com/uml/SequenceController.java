@@ -1,5 +1,10 @@
 package com.uml;
 
+import com.uml.classdiagram.ClassDiagram;
+import com.uml.classdiagram.UMLClass;
+import com.uml.customexception.InvalidOperationLabel;
+import com.uml.sequencediagram.SequenceDiagram;
+import com.uml.sequencediagram.UMLLifeline;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.TextInputDialog;
@@ -28,6 +33,9 @@ public class SequenceController extends Parent {
     private String messageID;
     private static SequenceUML tmpNode2;
     static ToggleGroup group = new ToggleGroup();
+
+    public SequenceDiagram sequenceDiagram;
+    public ClassDiagram classDiagram;
 
     public void initialize() {
         group.getToggles().addAll(sequenceButton, sequenceCreateButton, syncMessageButton, asyncMessageButton);
@@ -87,6 +95,7 @@ public class SequenceController extends Parent {
     }
 
     public void addElement(MouseEvent mouseEvent) throws IOException {
+        /* Lifeline */
         if(sequenceAct) {
             rPane.getChildren().add(createElement(mouseEvent));
         }
@@ -105,7 +114,16 @@ public class SequenceController extends Parent {
         name.ifPresent(s -> {
             nm[0] = name.get();
         });
-        SequenceUML sq = new SequenceUML(mouseEvent.getX(), DEFAULT_SEQUENCE_HEIGHT, nm[0], rPane);
+
+        UMLClass cls = this.classDiagram.findClass(nm[0]);
+
+        // TODO height
+        UMLLifeline lifeline = this.sequenceDiagram.createLifeline(cls, 0.0);
+        lifeline.setXCoordinate(mouseEvent.getX());
+
+        SequenceUML sq = new SequenceUML(mouseEvent.getX(), DEFAULT_SEQUENCE_HEIGHT, cls, rPane);
+
+        sq.lifeline = lifeline;
 
         sq.getView().setOnMouseDragged(e -> drag(e, sq));
         sq.getView().setOnMouseClicked(e -> sequenceClicked(e, sq));
@@ -144,8 +162,17 @@ public class SequenceController extends Parent {
         name.ifPresent(s -> {
             nm[0] = name.get();
         });
-        SequenceUML sq = new SequenceUML(mouseEvent.getX(), mouseEvent.getY(), nm[0], rPane);
+
+        UMLClass cls = this.classDiagram.findClass(nm[0]);
+
+        // TODO height
+        UMLLifeline lifeline = this.sequenceDiagram.createLifeline(cls, 0.0);
+        lifeline.setXCoordinate(mouseEvent.getX());
+
+        SequenceUML sq = new SequenceUML(mouseEvent.getX(), mouseEvent.getY(), cls, rPane);
         rPane.getChildren().add(sq);
+
+        sq.lifeline = lifeline;
 
         sq.getView().setOnMouseDragged(e -> drag(e, sq));
         sq.getView().setOnMouseClicked(e -> sequenceClicked(e, sq));
@@ -172,27 +199,76 @@ public class SequenceController extends Parent {
         tmpNode = sq;
     }
 
-    private Node createMessage(MouseEvent e,SequenceUML tmpNode, SequenceUML sq, String messageID) {
-        Message message = new Message(tmpNode.getView().getLayoutX(), e.getY(), sq.getView().getLayoutX(), e.getY(),  messageID);
+    private Node createMessage(MouseEvent e,SequenceUML fromNode, SequenceUML sq, String messageID) {
+        Message message = new Message(fromNode.getView().getLayoutX(), e.getY(), sq.getView().getLayoutX(), e.getY(),  messageID);
 
-        message.x1Property().bind(tmpNode.getView().layoutXProperty());
+        message.x1Property().bind(fromNode.getView().layoutXProperty());
         message.x2Property().bind(sq.getView().layoutXProperty());
 
-        tmpNode.edges.add(message);
+        fromNode.edges.add(message);
         sq.edges.add(message);
+
+        // TODO
+        String operation = "operation";
+        String[] tmp = {"t", "m", "p"};
+        String label = "label";
+
+        try {
+            switch (messageID) {
+                case "sync":
+                    this.sequenceDiagram.createSynchronousMessage(fromNode.lifeline, sq.lifeline, operation, tmp);
+                    break;
+                case "async":
+                    this.sequenceDiagram.createAsynchronousMessage(fromNode.lifeline, sq.lifeline, operation, tmp);
+                    break;
+                case "return":
+                    this.sequenceDiagram.createReturnMessage(fromNode.lifeline, sq.lifeline, label);
+                    break;
+                case "syncSelf":
+                    // TODO
+                    // this.sequenceDiagram.createSynchronousSelfMessage(fromNode.lifeline, sq.lifeline, operation, tmp);
+                    break;
+                case "asyncSelf":
+                    // TODO
+                    // this.sequenceDiagram.createAsynchronousSelfMessage(fromNode.lifeline, sq.lifeline, operation, tmp);
+                    break;
+                case "returnSelf":
+                    // TODO
+                    // this.sequenceDiagram.createReturnSelfMessage(fromNode.lifeline, sq.lifeline, operation, tmp);
+                    break;
+                case "destroy":
+                    this.sequenceDiagram.createDestroyMessage(fromNode.lifeline, sq.lifeline, label);
+                    break;
+                default:
+                    break;
+            }
+        } catch (InvalidOperationLabel err) {
+            // TODO
+            err.printStackTrace();
+        }
 
         return message;
     }
 
-    private Node createAndAddMessage(MouseDragEvent e, SequenceUML tmpNode, SequenceUML sq, String messageID) {
-        Message message = new Message(tmpNode.getView().getLayoutX(), e.getY(), sq.getView().getLayoutX(), e.getY(), messageID);
-        message.x1Property().bind(tmpNode.getView().layoutXProperty());
+    private Node createAndAddMessage(MouseDragEvent e, SequenceUML fromNode, SequenceUML sq, String messageID) {
+        Message message = new Message(fromNode.getView().getLayoutX(), e.getY(), sq.getView().getLayoutX(), e.getY(), messageID);
+        message.x1Property().bind(fromNode.getView().layoutXProperty());
         message.x2Property().bind(sq.getView().layoutXProperty());
 
         rPane.getChildren().add(message);
 
-        tmpNode.edges.add(message);
+        fromNode.edges.add(message);
         sq.edges.add(message);
+
+        // TODO
+        String[] tmp = {"t", "m", "p"};
+
+        try {
+            this.sequenceDiagram.createCreateMessage(fromNode.lifeline, sq.lifeline, tmp);
+        } catch (InvalidOperationLabel err) {
+            // TODO
+            err.printStackTrace();
+        }
 
         return message;
     }

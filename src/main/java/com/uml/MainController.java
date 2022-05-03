@@ -10,6 +10,7 @@
 package com.uml;
 
 import com.uml.classdiagram.*;
+import com.uml.sequencediagram.*;
 import com.uml.customexception.*;
 import com.uml.filehandler.IJAXMLParser;
 import com.uml.filehandler.SaveHandler;
@@ -583,6 +584,10 @@ public class MainController extends Parent {
             tab.setContent((Node) loader.load());
             tabPane.getTabs().add(tabPane.getTabs().size() - 1, tab);
             tabPane.getSelectionModel().select(tabPane.getTabs().size() - 2);
+
+            /* Backend */
+            sequenceController.sequenceDiagram = new SequenceDiagram(tabText);
+            sequenceController.classDiagram = this.diagram;
         } catch (IOException e) {
             e.printStackTrace();
         }
