@@ -203,7 +203,7 @@ public class ClassController extends Parent{
         TextField name = new TextField();
         name.setPromptText("Name");
         TextField parameters = new TextField();
-        parameters.setPromptText("names types");
+        parameters.setPromptText("names: types, next");
         TextField type = new TextField();
         type.setPromptText("type");
 
@@ -295,7 +295,7 @@ public class ClassController extends Parent{
                 if(this.classMethods.getText().equals("")){
                     this.classMethods.setText(this.classMethods.getText() + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((parameters.getText().equals("")) ? "()" : " ( " + parameters.getText() + " ) ") + ((type.getText().equals("")) ? "" : " : " + type.getText()));
                 }else {
-                    this.classArguments.setText(this.classArguments.getText() + "\n" + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((parameters.getText().equals("")) ? "()" : " ( " + parameters.getText() + " ) ") + ((type.getText().equals("")) ? "" : " : " + type.getText()));
+                    this.classMethods.setText(this.classArguments.getText() + "\n" + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((parameters.getText().equals("")) ? "()" : " ( " + parameters.getText() + " ) ") + ((type.getText().equals("")) ? "" : " : " + type.getText()));
                 }
             }
             return null;

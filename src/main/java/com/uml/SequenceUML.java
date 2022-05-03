@@ -84,7 +84,7 @@ public class SequenceUML extends Parent {
 
         dashedLine.getPoints().setAll(x1, y1, x2, y2);
         clickLine.getPoints().setAll(x1, y1, x2, y2);
-        dashedLine.getStrokeDashArray().addAll(25d, 10d);
+        dashedLine.getStrokeDashArray().addAll(2d, 5d);
     }
 
     private double[] scale(double x1, double y1, double x2, double y2){
