@@ -26,6 +26,8 @@ public class SequenceDiagram extends Element {
 
 	private List<UMLMessage> diagramMessages;
 	private List<UMLLifeline> diagramLifelines;
+	private List<UMLDestroy> diagramDestroys;
+	private List<UMLActivation> diagramActivations;
 
 	/**
 	 * Create an instance of SequenceDiagram.
@@ -36,6 +38,8 @@ public class SequenceDiagram extends Element {
 		super(name);
 		this.diagramMessages = new ArrayList<UMLMessage>();
 		this.diagramLifelines = new ArrayList<UMLLifeline>();
+		this.diagramDestroys = new ArrayList<UMLDestroy>();
+		this.diagramActivations = new ArrayList<UMLActivation>();
 	}
 
 	/**
@@ -274,25 +278,57 @@ public class SequenceDiagram extends Element {
 		return newReturnMessage;
 	}
 
-	/**
-	 * Creates an instance of the UML destroy message and inserts it into the diagram.
-	 *
-	 * @param fromLifeline Lifeline where the message starts.
-	 * @param toLifeline Lifeline where the message ends.
-	 * @param label Lifeline label.
-	 * @return New instance of an UMLDestroyMessage.
-	 */
-	public UMLDestroyMessage createDestroyMessage(UMLLifeline fromLifeline,
-	                                              UMLLifeline toLifeline,
-											      String label) {
-		UMLDestroyMessage newDestroyMessage = new UMLDestroyMessage(fromLifeline, toLifeline, label);
-		this.diagramMessages.add(newDestroyMessage);
-
-		return newDestroyMessage;
-	}
-
 	public List<UMLMessage> getMessages() {
 		return Collections.unmodifiableList(this.diagramMessages);
+	}
+
+	public UMLDestroy createDestroy(UMLLifeline lifeline,
+									double yCoordinate) {
+		UMLDestroy newDestroy = new UMLDestroy(lifeline, yCoordinate);
+
+		this.diagramDestroys.add(newDestroy);
+
+		return newDestroy;
+	}
+
+	public List<UMLDestroy> getDestroys() {
+		return Collections.unmodifiableList(this.diagramDestroys);
+	}
+
+	public boolean deleteDestroy(UMLDestroy destroy) {
+		int idx;
+
+		if ((idx = diagramDestroys.indexOf(destroy)) != -1) {
+			diagramDestroys.remove(idx);
+			return true;
+		}
+
+		return false;
+	}
+
+	public UMLActivation createActivation(UMLLifeline lifeline,
+										  double firstYCoordinate,
+										  double secondYCoordinate) {
+		UMLActivation newActivation = new UMLActivation(lifeline, firstYCoordinate, secondYCoordinate);
+
+		this.diagramActivations.add(newActivation);
+
+		return newActivation;
+	}
+
+	public List<UMLActivation> getActivations() {
+		return Collections.unmodifiableList(this.diagramActivations);
+	}
+
+	public boolean deleteActivation(UMLActivation activation) {
+		int idx;
+
+		if ((idx = diagramActivations.indexOf(activation)) != -1) {
+			diagramActivations.remove(idx);
+			return true;
+		}
+
+		return false;
 	}
 
 }

@@ -251,9 +251,6 @@ public class SequenceController extends Parent {
                 case "returnSelf":
                     this.sequenceDiagram.createReturnSelfMessage(fromNode.lifeline, operation, tmp);
                     break;
-                case "destroy":
-                    this.sequenceDiagram.createDestroyMessage(fromNode.lifeline, sq.lifeline, label);
-                    break;
                 default:
                     break;
             }
