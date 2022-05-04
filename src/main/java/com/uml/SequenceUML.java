@@ -30,7 +30,7 @@ public class SequenceUML extends Parent {
     private final Polyline clickLine = new Polyline();
     private final double LINE_SCALER = 20;
     public final Glow glow = new Glow(0.8);
-    public ObservableList<Message> edges = FXCollections.observableArrayList();
+    public ObservableList<Node> edges = FXCollections.observableArrayList();
 
     public UMLLifeline lifeline;
 

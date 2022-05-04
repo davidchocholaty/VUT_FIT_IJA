@@ -23,14 +23,21 @@ public class SequenceController extends Parent {
     public boolean sequenceCreateAct = false;
     public boolean syncMessageAct = false;
     public boolean asyncMessageAct = false;
+    public boolean returnMessageAct = false;
+    public boolean destroyMessageAct = false;
+    public boolean actiovationAct = false;
     public ToggleButton sequenceButton;
     public ToggleButton sequenceCreateButton;
+    public ToggleButton returnMessageButton;
+    public ToggleButton destroyMessageButton;
+    public ToggleButton activationButton;
     static int count = 0;
     public Pane rPane;
     public static SequenceUML tmpNode;
     public ToggleButton syncMessageButton;
     public ToggleButton asyncMessageButton;
     private String messageID;
+    private Double activation;
     private static SequenceUML tmpNode2;
     static ToggleGroup group = new ToggleGroup();
 
@@ -38,7 +45,7 @@ public class SequenceController extends Parent {
     public ClassDiagram classDiagram;
 
     public void initialize() {
-        group.getToggles().addAll(sequenceButton, sequenceCreateButton, syncMessageButton, asyncMessageButton);
+        group.getToggles().addAll(sequenceButton, sequenceCreateButton, syncMessageButton, asyncMessageButton, returnMessageButton, destroyMessageButton, activationButton);
     }
 
     public void sequenceActive(MouseEvent mouseEvent) {
@@ -47,6 +54,9 @@ public class SequenceController extends Parent {
             sequenceCreateAct = false;
             syncMessageAct = false;
             asyncMessageAct = false;
+            returnMessageAct = false;
+            destroyMessageAct = false;
+            actiovationAct = false;
             tmpNode = null;
             tmpNode2 = null;
             count = 0;
@@ -55,6 +65,9 @@ public class SequenceController extends Parent {
             sequenceCreateAct = true;
             syncMessageAct = false;
             asyncMessageAct = false;
+            returnMessageAct = false;
+            destroyMessageAct = false;
+            actiovationAct = false;
             tmpNode = null;
             tmpNode2 = null;
             messageID = "Create";
@@ -64,6 +77,9 @@ public class SequenceController extends Parent {
             sequenceCreateAct = false;
             syncMessageAct = true;
             asyncMessageAct = false;
+            returnMessageAct = false;
+            destroyMessageAct = false;
+            actiovationAct = false;
             tmpNode = null;
             tmpNode2 = null;
             messageID = "sync";
@@ -73,13 +89,50 @@ public class SequenceController extends Parent {
             sequenceCreateAct = false;
             syncMessageAct = false;
             asyncMessageAct = true;
+            returnMessageAct = false;
+            destroyMessageAct = false;
+            actiovationAct = false;
             tmpNode = null;
             tmpNode2 = null;
             messageID = "async";
             count = 0;
+        }else if (returnMessageButton.isSelected()) {
+            sequenceAct = false;
+            sequenceCreateAct = false;
+            syncMessageAct = false;
+            asyncMessageAct = false;
+            returnMessageAct = true;
+            destroyMessageAct = false;
+            actiovationAct = false;
+            tmpNode = null;
+            tmpNode2 = null;
+            messageID = "return";
+            count = 0;
+        }else if (destroyMessageButton.isSelected()) {
+            sequenceAct = false;
+            sequenceCreateAct = false;
+            syncMessageAct = false;
+            asyncMessageAct = false;
+            returnMessageAct = false;
+            destroyMessageAct = true;
+            actiovationAct = false;
+            tmpNode = null;
+            tmpNode2 = null;
+            messageID = "return";
+            count = 0;
+        }else if (activationButton.isSelected()) {
+            sequenceAct = false;
+            sequenceCreateAct = false;
+            syncMessageAct = false;
+            asyncMessageAct = false;
+            returnMessageAct = false;
+            destroyMessageAct = false;
+            actiovationAct = true;
+            tmpNode = null;
+            tmpNode2 = null;
+            count = 0;
         }else{
             sequenceAct = false;
-
             tmpNode = null;
             tmpNode2 = null;
         }
@@ -87,7 +140,7 @@ public class SequenceController extends Parent {
 
     public void handleKeyEvents(KeyEvent keyEvent) {
         if (keyEvent.getCode() == KeyCode.DELETE && tmpNode.getView() != null) {
-            for (Message a : tmpNode.edges) {
+            for (Node a : tmpNode.edges) {
                 rPane.getChildren().remove(a);
             }
             rPane.getChildren().remove(tmpNode);
@@ -218,19 +271,14 @@ public class SequenceController extends Parent {
     }
 
     private Node createMessage(MouseEvent e,SequenceUML fromNode, SequenceUML sq, String messageID) {
-        Message message = new Message(fromNode.getView().getLayoutX(), e.getY(), sq.getView().getLayoutX(), e.getY(),  messageID);
+        String messageText = getMessage(messageID);
 
-        message.x1Property().bind(fromNode.getView().layoutXProperty());
-        message.x2Property().bind(sq.getView().layoutXProperty());
-
-        fromNode.edges.add(message);
-        sq.edges.add(message);
 
         // TODO
         String operation = "operation";
         String[] tmp = {"t", "m", "p"};
         String label = "label";
-
+/*
         try {
             switch (messageID) {
                 case "sync":
@@ -259,11 +307,58 @@ public class SequenceController extends Parent {
             err.printStackTrace();
         }
 
+ */
+        Message message = new Message(fromNode.getView().getLayoutX(), e.getY(), sq.getView().getLayoutX(), e.getY(), messageID, messageText);
+
+        message.x1Property().bind(fromNode.getView().layoutXProperty());
+        message.x2Property().bind(sq.getView().layoutXProperty());
+
+        fromNode.edges.add(message);
+        sq.edges.add(message);
         return message;
     }
 
+    private String getMessage(String messageID) {
+        TextInputDialog dialog;
+        if (messageID.equals("return")){
+            dialog = new TextInputDialog();
+            dialog.setTitle(messageID+" Message");
+            dialog.setHeaderText("Enter return value");
+            dialog.setContentText("value:");
+        }else if(messageID.equals("Create")){
+            dialog = new TextInputDialog();
+            dialog.setTitle(messageID+" Message");
+            dialog.setHeaderText("Enter create message <<Create>>(parameters)");
+            dialog.setContentText("Message:");
+        }else{
+            dialog = new TextInputDialog();
+            dialog.setTitle(messageID+" Message");
+            dialog.setHeaderText("Enter create message Operation(parameters)");
+            dialog.setContentText("Message:");
+        }
+
+        Optional<String> name = dialog.showAndWait();
+        final String[] message = new String[1];
+
+        name.ifPresent(s -> {
+            message[0] = s;
+        });
+        return message[0];
+    }
+
     private Node createAndAddMessage(MouseDragEvent e, SequenceUML fromNode, SequenceUML sq, String messageID) {
-        Message message = new Message(fromNode.getView().getLayoutX(), e.getY(), sq.getView().getLayoutX(), e.getY(), messageID);
+        String messageText = getMessage(messageID);
+
+        // TODO
+        String[] tmp = {"t", "m", "p"};
+
+        /*try {
+            this.sequenceDiagram.createCreateMessage(fromNode.lifeline, sq.lifeline, tmp);
+        } catch (InvalidOperationLabel err) {
+            // TODO
+            err.printStackTrace();
+        }*/
+        Message message = new Message(fromNode.getView().getLayoutX(), e.getY(), sq.getView().getLayoutX(), e.getY(), messageID, messageText);
         message.x1Property().bind(fromNode.getView().layoutXProperty());
         message.x2Property().bind(sq.getView().layoutXProperty());
 
@@ -271,22 +366,11 @@ public class SequenceController extends Parent {
 
         fromNode.edges.add(message);
         sq.edges.add(message);
-
-        // TODO
-        String[] tmp = {"t", "m", "p"};
-
-        try {
-            this.sequenceDiagram.createCreateMessage(fromNode.lifeline, sq.lifeline, tmp);
-        } catch (InvalidOperationLabel err) {
-            // TODO
-            err.printStackTrace();
-        }
-
         return message;
     }
 
     private void timeLineClicked(MouseEvent e, SequenceUML sq) {
-        if (syncMessageAct || asyncMessageAct) {
+        if (syncMessageAct || asyncMessageAct || returnMessageAct) {
             System.out.println("click");
             if (count == 0) {
                 tmpNode = sq;
@@ -295,15 +379,44 @@ public class SequenceController extends Parent {
                 if (tmpNode == (Node)sq){
                     if(syncMessageAct){
                         rPane.getChildren().add(createMessage(e, tmpNode, sq, "syncSelf"));
-                    }else{
+                    }else if(asyncMessageAct){
                         rPane.getChildren().add(createMessage(e, tmpNode, sq, "asyncSelf"));
+                    }else if(returnMessageAct){
+                        rPane.getChildren().add(createMessage(e, tmpNode, sq, "returnSelf"));
                     }
                 }else {
                     rPane.getChildren().add(createMessage(e, tmpNode, sq, messageID));
                 }
                 count = 0;
             }
+        }else if(actiovationAct){
+            if (count == 0) {
+                activation = e.getY();
+                count++;
+            }else if(count == 1){
+                rPane.getChildren().add(createActivation(e, activation, sq));
+                count = 0;
+                activation = 0.0;
+            }
+        }else if(destroyMessageAct){
+            rPane.getChildren().add(createDelete(e, sq));
         }
+    }
+
+    private Node createDelete(MouseEvent e, SequenceUML sq) {
+        Cross cross = new Cross(sq.getView().getLayoutX(), e.getY());
+        cross.x1Property().bind(sq.getView().layoutXProperty());
+        sq.setY2(e.getY() + 40);
+        sq.edges.add(cross);
+        return cross;
+    }
+
+    private Node createActivation(MouseEvent e, Double activation, SequenceUML sq){
+        ActivationSequenceUML activ = new ActivationSequenceUML(activation, sq.getView().getLayoutX(), e.getY(), sq);
+        activ.x1Property().bind(sq.getView().layoutXProperty());
+
+        sq.edges.add(activ);
+        return activ;
     }
 
     private void drag(MouseEvent e, SequenceUML sq) {

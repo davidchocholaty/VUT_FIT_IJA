@@ -13,8 +13,8 @@ import java.util.Optional;
 
 public class Message extends Group {
 
-    private static final double ARROW_SCALER = 0;
-    private static final double ARROW_SCALER_CREATE = 20;
+    private static final double ARROW_SCALER = 10;
+    private static final double ARROW_SCALER_CREATE = 30;
     private static final double SELF_SPACE = 30;
     private final SimpleDoubleProperty x1 = new SimpleDoubleProperty();
     private final SimpleDoubleProperty y1 = new SimpleDoubleProperty();
@@ -36,28 +36,34 @@ public class Message extends Group {
     private final double MESSAGEHEAD_ANGLE = Math.toRadians(30);
     private final double MESSAGEHEAD_LENGTH = 15;
 
-    public Message(double X1, double X2, double Y1, double Y2, String messageID){
+    public Message(double X1, double X2, double Y1, double Y2, String messageID, String message){
         this.x1.set(X1);
         this.x2.set(Y1);
         this.y1.set(X2);
         this.y2.set(Y2);
 
         if(messageID.equals("Create")){
-            createText.setText("<<Create>>");
+            createText.setText(message);
             createText.translateXProperty().bind(createText.widthProperty().divide(-2));
             createText.translateYProperty().bind(createText.heightProperty().divide(-1));
             getChildren().addAll(dashedLineCreate, headASCreate, createText);
         }else if (messageID.equals("sync")){
-            messageText.setText(getText());
+            messageText.setText(message);
             getChildren().addAll(mainLine, headR, messageText);
         }else if (messageID.equals("async")){
-            messageText.setText(getText());
+            messageText.setText(message);
+            getChildren().addAll(mainLine, headAS, messageText);
+        }else if (messageID.equals("return")){
+            messageText.setText(message);
             getChildren().addAll(dashedLine, headAS, messageText);
         }else if (messageID.equals("syncSelf")){
-            messageTextSelf.setText(getText());
+            messageTextSelf.setText(message);
             getChildren().addAll(mainLineSelf, headRSelf, messageTextSelf);
         }else if (messageID.equals("asyncSelf")){
-            messageTextSelf.setText(getText());
+            messageTextSelf.setText(message);
+            getChildren().addAll(mainLineSelf, headASSelf, messageTextSelf);
+        }else if (messageID.equals("returnSelf")){
+            messageTextSelf.setText(message);
             getChildren().addAll(dashedLineSelf, headASSelf, messageTextSelf);
         }
         messageText.translateXProperty().bind(messageText.widthProperty().divide(-2));
@@ -70,22 +76,6 @@ public class Message extends Group {
         }
 
         update();
-    }
-
-    private String getText() {
-        TextInputDialog dialog = new TextInputDialog();
-
-        dialog.setTitle("Message");
-        dialog.setHeaderText("Enter message");
-        dialog.setContentText("Message:");
-
-        Optional<String> name = dialog.showAndWait();
-        final String[] text = new String[1];
-
-        name.ifPresent(s -> {
-            text[0] = s;
-        });
-        return text[0];
     }
 
     private void update(){
@@ -105,9 +95,9 @@ public class Message extends Group {
         createText.setLayoutY((y1+endCreate[1])/2);
         messageText.setLayoutX((x1+x2)/2);
         messageText.setLayoutY((y1+y2)/2);
-        dashedLineCreate.getStrokeDashArray().addAll(25d, 10d);
-        dashedLine.getStrokeDashArray().addAll(25d, 10d);
-        dashedLineSelf.getStrokeDashArray().addAll(25d, 10d);
+        dashedLineCreate.getStrokeDashArray().addAll(15d, 10d);
+        dashedLine.getStrokeDashArray().addAll(15d, 10d);
+        dashedLineSelf.getStrokeDashArray().addAll(15d, 10d);
 
         //self lines
         mainLineSelf.getPoints().setAll(x2, y2, x2 - SELF_SPACE, y2);
