@@ -136,6 +136,7 @@ public class SequenceController extends Parent {
                 ex.printStackTrace();
             }
         });
+        sq.getView().setOnContextMenuRequested(e -> changeHeight(e, sq));
         return sq;
     }
 
@@ -185,7 +186,24 @@ public class SequenceController extends Parent {
                 ex.printStackTrace();
             }
         });
+        sq.getView().setOnContextMenuRequested(e -> changeHeight(e, sq));
         return sq;
+    }
+
+    private void changeHeight(ContextMenuEvent e, SequenceUML sq) {
+        TextInputDialog dialog = new TextInputDialog();
+
+        dialog.setTitle("Height");
+        dialog.setHeaderText("Enter lifeLine height:");
+        dialog.setContentText("height:");
+
+        Optional<String> name = dialog.showAndWait();
+        String[] nm = {""};
+
+        name.ifPresent(s -> {
+            nm[0] = name.get();
+        });
+        sq.setY2(Integer.parseInt(nm[0])+80);
     }
 
     private void timeLineDragDetected(MouseEvent e, SequenceUML sq){

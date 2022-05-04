@@ -21,6 +21,7 @@ import java.io.IOException;
 public class SequenceUML extends Parent {
     private final SimpleDoubleProperty x1 = new SimpleDoubleProperty();
     private final SimpleDoubleProperty y1 = new SimpleDoubleProperty();
+
     private final SimpleDoubleProperty x2 = new SimpleDoubleProperty();
     private final SimpleDoubleProperty y2 = new SimpleDoubleProperty();
     private Node view;
@@ -53,7 +54,7 @@ public class SequenceUML extends Parent {
         FXMLLoader loader = new FXMLLoader(App.class.getResource("sequence_uml.fxml"));
         Button sequence = loader.load();
         setView(sequence);
-        sequence.setText(cls.getName());
+        sequence.setText("NAME");
         getView().setLayoutX(x);
         getView().setLayoutY(y);
         getView().translateXProperty().bind(sequence.widthProperty().divide(-2));
@@ -97,5 +98,17 @@ public class SequenceUML extends Parent {
                 x1 + Math.cos(theta) * LINE_SCALER,
                 y1 + Math.sin(theta) * LINE_SCALER
         };
+    }
+
+    public double getY2() {
+        return y2.get();
+    }
+
+    public SimpleDoubleProperty y2Property() {
+        return y2;
+    }
+
+    public void setY2(double y2) {
+        this.y2.set(y2);
     }
 }
