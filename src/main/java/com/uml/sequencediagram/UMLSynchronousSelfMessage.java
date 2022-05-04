@@ -10,15 +10,15 @@
 package com.uml.sequencediagram;
 
 /**
- * A class represents a self message.
+ * A class represents a synchronous self message.
  */
-public class UMLSelfMessage extends UMLMessageOperationType {
+public class UMLSynchronousSelfMessage extends UMLMessageOperationType {
 	/**
-	 * Creates an UMLCreateMessage instance with start and end lifeline.
+	 * Creates an UMLSynchronousSelfMessage instance with start and end lifeline.
 	 *
 	 * @param lifeline Start and end lifeline.
 	 */
-	public UMLSelfMessage(UMLLifeline lifeline) {
+	public UMLSynchronousSelfMessage(UMLLifeline lifeline) {
 		super(lifeline, lifeline);
 	}
 

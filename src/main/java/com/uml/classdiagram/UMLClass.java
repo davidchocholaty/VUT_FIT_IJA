@@ -24,7 +24,6 @@ public class UMLClass extends UMLClassifier {
 	private boolean isAbstract;
 	private double xCoordinate;
 	private double yCoordinate;
-	private UMLVisibilityType visibility;
 	private final List<UMLAttribute> classAttributes;
 	private final List<UMLOperation> classOperations;
 	private static int defaultClassId = 1;
@@ -40,7 +39,6 @@ public class UMLClass extends UMLClassifier {
 	public UMLClass(String name) {
 		super(name);
 		this.isAbstract = false;
-		this.visibility = UMLVisibilityType.UNSPECIFIED;
 		this.classAttributes = new ArrayList<UMLAttribute>();
 		this.classOperations = new ArrayList<UMLOperation>();
 		this.xCoordinate = 0.0;
@@ -264,23 +262,6 @@ public class UMLClass extends UMLClassifier {
 		}
 
 		return -1;
-	}
-
-	/**
-	 * Return class visibility.
-	 *
-	 * @return Class visibility.
-	 */
-	public UMLVisibilityType getVisibility() {
-		return this.visibility;
-	}
-
-	/**
-	 * Change the class visibility.
-	 * @param visibility Class visibility.
-	 */
-	public void setVisibility(UMLVisibilityType visibility) {
-		this.visibility = visibility;
 	}
 
 	public static UMLClass createDefault() {
