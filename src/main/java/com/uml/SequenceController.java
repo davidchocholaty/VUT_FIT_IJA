@@ -7,6 +7,7 @@ import com.uml.sequencediagram.SequenceDiagram;
 import com.uml.sequencediagram.UMLLifeline;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -133,8 +134,15 @@ public class SequenceController extends Parent {
             count = 0;
         }else{
             sequenceAct = false;
+            sequenceCreateAct = false;
+            syncMessageAct = false;
+            asyncMessageAct = false;
+            returnMessageAct = false;
+            destroyMessageAct = false;
+            actiovationAct = false;
             tmpNode = null;
             tmpNode2 = null;
+            count = 0;
         }
     }
 
@@ -147,23 +155,60 @@ public class SequenceController extends Parent {
         }
     }
 
-    public SequenceUML addElementLoaded(String name, double height, double x, double y){
-        return null;
+    public SequenceUML addElementLoaded(String name, double height, double x, double y) throws IOException {
+        UMLClass cls = this.classDiagram.findClass(name);
+
+        // TODO height
+        UMLLifeline lifeline = this.sequenceDiagram.createLifeline(cls, 0.0);
+        lifeline.setXCoordinate(x);
+
+        SequenceUML sq;
+        if(height == 0.0){
+            sq = new SequenceUML(x, DEFAULT_SEQUENCE_HEIGHT, y,rPane, name);
+        }else{
+            sq = new SequenceUML(x, DEFAULT_SEQUENCE_HEIGHT, y,rPane, name);
+        }
+
+        //TODO nekonzistence
+        /*
+        if(cls == null){
+
+        }*/
+
+        sq.lifeline = lifeline;
+
+        sq.getView().setOnMouseDragged(e -> drag(e, sq));
+        sq.getView().setOnMouseClicked(e -> sequenceClicked(e, sq));
+        sq.getClickLine().setOnMouseClicked(e -> timeLineClicked(e, sq));
+        sq.getClickLine().setOnDragDetected(e -> timeLineDragDetected(e, sq));
+        rPane.setOnMouseDragReleased(e -> {
+            try {
+                timeLineDragDone(e);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        sq.getView().setOnContextMenuRequested(e -> changeHeight(e, sq));
+        rPane.getChildren().add(sq);
+        return sq;
     }
 
     public void addElement(MouseEvent mouseEvent) throws IOException {
         /* Lifeline */
         if(sequenceAct) {
-            rPane.getChildren().add(createElement(mouseEvent));
+            SequenceUML sequenceUML = createElement(mouseEvent);
+            if (sequenceUML != null){
+                rPane.getChildren().add(sequenceUML);
+            }
         }
     }
 
     private SequenceUML createElement(MouseEvent mouseEvent) throws IOException {
-        TextInputDialog dialog = new TextInputDialog();
-
-        dialog.setTitle("class name");
-        dialog.setHeaderText("Enter class name:");
-        dialog.setContentText("Class name:");
+        ChoiceDialog dialog = new ChoiceDialog();
+        dialog.setTitle("Class Name");
+        dialog.setHeaderText("Choice class name from list");
+        dialog.setContentText("Class list");
+        dialog.getItems().addAll(this.classDiagram.getClassesNames());
 
         Optional<String> name = dialog.showAndWait();
         String[] nm = {""};
@@ -172,13 +217,17 @@ public class SequenceController extends Parent {
             nm[0] = name.get();
         });
 
+        if(nm[0].equals("")){
+            return null;
+        }
+
         UMLClass cls = this.classDiagram.findClass(nm[0]);
 
         // TODO height
         UMLLifeline lifeline = this.sequenceDiagram.createLifeline(cls, 0.0);
         lifeline.setXCoordinate(mouseEvent.getX());
 
-        SequenceUML sq = new SequenceUML(mouseEvent.getX(), DEFAULT_SEQUENCE_HEIGHT, cls, rPane);
+        SequenceUML sq = new SequenceUML(mouseEvent.getX(), DEFAULT_SEQUENCE_HEIGHT,0.0, rPane, nm[0]);
 
         sq.lifeline = lifeline;
 
@@ -201,6 +250,9 @@ public class SequenceController extends Parent {
         System.out.println();
         if(tmpNode != null){
             tmpNode2 = createAndAddElement(e);
+            if (tmpNode2 == null){
+                return;
+            }
             Node message = createAndAddMessage(e, tmpNode, tmpNode2, messageID);
             tmpNode = null;
             tmpNode2 = null;
@@ -208,11 +260,11 @@ public class SequenceController extends Parent {
     }
 
     private SequenceUML createAndAddElement(MouseDragEvent mouseEvent) throws IOException {
-        TextInputDialog dialog = new TextInputDialog();
-
-        dialog.setTitle("class name");
-        dialog.setHeaderText("Enter class name:");
-        dialog.setContentText("Class name:");
+        ChoiceDialog dialog = new ChoiceDialog();
+        dialog.setTitle("Class Name");
+        dialog.setHeaderText("Choice class name from list");
+        dialog.setContentText("Class list");
+        dialog.getItems().addAll(this.classDiagram.getClassesNames());
 
         Optional<String> name = dialog.showAndWait();
         String[] nm = {""};
@@ -221,13 +273,17 @@ public class SequenceController extends Parent {
             nm[0] = name.get();
         });
 
+        if(nm[0].equals("")){
+            return null;
+        }
+
         UMLClass cls = this.classDiagram.findClass(nm[0]);
 
         // TODO height
         UMLLifeline lifeline = this.sequenceDiagram.createLifeline(cls, 0.0);
         lifeline.setXCoordinate(mouseEvent.getX());
 
-        SequenceUML sq = new SequenceUML(mouseEvent.getX(), mouseEvent.getY(), cls, rPane);
+        SequenceUML sq = new SequenceUML(mouseEvent.getX(), mouseEvent.getY(),0.0, rPane, nm[0]);
         rPane.getChildren().add(sq);
 
         sq.lifeline = lifeline;
@@ -274,8 +330,15 @@ public class SequenceController extends Parent {
         tmpNode = sq;
     }
 
-    public void createMessageLoaded(SequenceUML from, SequenceUML to, String message, String messageID){
+    public void createMessageLoaded(SequenceUML from, SequenceUML to, double yCordinate, String messageText, String messageID){
+        Message message = new Message(from.getView().getLayoutX(), yCordinate, to.getView().getLayoutX(), yCordinate, messageID, messageText);
 
+        message.x1Property().bind(from.getView().layoutXProperty());
+        message.x2Property().bind(to.getView().layoutXProperty());
+
+        from.edges.add(message);
+        to.edges.add(message);
+        rPane.getChildren().add(message);
     }
     private Node createMessage(MouseEvent e,SequenceUML fromNode, SequenceUML sq, String messageID) {
         String messageText = getMessage(messageID);
@@ -409,9 +472,13 @@ public class SequenceController extends Parent {
             rPane.getChildren().add(createDelete(e, sq));
         }
     }
-    //TODO
-    public void createDestroy(SequenceUML lifeline, double y){
 
+    public void createDestroy(SequenceUML sq, double y){
+        Cross cross = new Cross(sq.getView().getLayoutX(), y);
+        cross.x1Property().bind(sq.getView().layoutXProperty());
+        sq.setY2(y + 40);
+        sq.edges.add(cross);
+        rPane.getChildren().add(cross);
     }
 
     private Node createDelete(MouseEvent e, SequenceUML sq) {
@@ -422,15 +489,40 @@ public class SequenceController extends Parent {
         return cross;
     }
     // TODO
-    private void CreateActivationLoaded(SequenceUML lifeline, double y1, double y2){
-
-    }
-
-    private Node createActivation(MouseEvent e, Double activation, SequenceUML sq){
-        ActivationSequenceUML activ = new ActivationSequenceUML(activation, sq.getView().getLayoutX(), e.getY(), sq);
+    private void CreateActivationLoaded(SequenceUML sq, double y1, double y2){
+        ActivationSequenceUML activ = new ActivationSequenceUML(y1, sq.getView().getLayoutX(), y2);
         activ.x1Property().bind(sq.getView().layoutXProperty());
 
         sq.edges.add(activ);
+
+        activ.getRectangle().setOnMouseClicked(ev -> timeLineClicked(ev, sq));
+        activ.getRectangle().setOnDragDetected(ev -> timeLineDragDetected(ev, sq));
+        rPane.setOnMouseDragReleased(ev -> {
+            try {
+                timeLineDragDone(ev);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        rPane.getChildren().add(activ);
+    }
+
+    private Node createActivation(MouseEvent e, Double activation, SequenceUML sq){
+        ActivationSequenceUML activ = new ActivationSequenceUML(activation, sq.getView().getLayoutX(), e.getY());
+        activ.x1Property().bind(sq.getView().layoutXProperty());
+
+        sq.edges.add(activ);
+
+        activ.getRectangle().setOnMouseClicked(ev -> timeLineClicked(ev, sq));
+        activ.getRectangle().setOnDragDetected(ev -> timeLineDragDetected(ev, sq));
+        rPane.setOnMouseDragReleased(ev -> {
+            try {
+                timeLineDragDone(ev);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+
         return activ;
     }
 

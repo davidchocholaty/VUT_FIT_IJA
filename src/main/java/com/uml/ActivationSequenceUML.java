@@ -10,7 +10,7 @@ public class ActivationSequenceUML extends Parent {
     private final SimpleDoubleProperty y1 = new SimpleDoubleProperty();
     private final SimpleDoubleProperty y2 = new SimpleDoubleProperty();
     private Rectangle rectangle = new Rectangle();
-    public ActivationSequenceUML(Double activation, double x, double y, SequenceUML sq) {
+    public ActivationSequenceUML(Double activation, double x, double y) {
         this.x1.set(x);
         this.y1.set(activation);
         this.y2.set(y);

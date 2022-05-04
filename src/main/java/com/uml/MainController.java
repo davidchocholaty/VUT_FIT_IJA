@@ -30,6 +30,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
@@ -574,8 +575,7 @@ public class MainController extends Parent {
 
     public void addTab(Event event) {
         try{
-            //TODO jmeno sequence diagram
-            String tabText = String.format("Sequence diagram %d", tabIndex++);
+            String tabText = getSequenceTabName();
             Tab tab = new Tab(tabText);
             tab.setId(tabText);
             FXMLLoader loader = new FXMLLoader(App.class.getResource("sequencePage.fxml"));
@@ -592,8 +592,40 @@ public class MainController extends Parent {
             e.printStackTrace();
         }
     }
-    // TODO
+
     public SequenceController addTabLoad(String name) {
+        try{
+            String tabText = name;
+            Tab tab = new Tab(tabText);
+            tab.setId(tabText);
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("sequencePage.fxml"));
+            SequenceController sequenceController = new SequenceController();
+            loader.setController(sequenceController);
+            tab.setContent((Node) loader.load());
+            tabPane.getTabs().add(tabPane.getTabs().size() - 1, tab);
+            tabPane.getSelectionModel().select(tabPane.getTabs().size() - 2);
+
+            /* Backend */
+            sequenceController.sequenceDiagram = new SequenceDiagram(tabText);
+            sequenceController.classDiagram = this.diagram;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
+    }
+
+    private String getSequenceTabName() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Tab name");
+        dialog.setHeaderText("Enter sequence diagram name");
+        dialog.setContentText("Name:");
+
+        Optional<String> name = dialog.showAndWait();
+        final String[] message = new String[1];
+
+        name.ifPresent(s -> {
+            message[0] = s;
+        });
+        return message[0];
     }
 }

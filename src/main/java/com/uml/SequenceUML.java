@@ -46,17 +46,22 @@ public class SequenceUML extends Parent {
         return this.view;
     }
 
-    public SequenceUML(double x, double y, UMLClass cls, Pane rpane) throws IOException {
+    public SequenceUML(double x, double height, double y, Pane rpane, String name) throws IOException {
+        System.out.println(height);
         this.x1.set(x);
-        this.y1.set(y);
+        this.y1.set(height);
         this.x2.set(x);
-        this.y2.set(rpane.getHeight());
+        if(y == 0.0){
+            this.y2.set(rpane.getHeight());
+        }else{
+            this.y2.set(y);
+        }
         FXMLLoader loader = new FXMLLoader(App.class.getResource("sequence_uml.fxml"));
         Button sequence = loader.load();
         setView(sequence);
-        sequence.setText("NAME");
+        sequence.setText(name);
         getView().setLayoutX(x);
-        getView().setLayoutY(y);
+        getView().setLayoutY(height);
         getView().translateXProperty().bind(sequence.widthProperty().divide(-2));
         getView().translateYProperty().bind(sequence.heightProperty().divide(-2));
         clickLine.setStrokeWidth(24);
