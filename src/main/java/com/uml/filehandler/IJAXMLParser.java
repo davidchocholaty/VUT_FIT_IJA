@@ -346,20 +346,6 @@ public class IJAXMLParser {
         this.diagramClasses.add(el);
         this.controller.addElement(el);
 
-        /* visibility tag */
-        node = list.item(this.secondLevelOrder);
-        this.secondLevelOrder += 2;
-
-        /*
-        if (node.getNodeType() == Node.ELEMENT_NODE) {
-            if (!node.getNodeName().equals("visibility")) {
-                throw new IllegalFileFormat("Invalid file syntax.");
-            } else {
-
-            }
-        }
-        */
-
         /* Attributes tags */
         parseAttributes(list);
 
@@ -1192,7 +1178,13 @@ public class IJAXMLParser {
                 case "asynchronousMessage":
                     // TODO frontend
                     break;
-                case "selfMessage":
+                case "synchronousSelfMessage":
+                    // TODO frontend
+                    break;
+                case "asynchronousSelfMessage":
+                    // TODO frontend
+                    break;
+                case "returnSelfMessage":
                     // TODO frontend
                     break;
                 case "createMessage":

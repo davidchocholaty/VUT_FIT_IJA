@@ -170,7 +170,6 @@ public class SaveHandler {
         addAbstractTag(diagramClass, currentClass);
         addXCoordinateTag(diagramClass, currentClass);
         addYCoordinateTag(diagramClass, currentClass);
-        addVisibilityTag(diagramClass, currentClass);
 
         /* Add attributes tags */
         List<UMLAttribute> classAttributes = currentClass.getAttributes();
@@ -244,11 +243,7 @@ public class SaveHandler {
         visibility = this.doc.createElement("visibility");
         parent.appendChild(visibility);
 
-        if (current instanceof UMLClass) {
-            visibility.setTextContent(((UMLClass)current).getVisibility().name());
-        } else {
-            visibility.setTextContent(((UMLAttribute)current).getVisibility().name());
-        }
+        visibility.setTextContent(((UMLAttribute)current).getVisibility().name());
     }
 
     /**
@@ -747,8 +742,12 @@ public class SaveHandler {
             addSynchronousMessageTag(operationType);
         } else if (currentMessage instanceof UMLAsynchronousMessage) {
             addAsynchronousMessageTag(operationType);
-        } else if (currentMessage instanceof UMLSelfMessage) {
-            addSelfMessageTag(operationType);
+        } else if (currentMessage instanceof UMLSynchronousSelfMessage) {
+            addSynchronousSelfMessageTag(operationType);
+        } else if (currentMessage instanceof UMLAsynchronousSelfMessage) {
+            addAsynchronousSelfMessageTag(operationType);
+        } else if (currentMessage instanceof UMLReturnSelfMessage) {
+            addReturnSelfMessageTag(operationType);
         } else if (currentMessage instanceof UMLCreateMessage) {
             addCreateMessageTag(operationType);
         }
@@ -781,16 +780,42 @@ public class SaveHandler {
     }
 
     /**
-     * Add self message tag.
+     * Add synchronous self message tag.
      *
      * @param operationType Label type element.
      */
-    private void addSelfMessageTag(Element operationType) {
-        Element selfMessage;
+    private void addSynchronousSelfMessageTag(Element operationType) {
+        Element synchronousSelfMessage;
 
-        /* selfMessage tag */
-        selfMessage = this.doc.createElement("selfMessage");
-        operationType.appendChild(selfMessage);
+        /* synchronousSelfMessage tag */
+        synchronousSelfMessage = this.doc.createElement("synchronousSelfMessage");
+        operationType.appendChild(synchronousSelfMessage);
+    }
+
+    /**
+     * Add asynchronous self message tag.
+     *
+     * @param operationType Label type element.
+     */
+    private void addAsynchronousSelfMessageTag(Element operationType) {
+        Element asynchronousSelfMessage;
+
+        /* synchronousSelfMessage tag */
+        asynchronousSelfMessage = this.doc.createElement("asynchronousSelfMessage");
+        operationType.appendChild(asynchronousSelfMessage);
+    }
+
+    /**
+     * Add return self message tag.
+     *
+     * @param operationType Label type element.
+     */
+    private void addReturnSelfMessageTag(Element operationType) {
+        Element returnSelfMessage;
+
+        /* synchronousSelfMessage tag */
+        returnSelfMessage = this.doc.createElement("returnSelfMessage");
+        operationType.appendChild(returnSelfMessage);
     }
 
     /**

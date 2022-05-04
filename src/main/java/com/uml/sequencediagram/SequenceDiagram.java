@@ -158,18 +158,18 @@ public class SequenceDiagram extends Element {
 	}
 
 	/**
-	 * Creates an instance of the UML self message and inserts it into the diagram.
+	 * Creates an instance of the UML synchronous self message and inserts it into the diagram.
 	 *
 	 * @param lifeline Lifeline where the message starts and ends.
 	 * @param operation Method name.
 	 * @param operationArguments Method parameters.
-	 * @return New instance of an UMLSelfMessage.
+	 * @return New instance of an UMLSynchronousSelfMessage.
 	 * @throws InvalidOperationLabel Invalid operation name or operation arguments.
 	 */
-	public UMLSelfMessage createSelfMessage(UMLLifeline lifeline,
-	                                        String operation,
-											String[] operationArguments) throws InvalidOperationLabel {
-		UMLSelfMessage newSelfMessage = new UMLSelfMessage(lifeline);
+	public UMLSynchronousSelfMessage createSynchronousSelfMessage(UMLLifeline lifeline,
+													   String operation,
+													   String[] operationArguments) throws InvalidOperationLabel {
+		UMLSynchronousSelfMessage newSelfMessage = new UMLSynchronousSelfMessage(lifeline);
 		
 		boolean exitSuccess = newSelfMessage.setOperation(operation, operationArguments);
 
@@ -177,6 +177,56 @@ public class SequenceDiagram extends Element {
 			throw new InvalidOperationLabel("Invalid self message operation.");
 		}
 		
+		this.diagramMessages.add(newSelfMessage);
+
+		return newSelfMessage;
+	}
+
+	/**
+	 * Creates an instance of the UML asynchronous self message and inserts it into the diagram.
+	 *
+	 * @param lifeline Lifeline where the message starts and ends.
+	 * @param operation Method name.
+	 * @param operationArguments Method parameters.
+	 * @return New instance of an UMLAsynchronousSelfMessage.
+	 * @throws InvalidOperationLabel Invalid operation name or operation arguments.
+	 */
+	public UMLAsynchronousSelfMessage createAsynchronousSelfMessage(UMLLifeline lifeline,
+											                        String operation,
+																    String[] operationArguments) throws InvalidOperationLabel {
+		UMLAsynchronousSelfMessage newSelfMessage = new UMLAsynchronousSelfMessage(lifeline);
+
+		boolean exitSuccess = newSelfMessage.setOperation(operation, operationArguments);
+
+		if (!exitSuccess) {
+			throw new InvalidOperationLabel("Invalid self message operation.");
+		}
+
+		this.diagramMessages.add(newSelfMessage);
+
+		return newSelfMessage;
+	}
+
+	/**
+	 * Creates an instance of the UML return self message and inserts it into the diagram.
+	 *
+	 * @param lifeline Lifeline where the message starts and ends.
+	 * @param operation Method name.
+	 * @param operationArguments Method parameters.
+	 * @return New instance of an UMLReturnSelfMessage.
+	 * @throws InvalidOperationLabel Invalid operation name or operation arguments.
+	 */
+	public UMLReturnSelfMessage createReturnSelfMessage(UMLLifeline lifeline,
+														String operation,
+														String[] operationArguments) throws InvalidOperationLabel {
+		UMLReturnSelfMessage newSelfMessage = new UMLReturnSelfMessage(lifeline);
+
+		boolean exitSuccess = newSelfMessage.setOperation(operation, operationArguments);
+
+		if (!exitSuccess) {
+			throw new InvalidOperationLabel("Invalid self message operation.");
+		}
+
 		this.diagramMessages.add(newSelfMessage);
 
 		return newSelfMessage;

@@ -243,16 +243,13 @@ public class SequenceController extends Parent {
                     this.sequenceDiagram.createReturnMessage(fromNode.lifeline, sq.lifeline, label);
                     break;
                 case "syncSelf":
-                    // TODO
-                    // this.sequenceDiagram.createSynchronousSelfMessage(fromNode.lifeline, sq.lifeline, operation, tmp);
+                    this.sequenceDiagram.createSynchronousSelfMessage(fromNode.lifeline, operation, tmp);
                     break;
                 case "asyncSelf":
-                    // TODO
-                    // this.sequenceDiagram.createAsynchronousSelfMessage(fromNode.lifeline, sq.lifeline, operation, tmp);
+                    this.sequenceDiagram.createAsynchronousSelfMessage(fromNode.lifeline, operation, tmp);
                     break;
                 case "returnSelf":
-                    // TODO
-                    // this.sequenceDiagram.createReturnSelfMessage(fromNode.lifeline, sq.lifeline, operation, tmp);
+                    this.sequenceDiagram.createReturnSelfMessage(fromNode.lifeline, operation, tmp);
                     break;
                 case "destroy":
                     this.sequenceDiagram.createDestroyMessage(fromNode.lifeline, sq.lifeline, label);
