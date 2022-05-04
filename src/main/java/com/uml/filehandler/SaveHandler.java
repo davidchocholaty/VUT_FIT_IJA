@@ -517,9 +517,13 @@ public class SaveHandler {
 
             List<UMLLifeline> diagramLifelines = currentSequenceDiagram.getLifelines();
             List<UMLMessage> diagramMessages = currentSequenceDiagram.getMessages();
+            List<UMLDestroy> diagramDestroys = currentSequenceDiagram.getDestroys();
+            List<UMLActivation> diagramActivations = currentSequenceDiagram.getActivations();
 
             addLifelinesTags(sequenceDiagramElement, diagramLifelines);
             addMessagesTags(sequenceDiagramElement, diagramMessages);
+            addDestroyTags(sequenceDiagramElement, diagramDestroys);
+            addActivationTags(sequenceDiagramElement, diagramActivations);
         }
     }
 
@@ -694,8 +698,6 @@ public class SaveHandler {
 
         if (currentMessage instanceof UMLReturnMessage) {
             addReturnMessageTag(labelType);
-        } else if (currentMessage instanceof UMLDestroyMessage) {
-            addDestroyMessageTag(labelType);
         }
     }
 
@@ -710,19 +712,6 @@ public class SaveHandler {
         /* returnMessage tag */
         returnMessage = this.doc.createElement("returnMessage");
         labelType.appendChild(returnMessage);
-    }
-
-    /**
-     * Add destroy message tag.
-     *
-     * @param labelType Label type element.
-     */
-    private void addDestroyMessageTag(Element labelType) {
-        Element destroyMessage;
-
-        /* destroyMessage tag */
-        destroyMessage = this.doc.createElement("destroyMessage");
-        labelType.appendChild(destroyMessage);
     }
 
     /**
@@ -829,6 +818,83 @@ public class SaveHandler {
         /* createMessage tag */
         createMessage = this.doc.createElement("createMessage");
         operationType.appendChild(createMessage);
+    }
+
+    private void addDestroyTags(Element sequenceDiagramElement, List<UMLDestroy> diagramDestroys) {
+        for (UMLDestroy currentDestroy : diagramDestroys) {
+            addDestroyTag(sequenceDiagramElement, currentDestroy);
+        }
+    }
+
+    private void addDestroyTag(Element sequenceDiagramElement, UMLDestroy currentDestroy) {
+        Element diagramDestroy;
+
+        /* Create destroy tag */
+        diagramDestroy = this.doc.createElement("destroy");
+        sequenceDiagramElement.appendChild(diagramDestroy);
+
+        addDestroyLifelineTag(diagramDestroy, currentDestroy);
+        addYCoordinateTag(diagramDestroy, currentDestroy);
+    }
+
+    private void addDestroyLifelineTag(Element diagramDestroy, UMLDestroy currentDestroy) {
+        Element destroyLifeline;
+
+        /* destroyLifeline */
+        destroyLifeline = this.doc.createElement("destroyLifeline");
+        diagramDestroy.appendChild(destroyLifeline);
+        destroyLifeline.setTextContent(currentDestroy.getLifeline().getObjectClass().getName());
+    }
+
+    private void addYCoordinateTag(Element diagramDestroy, UMLDestroy currentDestroy) {
+        Element yCoordinate;
+
+        /* yCoordinate tag */
+        yCoordinate = this.doc.createElement("yCoordinate");
+        diagramDestroy.appendChild(yCoordinate);
+        yCoordinate.setTextContent(Double.toString(currentDestroy.getYCoordinate()));
+    }
+
+    private void addActivationTags(Element sequenceDiagramElement, List<UMLActivation> diagramActivations) {
+        for (UMLActivation currentActivation : diagramActivations) {
+            addActivationTag(sequenceDiagramElement, currentActivation);
+        }
+    }
+
+    private void addActivationTag(Element sequenceDiagramElement, UMLActivation currentActivation) {
+        Element diagramActivation;
+
+        /* Create activation tag */
+        diagramActivation = this.doc.createElement("activation");
+        sequenceDiagramElement.appendChild(diagramActivation);
+
+        addActivationLifelineTag(diagramActivation, currentActivation);
+        addActivationYCoordinateTags(diagramActivation, currentActivation);
+    }
+
+    private void addActivationLifelineTag(Element diagramActivation, UMLActivation currentActivation) {
+        Element activationLifeline;
+
+        /* activationLifeline */
+        activationLifeline = this.doc.createElement("activationLifeline");
+        diagramActivation.appendChild(activationLifeline);
+        activationLifeline.setTextContent(currentActivation.getLifeline().getObjectClass().getName());
+    }
+
+    private void addActivationYCoordinateTags(Element diagramActivation, UMLActivation currentActivation) {
+        Element yCoordinate;
+
+        /* first yCoordinate tag */
+        yCoordinate = this.doc.createElement("yCoordinate");
+        diagramActivation.appendChild(yCoordinate);
+        yCoordinate.setTextContent(Double.toString(currentActivation.getFirstYCoordinate()));
+        yCoordinate.setAttribute("order", String.valueOf(1));
+
+        /* second yCoordinate tag */
+        yCoordinate = this.doc.createElement("yCoordinate");
+        diagramActivation.appendChild(yCoordinate);
+        yCoordinate.setTextContent(Double.toString(currentActivation.getSecondYCoordinate()));
+        yCoordinate.setAttribute("order", String.valueOf(2));
     }
 
     /*-----------------------------------------------------------------------------*/
