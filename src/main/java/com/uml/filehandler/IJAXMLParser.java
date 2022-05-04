@@ -167,6 +167,8 @@ public class IJAXMLParser {
 
                             parseLifelines();
                             parseMessages();
+                            parseDestroys();
+                            parseActivations();
                         }
                     }
 
@@ -964,7 +966,7 @@ public class IJAXMLParser {
      *
      * @throws IllegalFileFormat Invalid format of input file.
      */
-    private void parseLifelines() throws IllegalFileFormat {
+    private void parseLifelines() throws IllegalFileFormat, NullPointerException, NumberFormatException {
         Node node;
 
         while (this.firstLevelOrder < this.firstLevelList.getLength()) {
@@ -1000,7 +1002,8 @@ public class IJAXMLParser {
      * @param attrValue Value of lifeline tag name attribute.
      * @throws IllegalFileFormat Invalid format of input file.
      */
-    private void parseLifelineChildren(Node lifelineNode, String attrValue) throws IllegalFileFormat {
+    private void parseLifelineChildren(Node lifelineNode, String attrValue) throws IllegalFileFormat,
+            NullPointerException, NumberFormatException {
         NodeList list = lifelineNode.getChildNodes();
 
         Node node;
@@ -1056,7 +1059,7 @@ public class IJAXMLParser {
 
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 if (!node.getNodeName().equals("message")) {
-                    throw new IllegalFileFormat("Invalid file syntax.");
+                    break;
                 }
 
                 if (node.hasChildNodes()) {
@@ -1146,13 +1149,10 @@ public class IJAXMLParser {
         if (list.getLength() != expectedListLen) {
             throw new IllegalFileFormat("Invalid file syntax.");
         } else {
-
-            switch (list.item(1).getNodeName()) {
-                case "returnMessage":
-                    // TODO frontend
-                    break;
-                default:
-                    throw new IllegalFileFormat("Invalid file syntax.");
+            if (list.item(1).getNodeName().equals("returnMessage")) {
+                // TODO frontend
+            } else {
+                throw new IllegalFileFormat("Invalid file syntax.");
             }
         }
     }
@@ -1196,4 +1196,153 @@ public class IJAXMLParser {
             }
         }
     }
+
+    private void parseDestroys() throws IllegalFileFormat, NullPointerException, NumberFormatException {
+        Node node;
+
+        while (this.firstLevelOrder < this.firstLevelList.getLength()) {
+            node = this.firstLevelList.item(this.firstLevelOrder);
+
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                if (!node.getNodeName().equals("destroy")) {
+                    break;
+                }
+
+                String attrValue = parseXmlAttribute(node, "name");
+
+                if (attrValue == null) {
+                    throw new IllegalFileFormat("Invalid file syntax.");
+                }
+
+                if (node.hasChildNodes()) {
+                    parseDestroyChildren(node, attrValue);
+                }
+            }
+
+            this.firstLevelOrder += 2;
+        }
+    }
+
+    private void parseDestroyChildren(Node destroyNode, String attrValue) throws IllegalFileFormat,
+            NullPointerException, NumberFormatException {
+        NodeList list = destroyNode.getChildNodes();
+        Node node;
+        int order;
+        double y;
+        String lifeline = null;
+
+        order = 1;
+
+        /* destroyLifeline tag */
+        node = list.item(order);
+        order += 2;
+
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (!node.getNodeName().equals("destroyLifeline")) {
+                throw new IllegalFileFormat("Invalid file syntax.");
+            } else {
+                lifeline = node.getTextContent();
+            }
+        }
+
+        if (lifeline == null) {
+            throw new IllegalFileFormat("Invalid file syntax.");
+        }
+
+        /* yCoordinate tag */
+        node = list.item(order);
+        order += 2;
+
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (!node.getNodeName().equals("yCoordinate")) {
+                throw new IllegalFileFormat("Invalid file syntax.");
+            } else {
+                y = Double.parseDouble(node.getTextContent());
+            }
+        }
+
+
+
+        /* Call frontend method for creating destroy element */
+        // TODO
+    }
+
+    private void parseActivations() throws IllegalFileFormat, NullPointerException, NumberFormatException {
+        Node node;
+
+        while (this.firstLevelOrder < this.firstLevelList.getLength()) {
+            node = this.firstLevelList.item(this.firstLevelOrder);
+
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                if (!node.getNodeName().equals("activation")) {
+                    break;
+                }
+
+                String attrValue = parseXmlAttribute(node, "name");
+
+                if (attrValue == null) {
+                    throw new IllegalFileFormat("Invalid file syntax.");
+                }
+
+                if (node.hasChildNodes()) {
+                    parseActivationChildren(node, attrValue);
+                }
+            }
+
+            this.firstLevelOrder += 2;
+        }
+    }
+
+    private void parseActivationChildren(Node activationNode, String attrValue) throws IllegalFileFormat,
+            NullPointerException, NumberFormatException {
+        NodeList list = activationNode.getChildNodes();
+        Node node;
+        int order;
+        double yStart, yEnd;
+        String lifeline = null;
+        order = 1;
+
+        /* activationLifeline tag */
+        node = list.item(order);
+        order += 2;
+
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (!node.getNodeName().equals("activationLifeline")) {
+                throw new IllegalFileFormat("Invalid file syntax");
+            } else {
+                lifeline = node.getTextContent();
+            }
+        }
+
+        if (lifeline == null) {
+            throw new IllegalFileFormat("Invalid file syntax");
+        }
+
+        /* yCoordinate tags */
+        node = list.item(order);
+        order += 2;
+
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (!node.getNodeName().equals("yCoordinate")) {
+                throw new IllegalFileFormat("Invalid file syntax");
+            } else {
+                yStart = Double.parseDouble(node.getTextContent());
+            }
+        }
+
+        node = list.item(order);
+        order += 2;
+
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (!node.getNodeName().equals("yCoordinate")) {
+                throw new IllegalFileFormat("Invalid file syntax");
+            } else {
+                yEnd = Double.parseDouble(node.getTextContent());
+            }
+        }
+
+        /* Call frontend method for creating activation element */
+        // TODO
+    }
+
 }

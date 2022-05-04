@@ -98,6 +98,45 @@ public class SequenceDiagram extends Element {
 		}
 	}
 
+	public void deleteLifelineDestroy(UMLLifeline lifeline) {
+		int idx;
+		UMLDestroy destroyToDelete = null;
+
+		for (UMLDestroy currentDestroy : diagramDestroys) {
+			if (currentDestroy.getLifeline().equals(lifeline)) {
+				destroyToDelete = currentDestroy;
+				break;
+			}
+		}
+
+		if (destroyToDelete != null) {
+			idx = diagramDestroys.indexOf(destroyToDelete);
+			diagramDestroys.remove(idx);
+		}
+	}
+
+	public void deleteAllLifelineActivations(UMLLifeline lifeline) {
+		int idx;
+		List<UMLActivation> activationsToDelete = new ArrayList<UMLActivation>();
+
+		for (UMLActivation currentActivation : diagramActivations) {
+			if (currentActivation.getLifeline().equals(lifeline)) {
+				activationsToDelete.add(currentActivation);
+			}
+		}
+
+		for (UMLActivation currentActivation : activationsToDelete) {
+			idx = diagramActivations.indexOf(currentActivation);
+			diagramActivations.remove(idx);
+		}
+	}
+
+	public void deleteAllLifelineDependencies(UMLLifeline lifeline) {
+		deleteAllLifelineMessages(lifeline);
+		deleteLifelineDestroy(lifeline);
+		deleteAllLifelineActivations(lifeline);
+	}
+
 	/**
 	 * Method for obtaining diagram lifelines.
 	 *

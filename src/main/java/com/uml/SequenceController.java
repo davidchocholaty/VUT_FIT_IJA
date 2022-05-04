@@ -144,8 +144,7 @@ public class SequenceController extends Parent {
                 rPane.getChildren().remove(a);
             }
 
-            // TODO delete destroys a activation
-            this.sequenceDiagram.deleteAllLifelineMessages(tmpNode.lifeline);
+            this.sequenceDiagram.deleteAllLifelineDependencies(tmpNode.lifeline);
             this.sequenceDiagram.deleteLifeline(tmpNode.lifeline);
 
             rPane.getChildren().remove(tmpNode);
