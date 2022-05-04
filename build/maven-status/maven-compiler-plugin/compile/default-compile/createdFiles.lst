@@ -1,9 +1,9 @@
 com/uml/classdiagram/UMLRelationship.class
-com/uml/sequencediagram/UMLSelfMessage.class
 com/uml/sequencediagram/Element.class
 com/uml/customexception/IllegalFileExtension.class
 com/uml/classdiagram/UMLInstanceLevel.class
 com/uml/classdiagram/UMLVisibilityType.class
+com/uml/sequencediagram/UMLAsynchronousSelfMessage.class
 com/uml/Arrow.class
 com/uml/App.class
 com/uml/ClassUML.class
@@ -13,6 +13,7 @@ com/uml/AppLauncher.class
 com/uml/classdiagram/UMLDataType.class
 com/uml/customexception/InvalidOperationLabel.class
 com/uml/MainController.class
+com/uml/Cross.class
 com/uml/SequenceController.class
 com/uml/sequencediagram/UMLMessageOperationType.class
 com/uml/sequencediagram/UMLSynchronousMessage.class
@@ -21,6 +22,7 @@ com/uml/classdiagram/UMLClassifier.class
 com/uml/sequencediagram/UMLMessageLabelType.class
 com/uml/Message.class
 com/uml/classdiagram/UMLInterface.class
+com/uml/ActivationSequenceUML.class
 com/uml/sequencediagram/UMLMessage.class
 com/uml/SequenceUML.class
 com/uml/classdiagram/UMLAggregation.class
@@ -33,11 +35,13 @@ com/uml/classdiagram/UMLAssociation.class
 com/uml/sequencediagram/UMLDestroyMessage.class
 com/uml/sequencediagram/UMLReturnMessage.class
 com/uml/classdiagram/UMLAttribute.class
+com/uml/sequencediagram/UMLSynchronousSelfMessage.class
 com/uml/classdiagram/UMLClass.class
 com/uml/sequencediagram/SequenceDiagram.class
 com/uml/ClassController.class
 com/uml/filehandler/SaveHandler.class
 com/uml/sequencediagram/UMLLifeline.class
+com/uml/sequencediagram/UMLReturnSelfMessage.class
 com/uml/sequencediagram/UMLAsynchronousMessage.class
 com/uml/classdiagram/Element.class
 com/uml/classdiagram/UMLComposition.class

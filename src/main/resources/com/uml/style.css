@@ -46,3 +46,8 @@
     -fx-font-style: 13;
     -fx-padding: 15,15,15,15;
 }
+.activation{
+    -fx-fill: #D3D3D3;
+    -fx-stroke-width: 2;
+    -fx-stroke: #A9A9A9;
+}
