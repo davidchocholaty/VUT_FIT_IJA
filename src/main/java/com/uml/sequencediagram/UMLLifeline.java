@@ -19,6 +19,7 @@ public class UMLLifeline {
 	private long id;
 	private static long nextId = 0;
 	private double xCoordinate;
+	private double yCoordinate;
 	private UMLClass objectClass;
 	private double height;
 
@@ -32,6 +33,7 @@ public class UMLLifeline {
 		this.objectClass = objectClass;
 		this.height = height;
 		this.xCoordinate = 0.0;
+		this.yCoordinate = 0.0;
 		this.id = nextId;
 		nextId++;
 	}
@@ -61,6 +63,24 @@ public class UMLLifeline {
 	 */
 	public void setXCoordinate(double xCoordinate) {
 		this.xCoordinate = xCoordinate;
+	}
+
+	/**
+	 * Get y coordinate of lifeline on frontend scene.
+	 *
+	 * @return Lifeline y coordinate.
+	 */
+	public double getYCoordinate() {
+		return this.yCoordinate;
+	}
+
+	/**
+	 * Set y coordinate of lifeline on frontend scene.
+	 *
+	 * @param yCoordinate Lifeline y coordinate.
+	 */
+	public void setYCoordinate(double yCoordinate) {
+		this.yCoordinate = yCoordinate;
 	}
 
 	/**

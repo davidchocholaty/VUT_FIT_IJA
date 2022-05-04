@@ -1008,7 +1008,7 @@ public class IJAXMLParser {
 
         Node node;
         double height;
-        double x;
+        double x, y;
         int order;
 
         order = 1;
@@ -1037,6 +1037,18 @@ public class IJAXMLParser {
                 throw new IllegalFileFormat("Invalid file syntax.");
             } else {
                 x = Double.parseDouble(node.getTextContent());
+            }
+        }
+
+        /* yCoordinate tag */
+        node = list.item(this.secondLevelOrder);
+        order += 2;
+
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (!node.getNodeName().equals("yCoordinate")) {
+                throw new IllegalFileFormat("Invalid file syntax.");
+            } else {
+                y = Double.parseDouble(node.getTextContent());
             }
         }
 

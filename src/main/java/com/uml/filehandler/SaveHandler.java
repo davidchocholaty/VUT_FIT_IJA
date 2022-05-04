@@ -556,6 +556,7 @@ public class SaveHandler {
 
         addHeightTag(diagramLifeline, currentLifeline);
         addXCoordinateTag(diagramLifeline, currentLifeline);
+        addYCoordinateTag(diagramLifeline, currentLifeline);
     }
 
     /**
@@ -589,6 +590,24 @@ public class SaveHandler {
         xCoordinate = this.doc.createElement("xCoordinate");
         diagramLifeline.appendChild(xCoordinate);
         xCoordinate.setTextContent(Double.toString(currentLifeline.getXCoordinate()));
+    }
+
+    /**
+     * Add y coordinate tag.
+     * <p>
+     *     This method is overridden method of the class diagram method version for sequence diagram.
+     * </p>
+     *
+     * @param diagramLifeline Lifeline element.
+     * @param currentLifeline Current lifeline to be saved.
+     */
+    private void addYCoordinateTag(Element diagramLifeline, UMLLifeline currentLifeline) {
+        Element yCoordinate;
+
+        /* yCoordinate tag */
+        yCoordinate = this.doc.createElement("yCoordinate");
+        diagramLifeline.appendChild(yCoordinate);
+        yCoordinate.setTextContent(Double.toString(currentLifeline.getYCoordinate()));
     }
 
     /**
