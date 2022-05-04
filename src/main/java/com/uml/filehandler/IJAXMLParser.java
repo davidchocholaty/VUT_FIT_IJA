@@ -1074,6 +1074,12 @@ public class IJAXMLParser {
                     break;
                 }
 
+                String attrValue = parseXmlAttribute(node, "label");
+
+                if (attrValue == null) {
+                    throw new IllegalFileFormat("Invalid file syntax.");
+                }
+
                 if (node.hasChildNodes()) {
                     parseMessageChildren(node);
                 }

@@ -74,7 +74,7 @@ public class SequenceDiagram extends Element {
 	}
 
 	/**
-	 * Delete all messages which use the lifeline to be deleted.
+	 * Delete all messages which use the lifeline that will be deleted.
 	 * <p>
 	 *     The lifeline is in from or to attribute of message.
 	 * </p>
@@ -98,6 +98,11 @@ public class SequenceDiagram extends Element {
 		}
 	}
 
+	/**
+	 * Delete the lifeline destroying object symbol.
+	 *
+	 * @param lifeline Lifeline which destroy should be deleted.
+	 */
 	public void deleteLifelineDestroy(UMLLifeline lifeline) {
 		int idx;
 		UMLDestroy destroyToDelete = null;
@@ -115,6 +120,11 @@ public class SequenceDiagram extends Element {
 		}
 	}
 
+	/**
+	 * Delete all activations which use the lifeline that will be deleted.
+	 *
+	 * @param lifeline Lifeline which activations should be deleted.
+	 */
 	public void deleteAllLifelineActivations(UMLLifeline lifeline) {
 		int idx;
 		List<UMLActivation> activationsToDelete = new ArrayList<UMLActivation>();
@@ -131,6 +141,14 @@ public class SequenceDiagram extends Element {
 		}
 	}
 
+	/**
+	 * Delete all dependencies which use the lifeline that will be deleted.
+	 * <p>
+	 *     As lifeline dependencies are takes messages, activations and destroying object symbol.
+	 * </p>
+	 *
+	 * @param lifeline Lifeline which dependencies should be deleted.
+	 */
 	public void deleteAllLifelineDependencies(UMLLifeline lifeline) {
 		deleteAllLifelineMessages(lifeline);
 		deleteLifelineDestroy(lifeline);
