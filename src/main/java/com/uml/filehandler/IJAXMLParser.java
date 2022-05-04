@@ -9,10 +9,8 @@
 
 package com.uml.filehandler;
 
+import com.uml.*;
 import com.uml.customexception.*;
-import com.uml.App;
-import com.uml.ClassUML;
-import com.uml.MainController;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.w3c.dom.*;
@@ -41,7 +39,9 @@ public class IJAXMLParser {
     private int firstLevelOrder;
     private int secondLevelOrder;
     private List<ClassUML> diagramClasses;
+    private List<SequenceUML> diagramLifelines;
     private MainController controller;
+    private SequenceController sequenceController;
     private NodeList zeroLevelList;
     private NodeList firstLevelList;
 
@@ -157,6 +157,9 @@ public class IJAXMLParser {
                         if (attrValue == null) {
                             throw new IllegalFileFormat("Missing sequence diagram name.");
                         }
+
+                        // TODO
+                        //this.sequenceController = addTabLoad(attrValue);
 
                         if (node.hasChildNodes()) {
                             this.firstLevelList = node.getChildNodes();
@@ -1036,6 +1039,7 @@ public class IJAXMLParser {
 
         /* Call frontend method for creating lifeline element */
         // TODO
+        //SequenceUML lifeline = addElementLoaded(attrValue, height, x);
     }
 
     /**
@@ -1145,9 +1149,6 @@ public class IJAXMLParser {
 
             switch (list.item(1).getNodeName()) {
                 case "returnMessage":
-                    // TODO frontend
-                    break;
-                case "destroyMessage":
                     // TODO frontend
                     break;
                 default:

@@ -65,6 +65,8 @@ public class MainController extends Parent {
 
     public ClassDiagram diagram = new ClassDiagram("Class diagram");
 
+    private List<SequenceDiagram> sequenceDiagrams = new ArrayList<SequenceDiagram>();
+
     /**
      * Initialize main controller.
      */
@@ -588,6 +590,8 @@ public class MainController extends Parent {
             /* Backend */
             sequenceController.sequenceDiagram = new SequenceDiagram(tabText);
             sequenceController.classDiagram = this.diagram;
+
+            this.sequenceDiagrams.add(sequenceController.sequenceDiagram);
         } catch (IOException e) {
             e.printStackTrace();
         }

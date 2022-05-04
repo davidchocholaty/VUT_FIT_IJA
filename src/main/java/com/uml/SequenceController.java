@@ -143,6 +143,11 @@ public class SequenceController extends Parent {
             for (Node a : tmpNode.edges) {
                 rPane.getChildren().remove(a);
             }
+
+            // TODO delete destroys a activation
+            this.sequenceDiagram.deleteAllLifelineMessages(tmpNode.lifeline);
+            this.sequenceDiagram.deleteLifeline(tmpNode.lifeline);
+
             rPane.getChildren().remove(tmpNode);
         }
     }
@@ -170,7 +175,6 @@ public class SequenceController extends Parent {
 
         UMLClass cls = this.classDiagram.findClass(nm[0]);
 
-        // TODO height
         UMLLifeline lifeline = this.sequenceDiagram.createLifeline(cls, 0.0);
         lifeline.setXCoordinate(mouseEvent.getX());
 
@@ -219,7 +223,6 @@ public class SequenceController extends Parent {
 
         UMLClass cls = this.classDiagram.findClass(nm[0]);
 
-        // TODO height
         UMLLifeline lifeline = this.sequenceDiagram.createLifeline(cls, 0.0);
         lifeline.setXCoordinate(mouseEvent.getX());
 
@@ -243,6 +246,7 @@ public class SequenceController extends Parent {
         return sq;
     }
 
+    // TODO int number exception
     private void changeHeight(ContextMenuEvent e, SequenceUML sq) {
         TextInputDialog dialog = new TextInputDialog();
 
@@ -257,6 +261,8 @@ public class SequenceController extends Parent {
             nm[0] = name.get();
         });
         sq.setY2(Integer.parseInt(nm[0])+80);
+
+        sq.lifeline.setHeight(Integer.parseInt(nm[0])+80);
     }
 
     private void timeLineDragDetected(MouseEvent e, SequenceUML sq){
@@ -272,7 +278,6 @@ public class SequenceController extends Parent {
 
     private Node createMessage(MouseEvent e,SequenceUML fromNode, SequenceUML sq, String messageID) {
         String messageText = getMessage(messageID);
-
 
         // TODO
         String operation = "operation";
@@ -408,6 +413,9 @@ public class SequenceController extends Parent {
         cross.x1Property().bind(sq.getView().layoutXProperty());
         sq.setY2(e.getY() + 40);
         sq.edges.add(cross);
+
+        this.sequenceDiagram.createDestroy(sq.lifeline, e.getY());
+
         return cross;
     }
 
@@ -416,11 +424,16 @@ public class SequenceController extends Parent {
         activ.x1Property().bind(sq.getView().layoutXProperty());
 
         sq.edges.add(activ);
+
+        this.sequenceDiagram.createActivation(sq.lifeline, activation, e.getY());
+
         return activ;
     }
 
     private void drag(MouseEvent e, SequenceUML sq) {
         double x = sq.getView().getTranslateX() + e.getX() + sq.getView().getLayoutX();
         sq.getView().setLayoutX(x);
+
+        sq.lifeline.setXCoordinate(x);
     }
 }
