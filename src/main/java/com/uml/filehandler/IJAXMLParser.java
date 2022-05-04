@@ -1104,6 +1104,8 @@ public class IJAXMLParser {
         Node node;
         String from = null;
         String to = null;
+        String fromId;
+        String toId;
         this.secondLevelOrder = 1;
 
         /* From tag */
@@ -1120,6 +1122,12 @@ public class IJAXMLParser {
 
         if (from == null) {
             throw new IllegalFileFormat("Invalid file syntax.");
+        } else {
+            fromId = parseXmlAttribute(node, "id");
+
+            if (fromId == null || fromId.equals("")) {
+                throw new IllegalFileFormat("Invalid file syntax.");
+            }
         }
 
         /* To tag */
@@ -1136,6 +1144,12 @@ public class IJAXMLParser {
 
         if (to == null) {
             throw new IllegalFileFormat("Invalid file syntax.");
+        } else {
+            toId = parseXmlAttribute(node, "id");
+
+            if (toId == null || toId.equals("")) {
+                throw new IllegalFileFormat("Invalid file syntax.");
+            }
         }
 
         node = list.item(this.secondLevelOrder);
@@ -1150,6 +1164,8 @@ public class IJAXMLParser {
                 throw new IllegalFileFormat("Invalid file syntax");
             }
         }
+
+        // TODO message frontend
     }
 
     /**
@@ -1248,6 +1264,7 @@ public class IJAXMLParser {
         int order;
         double y;
         String lifeline = null;
+        String id = null;
 
         order = 1;
 
@@ -1256,7 +1273,7 @@ public class IJAXMLParser {
         order += 2;
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
-            if (!node.getNodeName().equals("destroyLifeline")) {
+            if (!node.getNodeName().equals("lifelineReference")) {
                 throw new IllegalFileFormat("Invalid file syntax.");
             } else {
                 lifeline = node.getTextContent();
@@ -1265,6 +1282,12 @@ public class IJAXMLParser {
 
         if (lifeline == null) {
             throw new IllegalFileFormat("Invalid file syntax.");
+        } else {
+            id = parseXmlAttribute(node, "id");
+
+            if (id == null || id.equals("")) {
+                throw new IllegalFileFormat("Invalid file syntax.");
+            }
         }
 
         /* yCoordinate tag */
@@ -1318,6 +1341,8 @@ public class IJAXMLParser {
         int order;
         double yStart, yEnd;
         String lifeline = null;
+        String id = null;
+        String orderAttr = null;
         order = 1;
 
         /* activationLifeline tag */
@@ -1325,7 +1350,7 @@ public class IJAXMLParser {
         order += 2;
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
-            if (!node.getNodeName().equals("activationLifeline")) {
+            if (!node.getNodeName().equals("lifelineReference")) {
                 throw new IllegalFileFormat("Invalid file syntax");
             } else {
                 lifeline = node.getTextContent();
@@ -1334,6 +1359,12 @@ public class IJAXMLParser {
 
         if (lifeline == null) {
             throw new IllegalFileFormat("Invalid file syntax");
+        } else {
+            id = parseXmlAttribute(node, "id");
+
+            if (id == null || id.equals("")) {
+                throw new IllegalFileFormat("Invalid file syntax.");
+            }
         }
 
         /* yCoordinate tags */
@@ -1344,6 +1375,12 @@ public class IJAXMLParser {
             if (!node.getNodeName().equals("yCoordinate")) {
                 throw new IllegalFileFormat("Invalid file syntax");
             } else {
+                orderAttr = parseXmlAttribute(node, "order");
+
+                if (!orderAttr.equals("1")) {
+                    throw new IllegalFileFormat("Invalid file syntax.");
+                }
+
                 yStart = Double.parseDouble(node.getTextContent());
             }
         }
@@ -1355,6 +1392,12 @@ public class IJAXMLParser {
             if (!node.getNodeName().equals("yCoordinate")) {
                 throw new IllegalFileFormat("Invalid file syntax");
             } else {
+                orderAttr = parseXmlAttribute(node, "order");
+
+                if (!orderAttr.equals("2")) {
+                    throw new IllegalFileFormat("Invalid file syntax.");
+                }
+
                 yEnd = Double.parseDouble(node.getTextContent());
             }
         }
