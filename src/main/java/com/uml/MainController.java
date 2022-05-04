@@ -294,14 +294,14 @@ public class MainController extends Parent {
         /* Remove all whitespaces and non-visible characters */
         methodParams = methodParams.replaceAll("\\s+","");
 
-        String[] splittedMethodParams = methodParams.split(",");
+        String[] splitedMethodParams = methodParams.split(",");
 
-        for (String currentParam : splittedMethodParams) {
+        for (String currentParam : splitedMethodParams) {
 
-            String[] splittedParam = currentParam.split(":");
+            String[] splitedParam = currentParam.split(":");
 
-            String paramName = splittedParam[0];
-            String paramDataType = splittedParam[1];
+            String paramName = splitedParam[0];
+            String paramDataType = splitedParam[1];
 
             UMLDataType dataType = this.diagram.dataTypeForName(paramDataType);
 

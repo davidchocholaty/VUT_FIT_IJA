@@ -12,8 +12,11 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
+import javafx.util.Pair;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class SequenceController extends Parent {
@@ -282,33 +285,50 @@ public class SequenceController extends Parent {
     public void createMessageLoaded(SequenceUML from, SequenceUML to, String message, String messageID){
 
     }
+
+    private Pair<String, String[]> parseOperationLabel(String operationLabel) throws InvalidOperationLabel {
+        if (operationLabel == null) {
+            throw new InvalidOperationLabel("Invalid message label.");
+        }
+
+        int idx = operationLabel.indexOf('(');
+
+        if (idx < 0) {
+            throw new InvalidOperationLabel("Invalid message label.");
+        }
+
+        /* Remove all whitespaces and non-visible characters */
+        operationLabel = operationLabel.replaceAll("\\s+","");
+
+        String operationName = operationLabel.substring(0, idx);
+
+        if (operationLabel.charAt(operationLabel.length()-1) != ')') {
+            throw new InvalidOperationLabel("Invalid message label.");
+        }
+
+        operationLabel = operationLabel.substring(idx, operationLabel.length()-1);
+
+        String[] splitedOperationLabel = operationLabel.split(",");
+
+        return new Pair<String, String[]>(operationName, splitedOperationLabel);
+    }
+
     private Node createMessage(MouseEvent e,SequenceUML fromNode, SequenceUML sq, String messageID) {
+        Pair<String, String[]> operation;
         String messageText = getMessage(messageID);
 
-        // TODO
-        String operation = "operation";
-        String[] tmp = {"t", "m", "p"};
-        String label = "label";
-/*
         try {
             switch (messageID) {
                 case "sync":
-                    this.sequenceDiagram.createSynchronousMessage(fromNode.lifeline, sq.lifeline, operation, tmp);
-                    break;
                 case "async":
-                    this.sequenceDiagram.createAsynchronousMessage(fromNode.lifeline, sq.lifeline, operation, tmp);
+                case "syncSelf":
+                case "asyncSelf":
+                case "returnSelf":
+                    operation = parseOperationLabel(messageText);
+                    this.sequenceDiagram.createSynchronousMessage(fromNode.lifeline, sq.lifeline, operation.getKey(), operation.getValue());
                     break;
                 case "return":
-                    this.sequenceDiagram.createReturnMessage(fromNode.lifeline, sq.lifeline, label);
-                    break;
-                case "syncSelf":
-                    this.sequenceDiagram.createSynchronousSelfMessage(fromNode.lifeline, operation, tmp);
-                    break;
-                case "asyncSelf":
-                    this.sequenceDiagram.createAsynchronousSelfMessage(fromNode.lifeline, operation, tmp);
-                    break;
-                case "returnSelf":
-                    this.sequenceDiagram.createReturnSelfMessage(fromNode.lifeline, operation, tmp);
+                    this.sequenceDiagram.createReturnMessage(fromNode.lifeline, sq.lifeline, messageText);
                     break;
                 default:
                     break;
@@ -318,7 +338,7 @@ public class SequenceController extends Parent {
             err.printStackTrace();
         }
 
- */
+
         Message message = new Message(fromNode.getView().getLayoutX(), e.getY(), sq.getView().getLayoutX(), e.getY(), messageID, messageText);
 
         message.x1Property().bind(fromNode.getView().layoutXProperty());
