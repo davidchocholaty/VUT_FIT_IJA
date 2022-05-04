@@ -592,4 +592,8 @@ public class MainController extends Parent {
             e.printStackTrace();
         }
     }
+    // TODO
+    public SequenceController addTabLoad(String name) {
+        return null;
+    }
 }

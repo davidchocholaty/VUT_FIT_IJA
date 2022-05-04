@@ -147,6 +147,10 @@ public class SequenceController extends Parent {
         }
     }
 
+    public SequenceUML addElementLoaded(String name, double height, double x, double y){
+        return null;
+    }
+
     public void addElement(MouseEvent mouseEvent) throws IOException {
         /* Lifeline */
         if(sequenceAct) {
@@ -270,6 +274,9 @@ public class SequenceController extends Parent {
         tmpNode = sq;
     }
 
+    public void createMessageLoaded(SequenceUML from, SequenceUML to, String message, String messageID){
+
+    }
     private Node createMessage(MouseEvent e,SequenceUML fromNode, SequenceUML sq, String messageID) {
         String messageText = getMessage(messageID);
 
@@ -336,7 +343,7 @@ public class SequenceController extends Parent {
         }else{
             dialog = new TextInputDialog();
             dialog.setTitle(messageID+" Message");
-            dialog.setHeaderText("Enter create message Operation(parameters)");
+            dialog.setHeaderText("Enter message Operation(parameters)");
             dialog.setContentText("Message:");
         }
 
@@ -405,6 +412,10 @@ public class SequenceController extends Parent {
             rPane.getChildren().add(createDelete(e, sq));
         }
     }
+    //TODO
+    public void createDestroy(SequenceUML lifeline, double y){
+
+    }
 
     private Node createDelete(MouseEvent e, SequenceUML sq) {
         Cross cross = new Cross(sq.getView().getLayoutX(), e.getY());
@@ -412,6 +423,10 @@ public class SequenceController extends Parent {
         sq.setY2(e.getY() + 40);
         sq.edges.add(cross);
         return cross;
+    }
+    // TODO
+    private void CreateActivationLoaded(SequenceUML lifeline, double y1, double y2){
+
     }
 
     private Node createActivation(MouseEvent e, Double activation, SequenceUML sq){
