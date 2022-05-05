@@ -42,7 +42,7 @@ public class Message extends Group {
         this.y1.set(X2);
         this.y2.set(Y2);
 
-        if(messageID.equals("Create")){
+        if(messageID.equals("create")){
             createText.setText(message);
             createText.translateXProperty().bind(createText.widthProperty().divide(-2));
             createText.translateYProperty().bind(createText.heightProperty().divide(-1));

@@ -1275,11 +1275,6 @@ public class IJAXMLParser {
         if (list.getLength() != expectedListLen) {
             throw new IllegalFileFormat("Invalid file syntax.");
         } else {
-            System.out.println("-------------");
-            System.out.println(from);
-            System.out.println(fromId);
-            System.out.println(to);
-            System.out.println(toId);
             SequenceUML fromLifeline = getLifelineByNameAndId(from, fromId);
             SequenceUML toLifeline = getLifelineByNameAndId(to, toId);
 

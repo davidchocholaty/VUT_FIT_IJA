@@ -70,7 +70,7 @@ public class SequenceController extends Parent {
             actiovationAct = false;
             tmpNode = null;
             tmpNode2 = null;
-            messageID = "Create";
+            messageID = "create";
             count = 0;
         }else if (syncMessageButton.isSelected()) {
             sequenceAct = false;
@@ -377,11 +377,6 @@ public class SequenceController extends Parent {
             err.printStackTrace();
         }
 
-        System.out.println("-------------------------");
-        System.out.println(yCoordinate);
-        System.out.println(messageID);
-        System.out.println(messageText);
-
         Message message = new Message(from.getView().getLayoutX(), yCoordinate, to.getView().getLayoutX(), yCoordinate, messageID, messageText);
         message.x1Property().bind(from.getView().layoutXProperty());
         message.x2Property().bind(to.getView().layoutXProperty());
@@ -505,7 +500,7 @@ public class SequenceController extends Parent {
             dialog.setTitle(messageID+" Message");
             dialog.setHeaderText("Enter return value");
             dialog.setContentText("value:");
-        }else if(messageID.equals("Create")){
+        }else if(messageID.equals("create")){
             dialog = new TextInputDialog();
             dialog.setTitle(messageID+" Message");
             dialog.setHeaderText("Enter create message <<Create>>(parameters)");
@@ -533,7 +528,8 @@ public class SequenceController extends Parent {
 
         try {
             createArguments = parseCreateLabel(messageText);
-            this.sequenceDiagram.createCreateMessage(fromNode.lifeline, sq.lifeline, createArguments);
+            UMLCreateMessage createMessage = this.sequenceDiagram.createCreateMessage(fromNode.lifeline, sq.lifeline, createArguments);
+            createMessage.setYCoordinate(e.getY());
         } catch (InvalidOperationLabel err) {
             getWarning("Message have invalid operation label");
             return null;
