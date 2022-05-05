@@ -6,9 +6,11 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<Button minWidth="100.0" mnemonicParsing="false" styleClass="classElement" stylesheets="@style.css" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uml.ClassController">
+<Button minWidth="100.0" mnemonicParsing="false" styleClass="classElement" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uml.ClassController">
    <graphic>
       <VBox>
          <padding>
@@ -16,13 +18,14 @@
          </padding>
          <children>
             <Label fx:id="className">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
             </Label>
             <Separator minWidth="10.0" style="-fx-background-color: black;" />
-            <Label fx:id="classArguments">
-            </Label>
+            <Pane fx:id="classArguments" minHeight="20.0" />
             <Separator minWidth="100.0" style="-fx-background-color: black;" />
-            <Label fx:id="classMethods">
-            </Label>
+            <Pane fx:id="classMethods" minHeight="20.0" />
          </children>
       </VBox>
    </graphic>

@@ -33,8 +33,10 @@ public class ClassController extends Parent{
     private MainController main;
     @FXML
     public Button inClassButton;
-    public Label classArguments;
-    public Label classMethods;
+    public Pane classArguments;
+    public double classArgumentPosition = 0.0;
+    public Pane classMethods;
+    public double classMethodsPosition = 0.0;
     public ContextMenu contextMenu;
     public MenuItem Name;
     public MenuItem Arguments;
@@ -161,13 +163,11 @@ public class ClassController extends Parent{
                     addArgumentAction(actionEvent);
                     return null;
                 }
-
-                if(this.classArguments.getText().equals("")){
-                    this.classArguments.setText(this.classArguments.getText() + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((type.getText().equals("")) ? "" : " : " + type.getText()) + ((def.getText().equals("")) ? "" : " = " + def.getText()));
-                }else {
-                    this.classArguments.setText(this.classArguments.getText() + "\n" + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((type.getText().equals("")) ? "" : " : " + type.getText()) + ((def.getText().equals("")) ? "" : " = " + def.getText()));
-                }
-
+                Label label = new Label();
+                label.setText(((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((type.getText().equals("")) ? "" : " : " + type.getText()) + ((def.getText().equals("")) ? "" : " = " + def.getText()));
+                classArguments.getChildren().add(label);
+                label.setLayoutY(classArgumentPosition);
+                classArgumentPosition += 16;
             }
             return null;
         });
@@ -292,10 +292,13 @@ public class ClassController extends Parent{
                     return null;
                 }
 
-                if(this.classMethods.getText().equals("")){
-                    this.classMethods.setText(this.classMethods.getText() + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((parameters.getText().equals("")) ? "()" : " ( " + parameters.getText() + " ) ") + ((type.getText().equals("")) ? "" : " : " + type.getText()));
-                }else {
-                    this.classMethods.setText(this.classMethods.getText() + "\n" + ((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((parameters.getText().equals("")) ? "()" : " ( " + parameters.getText() + " ) ") + ((type.getText().equals("")) ? "" : " : " + type.getText()));
+                Label label = new Label();
+                label.setText(((modifier.getValue() == null) ? "" : modifier.getValue()) + " " + name.getText() + ((parameters.getText().equals("")) ? "()" : " ( " + parameters.getText() + " ) ") + ((type.getText().equals("")) ? "" : " : " + type.getText()));
+                classMethods.getChildren().add(label);
+                label.setLayoutY(classMethodsPosition);
+                classMethodsPosition += 16;
+                if(main.diagram.isOverriddenMethod(cls, operation)){
+                    label.getStyleClass().add("overriden");
                 }
             }
             return null;
