@@ -679,4 +679,7 @@ public class MainController extends Parent {
         });
         return message[0];
     }
+
+    public void undo(MouseEvent mouseEvent) {
+    }
 }

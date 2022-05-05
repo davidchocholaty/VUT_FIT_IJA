@@ -58,7 +58,7 @@
                      </graphic>
                   </Button>
                   <Pane prefHeight="200.0" prefWidth="20.0" />
-                  <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="50.0">
+                  <Button mnemonicParsing="false" prefHeight="60.0" onMouseClicked="#undo" prefWidth="50.0">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>

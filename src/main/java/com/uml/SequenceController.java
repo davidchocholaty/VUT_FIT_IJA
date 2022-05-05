@@ -312,7 +312,6 @@ public class SequenceController extends Parent {
         return sq;
     }
 
-    // TODO int number exception
     private void changeHeight(ContextMenuEvent e, SequenceUML sq) {
         TextInputDialog dialog = new TextInputDialog();
 
@@ -326,9 +325,17 @@ public class SequenceController extends Parent {
         name.ifPresent(s -> {
             nm[0] = name.get();
         });
-        sq.setY2(Integer.parseInt(nm[0])+80);
-
-        sq.lifeline.setHeight(Integer.parseInt(nm[0])+80);
+        boolean isNumber;
+        try {
+            Double.parseDouble(nm[0]);
+            isNumber = true;
+        } catch(NumberFormatException ex){
+            isNumber =  false;
+        }
+        if (isNumber) {
+            sq.setY2(Integer.parseInt(nm[0]) + 80);
+            sq.lifeline.setHeight(Integer.parseInt(nm[0]) + 80);
+        }
     }
 
     private void timeLineDragDetected(MouseEvent e, SequenceUML sq){
