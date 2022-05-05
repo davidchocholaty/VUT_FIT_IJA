@@ -497,7 +497,7 @@ public class MainController extends Parent {
         String path = getFilePathWindow(saveLoad);
 
         if(path != null){
-            SaveHandler saveHandler = new SaveHandler(diagram);
+            SaveHandler saveHandler = new SaveHandler(diagram, this.sequenceDiagrams.toArray(new SequenceDiagram[0]));
             try{
                 saveHandler.save(path);
             } catch (ParserConfigurationException | FileNotFoundException | TransformerException e) {
@@ -612,9 +612,12 @@ public class MainController extends Parent {
             /* Backend */
             sequenceController.sequenceDiagram = new SequenceDiagram(tabText);
             sequenceController.classDiagram = this.diagram;
+
+            return sequenceController;
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return null;
     }
 
