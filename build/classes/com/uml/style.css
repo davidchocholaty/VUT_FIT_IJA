@@ -1,0 +1,64 @@
+.arrow{
+    -fx-stroke-width: 2;
+}
+.arrowR{
+    -fx-fill: white;
+    -fx-stroke-type: outside;
+    -fx-stroke: black;
+    -fx-stroke-width: 2;
+}
+.arrowAG{
+    -fx-fill: black;
+    -fx-stroke-type: outside;
+    -fx-stroke: black;
+    -fx-stroke-width: 2;
+}
+.arrowC{
+    -fx-fill: white;
+}
+.relLabel{
+    -fx-font-size: 20;
+    -fx-label-padding: 5,10,5,10;
+}
+.classHead{
+    -fx-font-size: 20;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-font-weight: bold;
+}
+.classBody{
+    -fx-font-size: 14;
+    -fx-text-alignment: left;
+}
+.classElement{
+    -fx-border-color: black;
+}
+.toggle-button:selected{
+    -fx-background-color: #FCA311;
+}
+.helpButton{
+    -fx-font-weight: bold;
+}
+.WindowSeparator{
+    -fx-stroke-width: 5;
+}
+.sequence{
+    -fx-padding: 15,15,15,15;
+}
+.activation{
+    -fx-fill: #D3D3D3;
+    -fx-stroke-width: 2;
+    -fx-stroke: #A9A9A9;
+}
+.overriden{
+    -fx-text-fill: blue;
+}
+.Collision {
+    -fx-stroke: red;
+    -fx-text-fill: red;
+}
+.CollisionButton {
+    -fx-stroke: red;
+    -fx-border-color: red;
+    -fx-text-fill: red;
+}

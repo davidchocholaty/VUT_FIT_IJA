@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="751.0" prefWidth="1225.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="751.0" prefWidth="1225.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="219.0" minWidth="219.0" prefWidth="219.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="5.0" minWidth="5.0" prefWidth="5.0" />
@@ -41,7 +41,7 @@
                      <graphic>
                         <ImageView fitHeight="88.0" fitWidth="83.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../images/sequence.png" />
+                              <Image url="@../../images/class.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -51,9 +51,9 @@
                   </ToggleButton>
                   <ToggleButton fx:id="sequenceCreateButton" mnemonicParsing="false" onMouseClicked="#sequenceActive" prefHeight="103.0" prefWidth="94.0" GridPane.columnIndex="1">
                      <graphic>
-                        <ImageView fitHeight="76.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="38.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../images/create.png" />
+                              <Image url="@../../images/asociation.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -62,7 +62,7 @@
                      <graphic>
                         <ImageView fitHeight="38.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../images/asociation.png" />
+                              <Image url="@../../images/realization.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -71,34 +71,34 @@
                      <graphic>
                         <ImageView fitHeight="38.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../images/realization.png" />
+                              <Image url="@../../images/Composition.png" />
                            </image>
                         </ImageView>
                      </graphic>
                   </ToggleButton>
                   <ToggleButton fx:id="returnMessageButton" mnemonicParsing="false" onMouseClicked="#sequenceActive" prefHeight="103.0" prefWidth="94.0" GridPane.rowIndex="2">
                      <graphic>
-                        <ImageView fitHeight="21.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="38.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../images/retrurn.png" />
+                              <Image url="@../../images/Agregation.png" />
                            </image>
                         </ImageView>
                      </graphic>
                   </ToggleButton>
                   <ToggleButton fx:id="destroyMessageButton" mnemonicParsing="false" onMouseClicked="#sequenceActive" prefHeight="103.0" prefWidth="94.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <graphic>
-                        <ImageView fitHeight="77.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="38.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../images/delete.png" />
+                              <Image url="@../../images/Agregation.png" />
                            </image>
                         </ImageView>
                      </graphic>
                   </ToggleButton>
                   <ToggleButton fx:id="activationButton" mnemonicParsing="false" onMouseClicked="#sequenceActive" prefHeight="103.0" prefWidth="94.0" GridPane.rowIndex="3">
                      <graphic>
-                        <ImageView fitHeight="102.0" fitWidth="77.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="38.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../images/action.png" />
+                              <Image url="@../../images/Agregation.png" />
                            </image>
                         </ImageView>
                      </graphic>
