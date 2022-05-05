@@ -22,6 +22,7 @@ import java.util.List;
  */
 public class UMLClass extends UMLClassifier {
 	private boolean isAbstract;
+	private boolean isInterface;
 	private double xCoordinate;
 	private double yCoordinate;
 	private final List<UMLAttribute> classAttributes;
@@ -39,6 +40,7 @@ public class UMLClass extends UMLClassifier {
 	public UMLClass(String name) {
 		super(name);
 		this.isAbstract = false;
+		this.isInterface = false;
 		this.classAttributes = new ArrayList<UMLAttribute>();
 		this.classOperations = new ArrayList<UMLOperation>();
 		this.xCoordinate = 0.0;
@@ -48,7 +50,7 @@ public class UMLClass extends UMLClassifier {
 	/**
 	 * Test whether the object represents an abstract class model.
 	 *
-	 * @return If the class is abstract, it return true. Otherwise it returns false.
+	 * @return If the class is abstract, it returns true. Otherwise, it returns false.
 	 */
 	public boolean isAbstract() {
 		return this.isAbstract;
@@ -56,10 +58,29 @@ public class UMLClass extends UMLClassifier {
 
 	/**
 	 * Changes the object information to see if it represents an abstract class.
+	 *
 	 * @param isAbstract Whether it is an abstract class or not.
 	 */
 	public void setAbstract(boolean isAbstract) {
 		this.isAbstract = isAbstract;
+	}
+
+	/**
+	 * Test whether the object represents an interface.
+	 *
+	 * @return If the class is interface, it returns true. Otherwise, it returns false.
+	 */
+	public boolean isInterface() {
+		return this.isInterface;
+	}
+
+	/**
+	 * Changes the object information to see if it represents an interface.
+	 *
+	 * @param isInterface Whether the class is an interface.
+	 */
+	public void setInterface(boolean isInterface) {
+		this.isInterface = isInterface;
 	}
 
 	/**

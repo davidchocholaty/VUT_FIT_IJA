@@ -337,6 +337,20 @@ public class IJAXMLParser {
         }
         */
 
+        /* isInterface tag */
+        node = list.item(this.secondLevelOrder);
+        this.secondLevelOrder += 2;
+
+        /*
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (!node.getNodeName().equals("interface")) {
+                throw new IllegalFileFormat("Invalid file syntax.");
+            } else {
+
+            }
+        }
+        */
+
         /* xCoordinate tag */
         node = list.item(this.secondLevelOrder);
         this.secondLevelOrder += 2;

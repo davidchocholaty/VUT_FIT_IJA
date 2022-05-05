@@ -168,6 +168,7 @@ public class SaveHandler {
         diagramClass.setAttribute("name", currentClass.getName());
 
         addAbstractTag(diagramClass, currentClass);
+        addIsInterfaceTag(diagramClass, currentClass);
         addXCoordinateTag(diagramClass, currentClass);
         addYCoordinateTag(diagramClass, currentClass);
 
@@ -197,6 +198,20 @@ public class SaveHandler {
             abstractTag.setTextContent("true");
         } else {
             abstractTag.setTextContent("false");
+        }
+    }
+
+    private void addIsInterfaceTag(Element diagramClass, UMLClass currentClass) {
+        Element interfaceTag;
+
+        /* Interface tag */
+        interfaceTag = this.doc.createElement("isInterface");
+        diagramClass.appendChild(interfaceTag);
+
+        if (currentClass.isInterface()) {
+            interfaceTag.setTextContent("true");
+        } else {
+            interfaceTag.setTextContent("false");
         }
     }
 

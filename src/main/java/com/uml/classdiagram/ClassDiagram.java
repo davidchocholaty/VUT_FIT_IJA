@@ -227,39 +227,6 @@ public class ClassDiagram extends Element {
 		return false;
 	}
 
-	/**
-	 * Creates an instance of the UML interface and inserts it into the diagram.
-	 * <p>
-	 *     If a class with the same name already exists in the diagram, it does nothing.
-	 * </p>
-	 *
-	 * @param name Interface name.
-	 * @return If class name is valid, return new UMLInterface instance. Otherwise, return null.
-	 */
-	public UMLInterface createInterface(String name) {
-		for (UMLClass currentClass : diagramClasses) {
-			if (currentClass.getName().equals(name)) {
-				return null;
-			}
-		}
-
-		UMLInterface newInterface = new UMLInterface(name);
-		diagramClasses.add(newInterface);
-
-		return newInterface;
-	}
-
-	/**
-	 * Creates an instance of the UML interface with default name and inserts it into the diagram.
-	 *
-	 * @return New default UMLInterface instance.
-	 */
-	public UMLInterface createDefaultInterface() {
-		UMLInterface newInterface = UMLInterface.createDefault();
-		diagramClasses.add(newInterface);
-
-		return newInterface;
-	}
 
 	/**
 	 * Find the data type by name in the diagram.
