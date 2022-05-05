@@ -11,6 +11,7 @@ package com.uml.filehandler;
 
 import com.uml.*;
 import com.uml.customexception.*;
+import com.uml.sequencediagram.UMLLifeline;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.w3c.dom.*;
@@ -57,6 +58,7 @@ public class IJAXMLParser {
         this.firstLevelOrder = 1;
         this.secondLevelOrder = 1;
         this.diagramClasses = new ArrayList<ClassUML>();
+        this.diagramLifelines = new ArrayList<SequenceUML>();
         this.controller = null;
         this.zeroLevelList = null;
         this.firstLevelList = null;
@@ -1029,7 +1031,7 @@ public class IJAXMLParser {
         y = 0.0;
 
         /* Height tag */
-        node = list.item(this.secondLevelOrder);
+        node = list.item(order);
         order += 2;
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -1041,7 +1043,7 @@ public class IJAXMLParser {
         }
 
         /* xCoordinate tag */
-        node = list.item(this.secondLevelOrder);
+        node = list.item(order);
         order += 2;
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -1053,7 +1055,7 @@ public class IJAXMLParser {
         }
 
         /* yCoordinate tag */
-        node = list.item(this.secondLevelOrder);
+        node = list.item(order);
         order += 2;
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -1066,6 +1068,7 @@ public class IJAXMLParser {
 
         /* Call frontend method for creating lifeline element */
         try {
+            System.out.println("creating lifeline ...");
             SequenceUML lifeline = this.sequenceController.addElementLoaded(attrValue, height, x, y);
             this.diagramLifelines.add(lifeline);
         } catch (IOException e) {

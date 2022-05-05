@@ -165,8 +165,7 @@ public class SequenceController extends Parent {
     public SequenceUML addElementLoaded(String name, double height, double x, double y) throws IOException {
         UMLClass cls = this.classDiagram.findClass(name);
 
-        // TODO height
-        UMLLifeline lifeline = this.sequenceDiagram.createLifeline(cls, 0.0);
+        UMLLifeline lifeline = this.sequenceDiagram.createLifeline(cls, height);
         lifeline.setXCoordinate(x);
 
         SequenceUML sq;
