@@ -501,6 +501,15 @@ public class MainController extends Parent {
                     rPane.getChildren().remove(tmpNode.getView());
                     diagram.deleteClass(cls);
                 }
+            } else {
+                diagram.deleteAllClassRelationships(cls);
+
+                for (Arrow a : tmpNode.edges) {
+                    rPane.getChildren().remove(a);
+                }
+
+                rPane.getChildren().remove(tmpNode.getView());
+                diagram.deleteClass(cls);
             }
         }
     }
