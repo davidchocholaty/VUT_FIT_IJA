@@ -338,11 +338,16 @@ public class SequenceController extends Parent {
         tmpNode = sq;
     }
 
-    public void createMessageLoaded(SequenceUML from, SequenceUML to, double yCordinate, String messageText, String messageID){
+    public void createMessageLoaded(SequenceUML from, SequenceUML to, double yCordinate, String messageText, String messageID) {
         Message message = new Message(from.getView().getLayoutX(), yCordinate, to.getView().getLayoutX(), yCordinate, messageID, messageText);
-    public void createMessageLoaded(SequenceUML from, SequenceUML to, double y, String message, String messageID){
+        message.x1Property().bind(from.getView().layoutXProperty());
+        message.x2Property().bind(to.getView().layoutXProperty());
 
+        from.edges.add(message);
+        to.edges.add(message);
+        rPane.getChildren().add(message);
     }
+
 
     private Pair<String, String[]> parseOperationLabel(String operationLabel) throws InvalidOperationLabel {
         if (operationLabel == null) {
@@ -359,13 +364,6 @@ public class SequenceController extends Parent {
         operationLabel = operationLabel.replaceAll("\\s+","");
 
         String operationName = operationLabel.substring(0, idx);
-
-        message.x1Property().bind(from.getView().layoutXProperty());
-        message.x2Property().bind(to.getView().layoutXProperty());
-
-        from.edges.add(message);
-        to.edges.add(message);
-        rPane.getChildren().add(message);
         if (operationLabel.charAt(operationLabel.length()-1) != ')') {
             throw new InvalidOperationLabel("Invalid message label.");
         }
@@ -552,7 +550,6 @@ public class SequenceController extends Parent {
 
 
         this.sequenceDiagram.createActivation(sq.lifeline, activation, e.getY());
-
         return activ;
     }
 
