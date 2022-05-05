@@ -282,7 +282,7 @@ public class SequenceController extends Parent {
         tmpNode = sq;
     }
 
-    public void createMessageLoaded(SequenceUML from, SequenceUML to, String message, String messageID){
+    public void createMessageLoaded(SequenceUML from, SequenceUML to, double y, String message, String messageID){
 
     }
 
@@ -378,17 +378,16 @@ public class SequenceController extends Parent {
     }
 
     private Node createAndAddMessage(MouseDragEvent e, SequenceUML fromNode, SequenceUML sq, String messageID) {
+        Pair<String, String[]> operation;
         String messageText = getMessage(messageID);
 
-        // TODO
-        String[] tmp = {"t", "m", "p"};
-
-        /*try {
-            this.sequenceDiagram.createCreateMessage(fromNode.lifeline, sq.lifeline, tmp);
+        try {
+            operation = parseOperationLabel(messageText);
+            this.sequenceDiagram.createCreateMessage(fromNode.lifeline, sq.lifeline, operation.getValue());
         } catch (InvalidOperationLabel err) {
             // TODO
             err.printStackTrace();
-        }*/
+        }
         Message message = new Message(fromNode.getView().getLayoutX(), e.getY(), sq.getView().getLayoutX(), e.getY(), messageID, messageText);
         message.x1Property().bind(fromNode.getView().layoutXProperty());
         message.x2Property().bind(sq.getView().layoutXProperty());
@@ -449,7 +448,7 @@ public class SequenceController extends Parent {
         return cross;
     }
     // TODO
-    private void CreateActivationLoaded(SequenceUML lifeline, double y1, double y2){
+    public void createActivationLoaded(SequenceUML lifeline, double y1, double y2){
 
     }
 

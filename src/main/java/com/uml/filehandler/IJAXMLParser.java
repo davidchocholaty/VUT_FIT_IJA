@@ -194,6 +194,17 @@ public class IJAXMLParser {
         return null;
     }
 
+    private SequenceUML getLifelineByNameAndId(String name, long id) {
+        for (SequenceUML currentLifeline : this.diagramLifelines) {
+            if (currentLifeline.lifeline.getObjectClass().getName().equals(name) &&
+                    currentLifeline.lifeline.getId() == id) {
+                return currentLifeline;
+            }
+        }
+
+        return null;
+    }
+
     /*
      * This method is based on code from following source.
      *
@@ -1054,7 +1065,9 @@ public class IJAXMLParser {
 
         /* Call frontend method for creating lifeline element */
         // TODO
-        //SequenceUML lifeline = addElementLoaded(attrValue, height, x);
+        //SequenceUML lifeline = addElementLoaded(attrValue, height, x, y);
+        //this.diagramLifelines.add(lifeline);
+        //this.sequenceController.addElement(lifeline);
     }
 
     /**
@@ -1062,7 +1075,7 @@ public class IJAXMLParser {
      *
      * @throws IllegalFileFormat Invalid format of input file.
      */
-    private void parseMessages() throws IllegalFileFormat {
+    private void parseMessages() throws IllegalFileFormat, NullPointerException, NumberFormatException {
         /* Iterate through messages */
         Node node;
 
@@ -1099,14 +1112,30 @@ public class IJAXMLParser {
      * @param messageNode Message node.
      * @throws IllegalFileFormat Invalid format of input file.
      */
-    private void parseMessageChildren(Node messageNode) throws IllegalFileFormat {
+    private void parseMessageChildren(Node messageNode) throws IllegalFileFormat, NullPointerException, NumberFormatException {
         NodeList list = messageNode.getChildNodes();
         Node node;
+        String label = null;
         String from = null;
         String to = null;
-        String fromId;
-        String toId;
+        String fromIdStr;
+        String toIdStr;
+        long fromId;
+        long toId;
+        double y;
         this.secondLevelOrder = 1;
+
+        /* Label tag */
+        node = list.item(this.secondLevelOrder);
+        this.secondLevelOrder += 2;
+
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (!node.getNodeName().equals("label")) {
+                throw new IllegalFileFormat("Invalid file syntax");
+            } else {
+                label = node.getTextContent();
+            }
+        }
 
         /* From tag */
         node = list.item(this.secondLevelOrder);
@@ -1123,10 +1152,12 @@ public class IJAXMLParser {
         if (from == null) {
             throw new IllegalFileFormat("Invalid file syntax.");
         } else {
-            fromId = parseXmlAttribute(node, "id");
+            fromIdStr = parseXmlAttribute(node, "id");
 
-            if (fromId == null || fromId.equals("")) {
+            if (fromIdStr == null || fromIdStr.equals("")) {
                 throw new IllegalFileFormat("Invalid file syntax.");
+            } else {
+                fromId = Long.parseLong(fromIdStr);
             }
         }
 
@@ -1145,27 +1176,36 @@ public class IJAXMLParser {
         if (to == null) {
             throw new IllegalFileFormat("Invalid file syntax.");
         } else {
-            toId = parseXmlAttribute(node, "id");
+            toIdStr = parseXmlAttribute(node, "id");
 
-            if (toId == null || toId.equals("")) {
+            if (toIdStr == null || toIdStr.equals("")) {
                 throw new IllegalFileFormat("Invalid file syntax.");
+            } else {
+                toId = Long.parseLong(toIdStr);
             }
         }
 
+        /* yCoordinate tag */
         node = list.item(this.secondLevelOrder);
         this.secondLevelOrder += 2;
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (!node.getNodeName().equals("yCoordinate")) {
+                throw new IllegalFileFormat("Invalid file syntax.");
+            } else {
+                y = Double.parseDouble(node.getTextContent());
+            }
+        }
+
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
             if (node.getNodeName().equals("labelType")) {
-                parseLabelType(node, from, to);
+                parseLabelType(node, label, from, to, fromId, toId, y);
             } else if (node.getNodeName().equals("operationType")) {
-                parseOperationType(node, from, to);
+                parseOperationType(node, label, from, to, fromId, toId, y);
             } else {
                 throw new IllegalFileFormat("Invalid file syntax");
             }
         }
-
-        // TODO message frontend
     }
 
     /**
@@ -1176,7 +1216,13 @@ public class IJAXMLParser {
      * @param to To lifeline.
      * @throws IllegalFileFormat Invalid format of input file.
      */
-    private void parseLabelType(Node labelType, String from, String to) throws IllegalFileFormat {
+    private void parseLabelType(Node labelType,
+                                String label,
+                                String from,
+                                String to,
+                                long fromId,
+                                long toId,
+                                double y) throws IllegalFileFormat {
         NodeList list = labelType.getChildNodes();
         int expectedListLen = 3;
 
@@ -1185,6 +1231,9 @@ public class IJAXMLParser {
         } else {
             if (list.item(1).getNodeName().equals("returnMessage")) {
                 // TODO frontend
+                //SequenceUML fromLifeline = getLifelineByNameAndId(from, fromId);
+                //SequenceUML toLifeline = getLifelineByNameAndId(to, toId);
+                //this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "return");
             } else {
                 throw new IllegalFileFormat("Invalid file syntax.");
             }
@@ -1199,31 +1248,48 @@ public class IJAXMLParser {
      * @param to To lifeline.
      * @throws IllegalFileFormat Invalid format of input file.
      */
-    private void parseOperationType(Node operationType, String from, String to) throws IllegalFileFormat {
+    private void parseOperationType(Node operationType,
+                                    String label,
+                                    String from,
+                                    String to,
+                                    long fromId,
+                                    long toId,
+                                    double y) throws IllegalFileFormat {
         NodeList list = operationType.getChildNodes();
         int expectedListLen = 3;
 
         if (list.getLength() != expectedListLen) {
             throw new IllegalFileFormat("Invalid file syntax.");
         } else {
+            //SequenceUML fromLifeline = getLifelineByNameAndId(from, fromId);
+            //SequenceUML toLifeline = getLifelineByNameAndId(to, toId);
+
             switch (list.item(1).getNodeName()) {
                 case "synchronousMessage":
                     // TODO frontend
+                    //this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "sync");
                     break;
                 case "asynchronousMessage":
                     // TODO frontend
+                    //this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "async");
                     break;
                 case "synchronousSelfMessage":
                     // TODO frontend
+                    //this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "syncSelf");
                     break;
                 case "asynchronousSelfMessage":
                     // TODO frontend
+                    //this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "asyncSelf");
                     break;
                 case "returnSelfMessage":
                     // TODO frontend
+                    //this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "returnSelf");
                     break;
                 case "createMessage":
                     // TODO frontend
+                    // TODO jak se vytvari create message na frontendu,
+                    // kterou metodu volat, jestli tu stejnou jak pro ostatni message
+                    //this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "create");
                     break;
                 default:
                     throw new IllegalFileFormat("Invalid file syntax.");
@@ -1264,7 +1330,8 @@ public class IJAXMLParser {
         int order;
         double y;
         String lifeline = null;
-        String id = null;
+        String idStr = null;
+        long id;
 
         order = 1;
 
@@ -1283,10 +1350,12 @@ public class IJAXMLParser {
         if (lifeline == null) {
             throw new IllegalFileFormat("Invalid file syntax.");
         } else {
-            id = parseXmlAttribute(node, "id");
+            idStr = parseXmlAttribute(node, "id");
 
-            if (id == null || id.equals("")) {
+            if (idStr == null || idStr.equals("")) {
                 throw new IllegalFileFormat("Invalid file syntax.");
+            } else {
+                id = Long.parseLong(idStr);
             }
         }
 
@@ -1306,6 +1375,8 @@ public class IJAXMLParser {
 
         /* Call frontend method for creating destroy element */
         // TODO
+        //SequenceUML frontLifeline = getLifelineByNameAndId(lifeline, id);
+        //this.sequenceController.createDestroy(frontLifeline, y);
     }
 
     private void parseActivations() throws IllegalFileFormat, NullPointerException, NumberFormatException {
@@ -1341,8 +1412,11 @@ public class IJAXMLParser {
         int order;
         double yStart, yEnd;
         String lifeline = null;
-        String id = null;
+        String idStr = null;
         String orderAttr = null;
+        long id;
+
+        yStart = yEnd = 0.0;
         order = 1;
 
         /* activationLifeline tag */
@@ -1360,10 +1434,12 @@ public class IJAXMLParser {
         if (lifeline == null) {
             throw new IllegalFileFormat("Invalid file syntax");
         } else {
-            id = parseXmlAttribute(node, "id");
+            idStr = parseXmlAttribute(node, "id");
 
-            if (id == null || id.equals("")) {
+            if (idStr == null || idStr.equals("")) {
                 throw new IllegalFileFormat("Invalid file syntax.");
+            } else {
+                id = Long.parseLong(idStr);
             }
         }
 
@@ -1404,6 +1480,8 @@ public class IJAXMLParser {
 
         /* Call frontend method for creating activation element */
         // TODO
+        //SequenceUML frontLifeline = getLifelineByNameAndId(lifeline, id);
+        //this.sequenceController.createActivationLoaded(frontLifeline, yStart, yEnd);
     }
 
 }
