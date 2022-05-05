@@ -338,8 +338,34 @@ public class SequenceController extends Parent {
         tmpNode = sq;
     }
 
-    public void createMessageLoaded(SequenceUML from, SequenceUML to, double yCordinate, String messageText, String messageID) {
-        Message message = new Message(from.getView().getLayoutX(), yCordinate, to.getView().getLayoutX(), yCordinate, messageID, messageText);
+    public void createMessageLoaded(SequenceUML from, SequenceUML to, double yCoordinate, String messageText, String messageID) {
+        Pair<String, String[]> operation;
+
+        try {
+            switch (messageID) {
+                case "sync":
+                case "async":
+                case "syncSelf":
+                case "asyncSelf":
+                case "returnSelf":
+                    operation = parseOperationLabel(messageText);
+                    this.sequenceDiagram.createSynchronousMessage(from.lifeline, to.lifeline, operation.getKey(), operation.getValue());
+                    break;
+                case "create":
+                    operation = parseOperationLabel(messageText);
+                    this.sequenceDiagram.createCreateMessage(from.lifeline, to.lifeline, operation.getValue());
+                case "return":
+                    this.sequenceDiagram.createReturnMessage(from.lifeline, to.lifeline, messageText);
+                    break;
+                default:
+                    break;
+            }
+        } catch (InvalidOperationLabel err) {
+            // TODO
+            err.printStackTrace();
+        }
+
+        Message message = new Message(from.getView().getLayoutX(), to.getView().getLayoutX(), yCoordinate, yCoordinate, messageID, messageText);
         message.x1Property().bind(from.getView().layoutXProperty());
         message.x2Property().bind(to.getView().layoutXProperty());
 
@@ -513,8 +539,8 @@ public class SequenceController extends Parent {
 
         return cross;
     }
-    // TODO
-    private void CreateActivationLoaded(SequenceUML sq, double y1, double y2){
+
+    public void createActivationLoaded(SequenceUML sq, double y1, double y2){
         ActivationSequenceUML activ = new ActivationSequenceUML(y1, sq.getView().getLayoutX(), y2);
         activ.x1Property().bind(sq.getView().layoutXProperty());
 

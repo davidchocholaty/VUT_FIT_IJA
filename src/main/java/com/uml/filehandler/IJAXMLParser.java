@@ -158,8 +158,8 @@ public class IJAXMLParser {
                             throw new IllegalFileFormat("Missing sequence diagram name.");
                         }
 
-                        // TODO
-                        //this.sequenceController = addTabLoad(attrValue);
+                        /* Create new sequence diagram */
+                        this.sequenceController = controller.addTabLoad(attrValue);
 
                         if (node.hasChildNodes()) {
                             this.firstLevelList = node.getChildNodes();
@@ -1026,6 +1026,7 @@ public class IJAXMLParser {
 
         height = 0.0;
         x = 0.0;
+        y = 0.0;
 
         /* Height tag */
         node = list.item(this.secondLevelOrder);
@@ -1064,10 +1065,12 @@ public class IJAXMLParser {
         }
 
         /* Call frontend method for creating lifeline element */
-        // TODO
-        //SequenceUML lifeline = addElementLoaded(attrValue, height, x, y);
-        //this.diagramLifelines.add(lifeline);
-        //this.sequenceController.addElement(lifeline);
+        try {
+            SequenceUML lifeline = this.sequenceController.addElementLoaded(attrValue, height, x, y);
+            this.diagramLifelines.add(lifeline);
+        } catch (IOException e) {
+            throw new IllegalFileFormat("Invalid file syntax.");
+        }
     }
 
     /**
@@ -1232,10 +1235,14 @@ public class IJAXMLParser {
             throw new IllegalFileFormat("Invalid file syntax.");
         } else {
             if (list.item(1).getNodeName().equals("returnMessage")) {
-                // TODO frontend
-                //SequenceUML fromLifeline = getLifelineByNameAndId(from, fromId);
-                //SequenceUML toLifeline = getLifelineByNameAndId(to, toId);
-                //this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "return");
+                SequenceUML fromLifeline = getLifelineByNameAndId(from, fromId);
+                SequenceUML toLifeline = getLifelineByNameAndId(to, toId);
+
+                if (fromLifeline == null || toLifeline == null) {
+                    throw new IllegalFileFormat("Invalid file syntax.");
+                }
+
+                this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "return");
             } else {
                 throw new IllegalFileFormat("Invalid file syntax.");
             }
@@ -1263,35 +1270,27 @@ public class IJAXMLParser {
         if (list.getLength() != expectedListLen) {
             throw new IllegalFileFormat("Invalid file syntax.");
         } else {
-            //SequenceUML fromLifeline = getLifelineByNameAndId(from, fromId);
-            //SequenceUML toLifeline = getLifelineByNameAndId(to, toId);
+            SequenceUML fromLifeline = getLifelineByNameAndId(from, fromId);
+            SequenceUML toLifeline = getLifelineByNameAndId(to, toId);
 
             switch (list.item(1).getNodeName()) {
                 case "synchronousMessage":
-                    // TODO frontend
-                    //this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "sync");
+                    this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "sync");
                     break;
                 case "asynchronousMessage":
-                    // TODO frontend
-                    //this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "async");
+                    this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "async");
                     break;
                 case "synchronousSelfMessage":
-                    // TODO frontend
-                    //this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "syncSelf");
+                    this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "syncSelf");
                     break;
                 case "asynchronousSelfMessage":
-                    // TODO frontend
-                    //this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "asyncSelf");
+                    this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "asyncSelf");
                     break;
                 case "returnSelfMessage":
-                    // TODO frontend
-                    //this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "returnSelf");
+                    this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "returnSelf");
                     break;
                 case "createMessage":
-                    // TODO frontend
-                    // TODO jak se vytvari create message na frontendu,
-                    // kterou metodu volat, jestli tu stejnou jak pro ostatni message
-                    //this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "create");
+                    this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "create");
                     break;
                 default:
                     throw new IllegalFileFormat("Invalid file syntax.");
@@ -1336,6 +1335,7 @@ public class IJAXMLParser {
         long id;
 
         order = 1;
+        y = 0.0;
 
         /* destroyLifeline tag */
         node = list.item(order);
@@ -1376,9 +1376,13 @@ public class IJAXMLParser {
 
 
         /* Call frontend method for creating destroy element */
-        // TODO
-        //SequenceUML frontLifeline = getLifelineByNameAndId(lifeline, id);
-        //this.sequenceController.createDestroy(frontLifeline, y);
+        SequenceUML frontLifeline = getLifelineByNameAndId(lifeline, id);
+
+        if (frontLifeline == null) {
+            throw new IllegalFileFormat("Invalid file syntax.");
+        }
+
+        this.sequenceController.createDestroy(frontLifeline, y);
     }
 
     private void parseActivations() throws IllegalFileFormat, NullPointerException, NumberFormatException {
@@ -1481,9 +1485,13 @@ public class IJAXMLParser {
         }
 
         /* Call frontend method for creating activation element */
-        // TODO
-        //SequenceUML frontLifeline = getLifelineByNameAndId(lifeline, id);
-        //this.sequenceController.createActivationLoaded(frontLifeline, yStart, yEnd);
+        SequenceUML frontLifeline = getLifelineByNameAndId(lifeline, id);
+
+        if (frontLifeline == null) {
+            throw new IllegalFileFormat("Invalid file syntax.");
+        }
+
+        this.sequenceController.createActivationLoaded(frontLifeline, yStart, yEnd);
     }
 
 }
