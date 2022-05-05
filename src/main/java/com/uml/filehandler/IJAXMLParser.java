@@ -11,6 +11,7 @@ package com.uml.filehandler;
 
 import com.uml.*;
 import com.uml.customexception.*;
+import com.uml.sequencediagram.SequenceDiagram;
 import com.uml.sequencediagram.UMLLifeline;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -105,6 +106,7 @@ public class IJAXMLParser {
             App app = new App();
             app.start(new Stage());
             this.controller = app.getController();
+            SequenceDiagram.restoreLifelineId();
 
             if (this.doc.hasChildNodes()) {
                 NodeList list = this.doc.getChildNodes();
@@ -161,7 +163,7 @@ public class IJAXMLParser {
                         }
 
                         /* Create new sequence diagram */
-                        this.sequenceController = controller.addTabLoad(attrValue);
+                        this.sequenceController = this.controller.addTabLoad(attrValue);
 
                         if (node.hasChildNodes()) {
                             this.firstLevelList = node.getChildNodes();
@@ -169,8 +171,8 @@ public class IJAXMLParser {
 
                             parseLifelines();
                             parseMessages();
-                            parseDestroys();
-                            parseActivations();
+                            //parseDestroys();
+                            //parseActivations();
                         }
                     }
 
@@ -198,6 +200,9 @@ public class IJAXMLParser {
 
     private SequenceUML getLifelineByNameAndId(String name, long id) {
         for (SequenceUML currentLifeline : this.diagramLifelines) {
+            System.out.println("-------------");
+            System.out.println(currentLifeline.lifeline.getObjectClass().getName());
+            System.out.println(currentLifeline.lifeline.getId());
             if (currentLifeline.lifeline.getObjectClass().getName().equals(name) &&
                     currentLifeline.lifeline.getId() == id) {
                 return currentLifeline;
@@ -1201,16 +1206,16 @@ public class IJAXMLParser {
         node = list.item(this.secondLevelOrder);
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
-            System.out.println(node.getNodeName());
             if (node.getNodeName().equals("labelType")) {
                 parseLabelType(node, label, from, to, fromId, toId, y);
             } else if (node.getNodeName().equals("operationType")) {
                 parseOperationType(node, label, from, to, fromId, toId, y);
             } else {
-                System.out.println("here invalid");
                 throw new IllegalFileFormat("Invalid file syntax");
             }
         }
+
+
     }
 
     /**
@@ -1270,8 +1275,17 @@ public class IJAXMLParser {
         if (list.getLength() != expectedListLen) {
             throw new IllegalFileFormat("Invalid file syntax.");
         } else {
+            System.out.println("-------------");
+            System.out.println(from);
+            System.out.println(fromId);
+            System.out.println(to);
+            System.out.println(toId);
             SequenceUML fromLifeline = getLifelineByNameAndId(from, fromId);
             SequenceUML toLifeline = getLifelineByNameAndId(to, toId);
+
+            if (fromLifeline == null || toLifeline == null) {
+                throw new IllegalFileFormat("Invalid file syntax.");
+            }
 
             switch (list.item(1).getNodeName()) {
                 case "synchronousMessage":

@@ -40,6 +40,16 @@ public abstract class UMLMessageOperationType extends UMLMessage {
         List<UMLOperation> classOperations = super.getFromLifeline().getObjectClass().getOperations();
 
         if (operation.equals("<<create>>")) {
+            StringBuilder label = new StringBuilder();
+
+            for (int i = 0; i < operationArguments.length; i++) {
+                label.append(operationArguments[i]);
+                label.append(", ");
+            }
+
+            String resultLabel = operation + "(" + label.substring(0, label.length() - 2) + ")";
+            super.setLabel(resultLabel);
+
             return true;
         }
 

@@ -47,6 +47,10 @@ public class UMLLifeline {
 		return this.id;
 	}
 
+	public static void restoreId() {
+		nextId = 0;
+	}
+
 	/**
 	 * Get x coordinate of lifeline on frontend scene.
 	 *

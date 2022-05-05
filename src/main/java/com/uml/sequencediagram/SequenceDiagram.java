@@ -430,4 +430,8 @@ public class SequenceDiagram extends Element {
 		return false;
 	}
 
+	public static void restoreLifelineId() {
+		UMLLifeline.restoreId();
+	}
+
 }

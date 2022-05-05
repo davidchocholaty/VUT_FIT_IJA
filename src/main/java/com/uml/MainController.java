@@ -613,6 +613,8 @@ public class MainController extends Parent {
             sequenceController.sequenceDiagram = new SequenceDiagram(tabText);
             sequenceController.classDiagram = this.diagram;
 
+            this.sequenceDiagrams.add(sequenceController.sequenceDiagram);
+
             return sequenceController;
         } catch (IOException e) {
             e.printStackTrace();

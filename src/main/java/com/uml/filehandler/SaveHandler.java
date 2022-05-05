@@ -698,7 +698,7 @@ public class SaveHandler {
         to = this.doc.createElement("to");
         diagramMessage.appendChild(to);
         to.setAttribute("id", String.valueOf(currentMessage.getToLifeline().getId()));
-        to.setTextContent(currentMessage.getFromLifeline().getObjectClass().getName());
+        to.setTextContent(currentMessage.getToLifeline().getObjectClass().getName());
     }
 
     /**
