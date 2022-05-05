@@ -618,7 +618,11 @@ public class SaveHandler {
      */
     private void addMessagesTags(Element sequenceDiagramElement,
                                  List<UMLMessage> diagramMessages) {
+        int idx = 0;
+        System.out.println("------------------");
         for (UMLMessage currentMessage : diagramMessages) {
+            System.out.println(idx);
+            idx++;
             addMessageTag(sequenceDiagramElement, currentMessage);
         }
     }

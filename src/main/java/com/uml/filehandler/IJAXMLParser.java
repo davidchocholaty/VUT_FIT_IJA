@@ -1376,8 +1376,6 @@ public class IJAXMLParser {
             }
         }
 
-
-
         /* Call frontend method for creating destroy element */
         SequenceUML frontLifeline = getLifelineByNameAndId(lifeline, id);
 

@@ -163,6 +163,8 @@ public class SequenceController extends Parent {
 
         UMLLifeline lifeline = this.sequenceDiagram.createLifeline(cls, height);
         lifeline.setXCoordinate(x);
+        lifeline.setYCoordinate(y);
+        lifeline.setHeight(height);
 
         SequenceUML sq;
         if(y == 0.0){
@@ -344,18 +346,22 @@ public class SequenceController extends Parent {
                     operation = parseOperationLabel(messageText);
                     UMLSynchronousMessage sync = this.sequenceDiagram.createSynchronousMessage(from.lifeline, to.lifeline, operation.getKey(), operation.getValue());
                     sync.setYCoordinate(yCoordinate);
+                    break;
                 case "async":
                     operation = parseOperationLabel(messageText);
                     UMLAsynchronousMessage async = this.sequenceDiagram.createAsynchronousMessage(from.lifeline, to.lifeline, operation.getKey(), operation.getValue());
                     async.setYCoordinate(yCoordinate);
+                    break;
                 case "syncSelf":
                     operation = parseOperationLabel(messageText);
                     UMLSynchronousSelfMessage syncSelf = this.sequenceDiagram.createSynchronousSelfMessage(from.lifeline, operation.getKey(), operation.getValue());
                     syncSelf.setYCoordinate(yCoordinate);
+                    break;
                 case "asyncSelf":
                     operation = parseOperationLabel(messageText);
                     UMLAsynchronousSelfMessage asyncSelf = this.sequenceDiagram.createAsynchronousSelfMessage(from.lifeline, operation.getKey(), operation.getValue());
                     asyncSelf.setYCoordinate(yCoordinate);
+                    break;
                 case "returnSelf":
                     operation = parseOperationLabel(messageText);
                     UMLReturnSelfMessage returnSelf = this.sequenceDiagram.createReturnSelfMessage(from.lifeline, operation.getKey(), operation.getValue());
@@ -365,6 +371,7 @@ public class SequenceController extends Parent {
                     createArguments = parseCreateLabel(messageText);
                     UMLCreateMessage createMessage = this.sequenceDiagram.createCreateMessage(from.lifeline, to.lifeline, createArguments);
                     createMessage.setYCoordinate(yCoordinate);
+                    break;
                 case "return":
                     UMLReturnMessage returnMessage = this.sequenceDiagram.createReturnMessage(from.lifeline, to.lifeline, messageText);
                     returnMessage.setYCoordinate(yCoordinate);
@@ -461,10 +468,12 @@ public class SequenceController extends Parent {
                     operation = parseOperationLabel(messageText);
                     UMLSynchronousSelfMessage syncSelf = this.sequenceDiagram.createSynchronousSelfMessage(fromNode.lifeline, operation.getKey(), operation.getValue());
                     syncSelf.setYCoordinate(e.getY());
+                    break;
                 case "asyncSelf":
                     operation = parseOperationLabel(messageText);
                     UMLAsynchronousSelfMessage asyncSelf = this.sequenceDiagram.createAsynchronousSelfMessage(fromNode.lifeline, operation.getKey(), operation.getValue());
                     asyncSelf.setYCoordinate(e.getY());
+                    break;
                 case "returnSelf":
                     operation = parseOperationLabel(messageText);
                     UMLReturnSelfMessage returnSelf = this.sequenceDiagram.createReturnSelfMessage(fromNode.lifeline, operation.getKey(), operation.getValue());
@@ -594,6 +603,8 @@ public class SequenceController extends Parent {
         sq.setY2(y + 40);
         sq.edges.add(cross);
         rPane.getChildren().add(cross);
+
+        this.sequenceDiagram.createDestroy(sq.lifeline, y);
     }
 
     private Node createDelete(MouseEvent e, SequenceUML sq) {
@@ -623,6 +634,8 @@ public class SequenceController extends Parent {
             }
         });
         rPane.getChildren().add(activ);
+
+        this.sequenceDiagram.createActivation(sq.lifeline, y1, y2);
     }
 
     private Node createActivation(MouseEvent e, Double activation, SequenceUML sq){
