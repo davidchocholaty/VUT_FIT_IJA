@@ -759,6 +759,8 @@ public class SaveHandler {
 
         if (currentMessage instanceof UMLReturnMessage) {
             addReturnMessageTag(labelType);
+        } else if (currentMessage instanceof UMLReturnSelfMessage) {
+            addReturnSelfMessageTag(labelType);
         }
     }
 
@@ -796,8 +798,6 @@ public class SaveHandler {
             addSynchronousSelfMessageTag(operationType);
         } else if (currentMessage instanceof UMLAsynchronousSelfMessage) {
             addAsynchronousSelfMessageTag(operationType);
-        } else if (currentMessage instanceof UMLReturnSelfMessage) {
-            addReturnSelfMessageTag(operationType);
         } else if (currentMessage instanceof UMLCreateMessage) {
             addCreateMessageTag(operationType);
         }
