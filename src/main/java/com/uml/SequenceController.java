@@ -365,8 +365,7 @@ public class SequenceController extends Parent {
                     asyncSelf.setYCoordinate(yCoordinate);
                     break;
                 case "returnSelf":
-                    operation = parseOperationLabel(messageText);
-                    UMLReturnSelfMessage returnSelf = this.sequenceDiagram.createReturnSelfMessage(from.lifeline, operation.getKey(), operation.getValue());
+                    UMLReturnSelfMessage returnSelf = this.sequenceDiagram.createReturnSelfMessage(from.lifeline, messageText);
                     returnSelf.setYCoordinate(yCoordinate);
                     break;
                 case "create":
@@ -425,16 +424,6 @@ public class SequenceController extends Parent {
                         operation = parseOperationLabel(messageText);
                         UMLAsynchronousSelfMessage asyncSelf = this.sequenceDiagram.createAsynchronousSelfMessageNotExists(from.lifeline, operation.getKey(), operation.getValue());
                         asyncSelf.setYCoordinate(yCoordinate);
-                    } catch (InvalidOperationLabel ex) {
-                        ex.printStackTrace();
-                    }
-
-                    break;
-                case "returnSelf":
-                    try {
-                        operation = parseOperationLabel(messageText);
-                        UMLReturnSelfMessage returnSelf = this.sequenceDiagram.createReturnSelfMessageNotExists(from.lifeline, operation.getKey(), operation.getValue());
-                        returnSelf.setYCoordinate(yCoordinate);
                     } catch (InvalidOperationLabel ex) {
                         ex.printStackTrace();
                     }
@@ -534,8 +523,7 @@ public class SequenceController extends Parent {
                     asyncSelf.setYCoordinate(e.getY());
                     break;
                 case "returnSelf":
-                    operation = parseOperationLabel(messageText);
-                    UMLReturnSelfMessage returnSelf = this.sequenceDiagram.createReturnSelfMessage(fromNode.lifeline, operation.getKey(), operation.getValue());
+                    UMLReturnSelfMessage returnSelf = this.sequenceDiagram.createReturnSelfMessage(fromNode.lifeline, messageText);
                     returnSelf.setYCoordinate(e.getY());
                     break;
                 case "return":
@@ -587,19 +575,6 @@ public class SequenceController extends Parent {
                         }
                         UMLAsynchronousSelfMessage asyncSelf = this.sequenceDiagram.createAsynchronousSelfMessageNotExists(fromNode.lifeline, operation.getKey(), operation.getValue());
                         asyncSelf.setYCoordinate(e.getY());
-                        break;
-                    case "returnSelf":
-                        try {
-                            operation = parseOperationLabel(messageText);
-                        } catch (InvalidOperationLabel ex) {
-                            throw new RuntimeException(ex);
-                        }
-                        UMLReturnSelfMessage returnSelf = this.sequenceDiagram.createReturnSelfMessageNotExists(fromNode.lifeline, operation.getKey(), operation.getValue());
-                        returnSelf.setYCoordinate(e.getY());
-                        break;
-                    case "return":
-                        UMLReturnMessage returnMessage = this.sequenceDiagram.createReturnMessage(fromNode.lifeline, sq.lifeline, messageText);
-                        returnMessage.setYCoordinate(e.getY());
                         break;
                     default:
                         break;

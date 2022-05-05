@@ -1248,11 +1248,17 @@ public class IJAXMLParser {
         if (list.getLength() != expectedListLen) {
             throw new IllegalFileFormat("Invalid file syntax.");
         } else {
-            if (list.item(1).getNodeName().equals("returnMessage")) {
-                SequenceUML fromLifeline = getLifelineByNameAndId(from, fromId);
-                SequenceUML toLifeline = getLifelineByNameAndId(to, toId);
+            SequenceUML fromLifeline = getLifelineByNameAndId(from, fromId);
+            SequenceUML toLifeline = getLifelineByNameAndId(to, toId);
 
+            if (fromLifeline == null || toLifeline == null) {
+                throw new IllegalFileFormat("Invalid file syntax.");
+            }
+
+            if (list.item(1).getNodeName().equals("returnMessage")) {
                 this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "return");
+            } else if (list.item(1).getNodeName().equals("returnSelfMessage")) {
+                this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "returnSelf");
             } else {
                 throw new IllegalFileFormat("Invalid file syntax.");
             }
@@ -1283,6 +1289,10 @@ public class IJAXMLParser {
             SequenceUML fromLifeline = getLifelineByNameAndId(from, fromId);
             SequenceUML toLifeline = getLifelineByNameAndId(to, toId);
 
+            if (fromLifeline == null || toLifeline == null) {
+                throw new IllegalFileFormat("Invalid file syntax.");
+            }
+
             switch (list.item(1).getNodeName()) {
                 case "synchronousMessage":
                     this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "sync");
@@ -1295,9 +1305,6 @@ public class IJAXMLParser {
                     break;
                 case "asynchronousSelfMessage":
                     this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "asyncSelf");
-                    break;
-                case "returnSelfMessage":
-                    this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "returnSelf");
                     break;
                 case "createMessage":
                     this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "create");
@@ -1394,6 +1401,10 @@ public class IJAXMLParser {
 
         /* Call frontend method for creating destroy element */
         SequenceUML frontLifeline = getLifelineByNameAndId(lifeline, id);
+
+        if (frontLifeline == null) {
+            throw new IllegalFileFormat("Invalid file syntax.");
+        }
 
         this.sequenceController.createDestroy(frontLifeline, y);
     }

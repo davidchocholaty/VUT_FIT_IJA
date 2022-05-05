@@ -12,14 +12,15 @@ package com.uml.sequencediagram;
 /**
  * A class represents a return self message.
  */
-public class UMLReturnSelfMessage extends UMLMessageOperationType {
+public class UMLReturnSelfMessage extends UMLMessageLabelType {
     /**
-     * Creates an UMLReturnSelfMessage instance with start and end lifeline.
+     * Creates an UMLReturnSelfMessage instance with start and end lifeline and label.
      *
      * @param lifeline Start and end lifeline.
+     * @param label Message label.
      */
-    public UMLReturnSelfMessage(UMLLifeline lifeline) {
-        super(lifeline, lifeline);
+    public UMLReturnSelfMessage(UMLLifeline lifeline, String label) {
+        super(lifeline, lifeline, label);
     }
 
 }

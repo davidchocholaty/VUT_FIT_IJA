@@ -273,22 +273,13 @@ public class SequenceDiagram extends Element {
 	 * Creates an instance of the UML return self message and inserts it into the diagram.
 	 *
 	 * @param lifeline Lifeline where the message starts and ends.
-	 * @param operation Method name.
-	 * @param operationArguments Method parameters.
+	 * @param label Method label.
 	 * @return New instance of an UMLReturnSelfMessage.
 	 * @throws OperationNotExists Invalid operation name or operation arguments.
 	 */
 	public UMLReturnSelfMessage createReturnSelfMessage(UMLLifeline lifeline,
-														String operation,
-														String[] operationArguments) throws OperationNotExists {
-		UMLReturnSelfMessage newSelfMessage = new UMLReturnSelfMessage(lifeline);
-
-		boolean exitSuccess = newSelfMessage.setOperation(operation, operationArguments);
-
-		if (!exitSuccess) {
-			throw new OperationNotExists("Invalid self message operation.");
-		}
-
+														String label) throws OperationNotExists {
+		UMLReturnSelfMessage newSelfMessage = new UMLReturnSelfMessage(lifeline, label);
 		this.diagramMessages.add(newSelfMessage);
 
 		return newSelfMessage;
@@ -324,7 +315,7 @@ public class SequenceDiagram extends Element {
 	 *
 	 * @param fromLifeline Lifeline where the message starts.
 	 * @param toLifeline Lifeline where the message ends.
-	 * @param label Lifeline label.
+	 * @param label Message label.
 	 * @return New instance of an UMLReturnMessage.
 	 */
 	public UMLReturnMessage createReturnMessage(UMLLifeline fromLifeline,
@@ -440,46 +431,6 @@ public class SequenceDiagram extends Element {
 		newSelfMessage.setLabel(createOperationLabel(operation, operationArguments));
 
 		return newSelfMessage;
-	}
-
-	/**
-	 * Creates an instance of the UML return self message and inserts it into the diagram
-	 * when operation does not exist in class.
-	 *
-	 * @param lifeline Lifeline where the message starts and ends.
-	 * @param operation Method name.
-	 * @param operationArguments Method parameters.
-	 * @return New instance of an UMLReturnSelfMessage.
-	 */
-	public UMLReturnSelfMessage createReturnSelfMessageNotExists(UMLLifeline lifeline,
-														         String operation,
-														         String[] operationArguments) {
-		UMLReturnSelfMessage newSelfMessage = new UMLReturnSelfMessage(lifeline);
-		this.diagramMessages.add(newSelfMessage);
-
-		newSelfMessage.setLabel(createOperationLabel(operation, operationArguments));
-
-		return newSelfMessage;
-	}
-
-	/**
-	 * Creates an instance of the UML create message and inserts it into the diagram
-	 * when operation does not exist in class.
-	 *
-	 * @param fromLifeline Lifeline where the message starts.
-	 * @param toLifeline Lifeline where the message ends.
-	 * @param operationArguments Method parameters.
-	 * @return New instance of an UMLCreateMessage.
-	 */
-	public UMLCreateMessage createCreateMessageNotExists(UMLLifeline fromLifeline,
-												         UMLLifeline toLifeline,
-												         String[] operationArguments) {
-		UMLCreateMessage newCreateMessage = new UMLCreateMessage(fromLifeline, toLifeline);
-		this.diagramMessages.add(newCreateMessage);
-
-		newCreateMessage.setLabel(createOperationLabel("<<create>>", operationArguments));
-
-		return newCreateMessage;
 	}
 
 	/**
