@@ -168,9 +168,9 @@ public class IJAXMLParser {
                             this.firstLevelOrder = 1;
 
                             parseLifelines();
-                            parseMessages();
-                            parseDestroys();
-                            parseActivations();
+                            //parseMessages();
+                            //parseDestroys();
+                            //parseActivations();
                         }
                     }
 
@@ -1068,7 +1068,6 @@ public class IJAXMLParser {
 
         /* Call frontend method for creating lifeline element */
         try {
-            System.out.println("creating lifeline ...");
             SequenceUML lifeline = this.sequenceController.addElementLoaded(attrValue, height, x, y);
             this.diagramLifelines.add(lifeline);
         } catch (IOException e) {

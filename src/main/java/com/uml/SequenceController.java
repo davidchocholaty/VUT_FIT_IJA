@@ -339,6 +339,7 @@ public class SequenceController extends Parent {
 
     public void createMessageLoaded(SequenceUML from, SequenceUML to, double yCoordinate, String messageText, String messageID) {
         Pair<String, String[]> operation;
+        String[] createArguments;
 
         try {
             switch (messageID) {
@@ -351,8 +352,8 @@ public class SequenceController extends Parent {
                     this.sequenceDiagram.createSynchronousMessage(from.lifeline, to.lifeline, operation.getKey(), operation.getValue());
                     break;
                 case "create":
-                    operation = parseOperationLabel(messageText);
-                    this.sequenceDiagram.createCreateMessage(from.lifeline, to.lifeline, operation.getValue());
+                    createArguments = parseCreateLabel(messageText);
+                    this.sequenceDiagram.createCreateMessage(from.lifeline, to.lifeline, createArguments);
                 case "return":
                     this.sequenceDiagram.createReturnMessage(from.lifeline, to.lifeline, messageText);
                     break;
@@ -379,14 +380,14 @@ public class SequenceController extends Parent {
             throw new InvalidOperationLabel("Invalid message label.");
         }
 
+        /* Remove all whitespaces and non-visible characters */
+        operationLabel = operationLabel.replaceAll("\\s+","");
+
         int idx = operationLabel.indexOf('(');
 
         if (idx < 0) {
             throw new InvalidOperationLabel("Invalid message label.");
         }
-
-        /* Remove all whitespaces and non-visible characters */
-        operationLabel = operationLabel.replaceAll("\\s+","");
 
         String operationName = operationLabel.substring(0, idx);
         if (operationLabel.charAt(operationLabel.length()-1) != ')') {
@@ -398,6 +399,34 @@ public class SequenceController extends Parent {
         String[] splitedOperationLabel = operationLabel.split(",");
 
         return new Pair<String, String[]>(operationName, splitedOperationLabel);
+    }
+
+    private String[] parseCreateLabel(String createLabel) throws InvalidOperationLabel {
+        if (createLabel == null) {
+            throw new InvalidOperationLabel("Invalid message label.");
+        }
+
+        /* Remove all whitespaces and non-visible characters */
+        createLabel = createLabel.replaceAll("\\s+","");
+
+        int idx = createLabel.indexOf('(');
+
+        if (idx < 0) {
+            throw new InvalidOperationLabel("Invalid message label.");
+        }
+
+        String createName = createLabel.substring(0, idx);
+        if (createLabel.charAt(createLabel.length()-1) != ')') {
+            throw new InvalidOperationLabel("Invalid message label.");
+        }
+
+        if (!createName.equals("<<create>>")) {
+            throw new InvalidOperationLabel("Invalid message label.");
+        }
+
+        createLabel = createLabel.substring(idx, createLabel.length()-1);
+
+        return createLabel.split(",");
     }
 
     private Node createMessage(MouseEvent e,SequenceUML fromNode, SequenceUML sq, String messageID) {
@@ -466,11 +495,12 @@ public class SequenceController extends Parent {
 
     private Node createAndAddMessage(MouseDragEvent e, SequenceUML fromNode, SequenceUML sq, String messageID) {
         Pair<String, String[]> operation;
+        String[] createArguments;
         String messageText = getMessage(messageID);
 
         try {
-            operation = parseOperationLabel(messageText);
-            this.sequenceDiagram.createCreateMessage(fromNode.lifeline, sq.lifeline, operation.getValue());
+            createArguments = parseCreateLabel(messageText);
+            this.sequenceDiagram.createCreateMessage(fromNode.lifeline, sq.lifeline, createArguments);
         } catch (InvalidOperationLabel err) {
             // TODO
             err.printStackTrace();

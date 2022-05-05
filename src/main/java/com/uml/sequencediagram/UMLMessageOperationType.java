@@ -39,6 +39,10 @@ public abstract class UMLMessageOperationType extends UMLMessage {
     public boolean setOperation(String operation, String[] operationArguments) {
         List<UMLOperation> classOperations = super.getFromLifeline().getObjectClass().getOperations();
 
+        if (operation.equals("<<create>>")) {
+            return true;
+        }
+
         for (UMLOperation currentOperation : classOperations) {
             if (currentOperation.getName().equals(operation)) {                
                 if (currentOperation.getArguments().size() == operationArguments.length) {                    
