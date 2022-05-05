@@ -556,6 +556,7 @@ public class SaveHandler {
 
         addHeightTag(diagramLifeline, currentLifeline);
         addXCoordinateTag(diagramLifeline, currentLifeline);
+        addYCoordinateTag(diagramLifeline, currentLifeline);
     }
 
     /**
@@ -592,6 +593,24 @@ public class SaveHandler {
     }
 
     /**
+     * Add y coordinate tag.
+     * <p>
+     *     This method is overridden method of the class diagram method version for sequence diagram.
+     * </p>
+     *
+     * @param diagramLifeline Lifeline element.
+     * @param currentLifeline Current lifeline to be saved.
+     */
+    private void addYCoordinateTag(Element diagramLifeline, UMLLifeline currentLifeline) {
+        Element yCoordinate;
+
+        /* yCoordinate tag */
+        yCoordinate = this.doc.createElement("yCoordinate");
+        diagramLifeline.appendChild(yCoordinate);
+        yCoordinate.setTextContent(Double.toString(currentLifeline.getYCoordinate()));
+    }
+
+    /**
      * Add all diagram messages tags.
      *
      * @param sequenceDiagramElement Sequence diagram element.
@@ -616,8 +635,8 @@ public class SaveHandler {
         /* Create message tag */
         diagramMessage = this.doc.createElement("message");
         sequenceDiagramElement.appendChild(diagramMessage);
-        diagramMessage.setAttribute("name", currentMessage.getLabel());
 
+        addLabelTag(diagramMessage, currentMessage);
         addFromTag(diagramMessage, currentMessage);
         addToTag(diagramMessage, currentMessage);
         addYCoordinateTag(diagramMessage, currentMessage);
@@ -627,6 +646,21 @@ public class SaveHandler {
         } else {
             addOperationTypeTag(diagramMessage, currentMessage);
         }
+    }
+
+    /**
+     * Add label tag for message.
+     *
+     * @param diagramMessage Message element.
+     * @param currentMessage Current message.
+     */
+    private void addLabelTag(Element diagramMessage, UMLMessage currentMessage) {
+        Element label;
+
+        /* label tag */
+        label = this.doc.createElement("label");
+        diagramMessage.appendChild(label);
+        label.setTextContent(currentMessage.getLabel());
     }
 
     /**
@@ -644,6 +678,7 @@ public class SaveHandler {
         /* from tag */
         from = this.doc.createElement("from");
         diagramMessage.appendChild(from);
+        from.setAttribute("id", String.valueOf(currentMessage.getFromLifeline().getId()));
         from.setTextContent(currentMessage.getFromLifeline().getObjectClass().getName());
     }
 
@@ -662,6 +697,7 @@ public class SaveHandler {
         /* to tag */
         to = this.doc.createElement("to");
         diagramMessage.appendChild(to);
+        to.setAttribute("id", String.valueOf(currentMessage.getToLifeline().getId()));
         to.setTextContent(currentMessage.getFromLifeline().getObjectClass().getName());
     }
 
@@ -820,12 +856,24 @@ public class SaveHandler {
         operationType.appendChild(createMessage);
     }
 
+    /**
+     * Add tag for representing destoying object symbol.
+     *
+     * @param sequenceDiagramElement Sequence diagram element.
+     * @param diagramDestroys Destroys from diagram to be saved.
+     */
     private void addDestroyTags(Element sequenceDiagramElement, List<UMLDestroy> diagramDestroys) {
         for (UMLDestroy currentDestroy : diagramDestroys) {
             addDestroyTag(sequenceDiagramElement, currentDestroy);
         }
     }
 
+    /**
+     * Create destroy tag to save diagram object destroying symbol.
+     *
+     * @param sequenceDiagramElement Sequence diagram element.
+     * @param currentDestroy Current destroy to be saved.
+     */
     private void addDestroyTag(Element sequenceDiagramElement, UMLDestroy currentDestroy) {
         Element diagramDestroy;
 
@@ -833,19 +881,35 @@ public class SaveHandler {
         diagramDestroy = this.doc.createElement("destroy");
         sequenceDiagramElement.appendChild(diagramDestroy);
 
-        addDestroyLifelineTag(diagramDestroy, currentDestroy);
+        addLifelineReferenceTag(diagramDestroy, currentDestroy);
         addYCoordinateTag(diagramDestroy, currentDestroy);
     }
 
-    private void addDestroyLifelineTag(Element diagramDestroy, UMLDestroy currentDestroy) {
-        Element destroyLifeline;
+    /**
+     * Add lifeline reference tag which represents reference on tag with name and id.
+     *
+     * @param diagramDestroy Destroying object element.
+     * @param currentDestroy Current destroy.
+     */
+    private void addLifelineReferenceTag(Element diagramDestroy, UMLDestroy currentDestroy) {
+        Element lifeline;
 
-        /* destroyLifeline */
-        destroyLifeline = this.doc.createElement("destroyLifeline");
-        diagramDestroy.appendChild(destroyLifeline);
-        destroyLifeline.setTextContent(currentDestroy.getLifeline().getObjectClass().getName());
+        /* lifelineReference */
+        lifeline = this.doc.createElement("lifelineReference");
+        diagramDestroy.appendChild(lifeline);
+        lifeline.setAttribute("id", String.valueOf(currentDestroy.getLifeline().getId()));
+        lifeline.setTextContent(currentDestroy.getLifeline().getObjectClass().getName());
     }
 
+    /**
+     * Add y coordinate tag.
+     * <p>
+     *     This method is overriden method of the class diagram method version for sequence diagram object destroying.
+     * </p>
+     *
+     * @param diagramDestroy Destroy element.
+     * @param currentDestroy Current destroy which lifeline will be saved.
+     */
     private void addYCoordinateTag(Element diagramDestroy, UMLDestroy currentDestroy) {
         Element yCoordinate;
 
@@ -854,7 +918,7 @@ public class SaveHandler {
         diagramDestroy.appendChild(yCoordinate);
         yCoordinate.setTextContent(Double.toString(currentDestroy.getYCoordinate()));
     }
-
+    
     private void addActivationTags(Element sequenceDiagramElement, List<UMLActivation> diagramActivations) {
         for (UMLActivation currentActivation : diagramActivations) {
             addActivationTag(sequenceDiagramElement, currentActivation);
@@ -868,17 +932,18 @@ public class SaveHandler {
         diagramActivation = this.doc.createElement("activation");
         sequenceDiagramElement.appendChild(diagramActivation);
 
-        addActivationLifelineTag(diagramActivation, currentActivation);
+        addLifelineReferenceTag(diagramActivation, currentActivation);
         addActivationYCoordinateTags(diagramActivation, currentActivation);
     }
 
-    private void addActivationLifelineTag(Element diagramActivation, UMLActivation currentActivation) {
-        Element activationLifeline;
+    private void addLifelineReferenceTag(Element diagramActivation, UMLActivation currentActivation) {
+        Element lifeline;
 
-        /* activationLifeline */
-        activationLifeline = this.doc.createElement("activationLifeline");
-        diagramActivation.appendChild(activationLifeline);
-        activationLifeline.setTextContent(currentActivation.getLifeline().getObjectClass().getName());
+        /* lifelineReference */
+        lifeline = this.doc.createElement("lifelineReference");
+        diagramActivation.appendChild(lifeline);
+        lifeline.setAttribute("id", String.valueOf(currentActivation.getLifeline().getId()));
+        lifeline.setTextContent(currentActivation.getLifeline().getObjectClass().getName());
     }
 
     private void addActivationYCoordinateTags(Element diagramActivation, UMLActivation currentActivation) {
@@ -888,13 +953,13 @@ public class SaveHandler {
         yCoordinate = this.doc.createElement("yCoordinate");
         diagramActivation.appendChild(yCoordinate);
         yCoordinate.setTextContent(Double.toString(currentActivation.getFirstYCoordinate()));
-        yCoordinate.setAttribute("order", String.valueOf(1));
+        yCoordinate.setAttribute("order", "1");
 
         /* second yCoordinate tag */
         yCoordinate = this.doc.createElement("yCoordinate");
         diagramActivation.appendChild(yCoordinate);
         yCoordinate.setTextContent(Double.toString(currentActivation.getSecondYCoordinate()));
-        yCoordinate.setAttribute("order", String.valueOf(2));
+        yCoordinate.setAttribute("order", "2");
     }
 
     /*-----------------------------------------------------------------------------*/

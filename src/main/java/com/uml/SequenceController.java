@@ -13,8 +13,11 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
+import javafx.util.Pair;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class SequenceController extends Parent {
@@ -151,6 +154,10 @@ public class SequenceController extends Parent {
             for (Node a : tmpNode.edges) {
                 rPane.getChildren().remove(a);
             }
+
+            this.sequenceDiagram.deleteAllLifelineDependencies(tmpNode.lifeline);
+            this.sequenceDiagram.deleteLifeline(tmpNode.lifeline);
+
             rPane.getChildren().remove(tmpNode);
         }
     }
@@ -223,7 +230,6 @@ public class SequenceController extends Parent {
 
         UMLClass cls = this.classDiagram.findClass(nm[0]);
 
-        // TODO height
         UMLLifeline lifeline = this.sequenceDiagram.createLifeline(cls, 0.0);
         lifeline.setXCoordinate(mouseEvent.getX());
 
@@ -279,7 +285,6 @@ public class SequenceController extends Parent {
 
         UMLClass cls = this.classDiagram.findClass(nm[0]);
 
-        // TODO height
         UMLLifeline lifeline = this.sequenceDiagram.createLifeline(cls, 0.0);
         lifeline.setXCoordinate(mouseEvent.getX());
 
@@ -303,6 +308,7 @@ public class SequenceController extends Parent {
         return sq;
     }
 
+    // TODO int number exception
     private void changeHeight(ContextMenuEvent e, SequenceUML sq) {
         TextInputDialog dialog = new TextInputDialog();
 
@@ -317,6 +323,8 @@ public class SequenceController extends Parent {
             nm[0] = name.get();
         });
         sq.setY2(Integer.parseInt(nm[0])+80);
+
+        sq.lifeline.setHeight(Integer.parseInt(nm[0])+80);
     }
 
     private void timeLineDragDetected(MouseEvent e, SequenceUML sq){
@@ -332,6 +340,25 @@ public class SequenceController extends Parent {
 
     public void createMessageLoaded(SequenceUML from, SequenceUML to, double yCordinate, String messageText, String messageID){
         Message message = new Message(from.getView().getLayoutX(), yCordinate, to.getView().getLayoutX(), yCordinate, messageID, messageText);
+    public void createMessageLoaded(SequenceUML from, SequenceUML to, double y, String message, String messageID){
+
+    }
+
+    private Pair<String, String[]> parseOperationLabel(String operationLabel) throws InvalidOperationLabel {
+        if (operationLabel == null) {
+            throw new InvalidOperationLabel("Invalid message label.");
+        }
+
+        int idx = operationLabel.indexOf('(');
+
+        if (idx < 0) {
+            throw new InvalidOperationLabel("Invalid message label.");
+        }
+
+        /* Remove all whitespaces and non-visible characters */
+        operationLabel = operationLabel.replaceAll("\\s+","");
+
+        String operationName = operationLabel.substring(0, idx);
 
         message.x1Property().bind(from.getView().layoutXProperty());
         message.x2Property().bind(to.getView().layoutXProperty());
@@ -339,35 +366,33 @@ public class SequenceController extends Parent {
         from.edges.add(message);
         to.edges.add(message);
         rPane.getChildren().add(message);
+        if (operationLabel.charAt(operationLabel.length()-1) != ')') {
+            throw new InvalidOperationLabel("Invalid message label.");
+        }
+
+        operationLabel = operationLabel.substring(idx, operationLabel.length()-1);
+
+        String[] splitedOperationLabel = operationLabel.split(",");
+
+        return new Pair<String, String[]>(operationName, splitedOperationLabel);
     }
+
     private Node createMessage(MouseEvent e,SequenceUML fromNode, SequenceUML sq, String messageID) {
+        Pair<String, String[]> operation;
         String messageText = getMessage(messageID);
 
-
-        // TODO
-        String operation = "operation";
-        String[] tmp = {"t", "m", "p"};
-        String label = "label";
-/*
         try {
             switch (messageID) {
                 case "sync":
-                    this.sequenceDiagram.createSynchronousMessage(fromNode.lifeline, sq.lifeline, operation, tmp);
-                    break;
                 case "async":
-                    this.sequenceDiagram.createAsynchronousMessage(fromNode.lifeline, sq.lifeline, operation, tmp);
+                case "syncSelf":
+                case "asyncSelf":
+                case "returnSelf":
+                    operation = parseOperationLabel(messageText);
+                    this.sequenceDiagram.createSynchronousMessage(fromNode.lifeline, sq.lifeline, operation.getKey(), operation.getValue());
                     break;
                 case "return":
-                    this.sequenceDiagram.createReturnMessage(fromNode.lifeline, sq.lifeline, label);
-                    break;
-                case "syncSelf":
-                    this.sequenceDiagram.createSynchronousSelfMessage(fromNode.lifeline, operation, tmp);
-                    break;
-                case "asyncSelf":
-                    this.sequenceDiagram.createAsynchronousSelfMessage(fromNode.lifeline, operation, tmp);
-                    break;
-                case "returnSelf":
-                    this.sequenceDiagram.createReturnSelfMessage(fromNode.lifeline, operation, tmp);
+                    this.sequenceDiagram.createReturnMessage(fromNode.lifeline, sq.lifeline, messageText);
                     break;
                 default:
                     break;
@@ -377,7 +402,7 @@ public class SequenceController extends Parent {
             err.printStackTrace();
         }
 
- */
+
         Message message = new Message(fromNode.getView().getLayoutX(), e.getY(), sq.getView().getLayoutX(), e.getY(), messageID, messageText);
 
         message.x1Property().bind(fromNode.getView().layoutXProperty());
@@ -417,17 +442,16 @@ public class SequenceController extends Parent {
     }
 
     private Node createAndAddMessage(MouseDragEvent e, SequenceUML fromNode, SequenceUML sq, String messageID) {
+        Pair<String, String[]> operation;
         String messageText = getMessage(messageID);
 
-        // TODO
-        String[] tmp = {"t", "m", "p"};
-
-        /*try {
-            this.sequenceDiagram.createCreateMessage(fromNode.lifeline, sq.lifeline, tmp);
+        try {
+            operation = parseOperationLabel(messageText);
+            this.sequenceDiagram.createCreateMessage(fromNode.lifeline, sq.lifeline, operation.getValue());
         } catch (InvalidOperationLabel err) {
             // TODO
             err.printStackTrace();
-        }*/
+        }
         Message message = new Message(fromNode.getView().getLayoutX(), e.getY(), sq.getView().getLayoutX(), e.getY(), messageID, messageText);
         message.x1Property().bind(fromNode.getView().layoutXProperty());
         message.x2Property().bind(sq.getView().layoutXProperty());
@@ -486,6 +510,9 @@ public class SequenceController extends Parent {
         cross.x1Property().bind(sq.getView().layoutXProperty());
         sq.setY2(e.getY() + 40);
         sq.edges.add(cross);
+
+        this.sequenceDiagram.createDestroy(sq.lifeline, e.getY());
+
         return cross;
     }
     // TODO
@@ -523,11 +550,16 @@ public class SequenceController extends Parent {
             }
         });
 
+
+        this.sequenceDiagram.createActivation(sq.lifeline, activation, e.getY());
+
         return activ;
     }
 
     private void drag(MouseEvent e, SequenceUML sq) {
         double x = sq.getView().getTranslateX() + e.getX() + sq.getView().getLayoutX();
         sq.getView().setLayoutX(x);
+
+        sq.lifeline.setXCoordinate(x);
     }
 }
