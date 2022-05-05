@@ -200,9 +200,6 @@ public class IJAXMLParser {
 
     private SequenceUML getLifelineByNameAndId(String name, long id) {
         for (SequenceUML currentLifeline : this.diagramLifelines) {
-            System.out.println("-------------");
-            System.out.println(currentLifeline.lifeline.getObjectClass().getName());
-            System.out.println(currentLifeline.lifeline.getId());
             if (currentLifeline.lifeline.getObjectClass().getName().equals(name) &&
                     currentLifeline.lifeline.getId() == id) {
                 return currentLifeline;
@@ -1243,9 +1240,9 @@ public class IJAXMLParser {
                 SequenceUML fromLifeline = getLifelineByNameAndId(from, fromId);
                 SequenceUML toLifeline = getLifelineByNameAndId(to, toId);
 
-                if (fromLifeline == null || toLifeline == null) {
-                    throw new IllegalFileFormat("Invalid file syntax.");
-                }
+                //if (fromLifeline == null || toLifeline == null) {
+                //    throw new IllegalFileFormat("Invalid file syntax.");
+                //}
 
                 this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "return");
             } else {
@@ -1278,9 +1275,9 @@ public class IJAXMLParser {
             SequenceUML fromLifeline = getLifelineByNameAndId(from, fromId);
             SequenceUML toLifeline = getLifelineByNameAndId(to, toId);
 
-            if (fromLifeline == null || toLifeline == null) {
-                throw new IllegalFileFormat("Invalid file syntax.");
-            }
+            //if (fromLifeline == null || toLifeline == null) {
+            //    throw new IllegalFileFormat("Invalid file syntax.");
+            //}
 
             switch (list.item(1).getNodeName()) {
                 case "synchronousMessage":
@@ -1379,9 +1376,9 @@ public class IJAXMLParser {
         /* Call frontend method for creating destroy element */
         SequenceUML frontLifeline = getLifelineByNameAndId(lifeline, id);
 
-        if (frontLifeline == null) {
-            throw new IllegalFileFormat("Invalid file syntax.");
-        }
+        //if (frontLifeline == null) {
+        //    throw new IllegalFileFormat("Invalid file syntax.");
+        //}
 
         this.sequenceController.createDestroy(frontLifeline, y);
     }
@@ -1482,9 +1479,9 @@ public class IJAXMLParser {
         /* Call frontend method for creating activation element */
         SequenceUML frontLifeline = getLifelineByNameAndId(lifeline, id);
 
-        if (frontLifeline == null) {
-            throw new IllegalFileFormat("Invalid file syntax.");
-        }
+        //if (frontLifeline == null) {
+        //    throw new IllegalFileFormat("Invalid file syntax.");
+        //}
 
         this.sequenceController.createActivationLoaded(frontLifeline, yStart, yEnd);
     }
