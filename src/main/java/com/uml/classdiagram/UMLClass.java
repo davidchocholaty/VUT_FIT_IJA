@@ -9,6 +9,8 @@
 
 package com.uml.classdiagram;
 
+import javafx.beans.property.SimpleStringProperty;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +30,7 @@ public class UMLClass extends UMLClassifier {
 	private final List<UMLAttribute> classAttributes;
 	private final List<UMLOperation> classOperations;
 	private static int defaultClassId = 1;
+	private SimpleStringProperty className;
 
 	/**
 	 * Creates an instance representing an UML class model.
@@ -45,6 +48,7 @@ public class UMLClass extends UMLClassifier {
 		this.classOperations = new ArrayList<UMLOperation>();
 		this.xCoordinate = 0.0;
 		this.yCoordinate = 0.0;
+		className = new SimpleStringProperty();
 	}
 
 	/**
@@ -307,6 +311,21 @@ public class UMLClass extends UMLClassifier {
 		}
 
 		defaultClassId++;
+	}
+
+	@Override
+	/**
+	 * Set new class name.
+	 *
+	 * @param name New class name.
+	 */
+	public void setName(String name) {
+		super.setName(name);
+		this.className.set(name);
+	}
+
+	public SimpleStringProperty getClassName() {
+		return this.className;
 	}
 
 }
