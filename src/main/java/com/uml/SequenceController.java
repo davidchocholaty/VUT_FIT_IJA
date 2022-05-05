@@ -388,6 +388,61 @@ public class SequenceController extends Parent {
             for(Node node : message.getChildrenUnmodifiable()){
                 node.getStyleClass().add("Collision");
             }
+
+            switch (messageID) {
+                case "sync":
+                    try {
+                        operation = parseOperationLabel(messageText);
+                        UMLSynchronousMessage sync = this.sequenceDiagram.createSynchronousMessageNotExists(from.lifeline, to.lifeline, operation.getKey(), operation.getValue());
+                        sync.setYCoordinate(yCoordinate);
+                    } catch (InvalidOperationLabel ex) {
+                        ex.printStackTrace();
+                    }
+
+                    break;
+                case "async":
+                    try {
+                        operation = parseOperationLabel(messageText);
+                        UMLAsynchronousMessage async = this.sequenceDiagram.createAsynchronousMessageNotExists(from.lifeline, to.lifeline, operation.getKey(), operation.getValue());
+                        async.setYCoordinate(yCoordinate);
+                    } catch (InvalidOperationLabel ex) {
+                        ex.printStackTrace();
+                    }
+
+                    break;
+                case "syncSelf":
+                    try {
+                        operation = parseOperationLabel(messageText);
+                        UMLSynchronousSelfMessage syncSelf = this.sequenceDiagram.createSynchronousSelfMessageNotExists(from.lifeline, operation.getKey(), operation.getValue());
+                        syncSelf.setYCoordinate(yCoordinate);
+                    } catch (InvalidOperationLabel ex) {
+                        ex.printStackTrace();
+                    }
+
+                    break;
+                case "asyncSelf":
+                    try {
+                        operation = parseOperationLabel(messageText);
+                        UMLAsynchronousSelfMessage asyncSelf = this.sequenceDiagram.createAsynchronousSelfMessageNotExists(from.lifeline, operation.getKey(), operation.getValue());
+                        asyncSelf.setYCoordinate(yCoordinate);
+                    } catch (InvalidOperationLabel ex) {
+                        ex.printStackTrace();
+                    }
+
+                    break;
+                case "returnSelf":
+                    try {
+                        operation = parseOperationLabel(messageText);
+                        UMLReturnSelfMessage returnSelf = this.sequenceDiagram.createReturnSelfMessageNotExists(from.lifeline, operation.getKey(), operation.getValue());
+                        returnSelf.setYCoordinate(yCoordinate);
+                    } catch (InvalidOperationLabel ex) {
+                        ex.printStackTrace();
+                    }
+
+                    break;
+                default:
+                    break;
+            }
         }
         message.x1Property().bind(from.getView().layoutXProperty());
         message.x2Property().bind(to.getView().layoutXProperty());
