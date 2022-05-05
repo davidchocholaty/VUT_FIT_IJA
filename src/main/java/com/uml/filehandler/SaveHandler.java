@@ -648,6 +648,12 @@ public class SaveHandler {
         }
     }
 
+    /**
+     * Add label tag for message.
+     *
+     * @param diagramMessage Message element.
+     * @param currentMessage Current message.
+     */
     private void addLabelTag(Element diagramMessage, UMLMessage currentMessage) {
         Element label;
 
@@ -850,12 +856,24 @@ public class SaveHandler {
         operationType.appendChild(createMessage);
     }
 
+    /**
+     * Add tag for representing destoying object symbol.
+     *
+     * @param sequenceDiagramElement Sequence diagram element.
+     * @param diagramDestroys Destroys from diagram to be saved.
+     */
     private void addDestroyTags(Element sequenceDiagramElement, List<UMLDestroy> diagramDestroys) {
         for (UMLDestroy currentDestroy : diagramDestroys) {
             addDestroyTag(sequenceDiagramElement, currentDestroy);
         }
     }
 
+    /**
+     * Create destroy tag to save diagram object destroying symbol.
+     *
+     * @param sequenceDiagramElement Sequence diagram element.
+     * @param currentDestroy Current destroy to be saved.
+     */
     private void addDestroyTag(Element sequenceDiagramElement, UMLDestroy currentDestroy) {
         Element diagramDestroy;
 
@@ -867,6 +885,12 @@ public class SaveHandler {
         addYCoordinateTag(diagramDestroy, currentDestroy);
     }
 
+    /**
+     * Add lifeline reference tag which represents reference on tag with name and id.
+     *
+     * @param diagramDestroy Destroying object element.
+     * @param currentDestroy Current destroy.
+     */
     private void addLifelineReferenceTag(Element diagramDestroy, UMLDestroy currentDestroy) {
         Element lifeline;
 
@@ -877,6 +901,15 @@ public class SaveHandler {
         lifeline.setTextContent(currentDestroy.getLifeline().getObjectClass().getName());
     }
 
+    /**
+     * Add y coordinate tag.
+     * <p>
+     *     This method is overriden method of the class diagram method version for sequence diagram object destroying.
+     * </p>
+     *
+     * @param diagramDestroy Destroy element.
+     * @param currentDestroy Current destroy which lifeline will be saved.
+     */
     private void addYCoordinateTag(Element diagramDestroy, UMLDestroy currentDestroy) {
         Element yCoordinate;
 
@@ -885,7 +918,7 @@ public class SaveHandler {
         diagramDestroy.appendChild(yCoordinate);
         yCoordinate.setTextContent(Double.toString(currentDestroy.getYCoordinate()));
     }
-
+    
     private void addActivationTags(Element sequenceDiagramElement, List<UMLActivation> diagramActivations) {
         for (UMLActivation currentActivation : diagramActivations) {
             addActivationTag(sequenceDiagramElement, currentActivation);
