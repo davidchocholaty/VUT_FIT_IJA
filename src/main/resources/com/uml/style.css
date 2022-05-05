@@ -43,7 +43,6 @@
     -fx-stroke-width: 5;
 }
 .sequence{
-    -fx-font-style: 13;
     -fx-padding: 15,15,15,15;
 }
 .activation{
@@ -53,4 +52,13 @@
 }
 .overriden{
     -fx-text-fill: blue;
+}
+.Collision {
+    -fx-stroke: red;
+    -fx-text-fill: red;
+}
+.CollisionButton {
+    -fx-stroke: red;
+    -fx-border-color: red;
+    -fx-text-fill: red;
 }

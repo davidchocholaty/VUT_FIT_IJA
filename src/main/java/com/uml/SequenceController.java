@@ -11,7 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.util.Pair;
-
+import javafx.scene.paint.Color;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -161,23 +161,24 @@ public class SequenceController extends Parent {
     public SequenceUML addElementLoaded(String name, double height, double x, double y) throws IOException {
         UMLClass cls = this.classDiagram.findClass(name);
 
-        if (cls == null) {
-            // Inconsistence
-            // TODO barevne odliseni lifeline
-            // TODO nastaveni jmena lifeline
+        SequenceUML sq;
+
+        if(y == 0.0){
+            sq = new SequenceUML(x, DEFAULT_SEQUENCE_HEIGHT, height, rPane, name);
+        }else{
+            sq = new SequenceUML(x, y, height, rPane, name);
+        }
+
+        if (cls == null){
+            sq.getView().getStyleClass().add("CollisionButton");
+            sq.dashedLine.getStyleClass().add("Collision");
+            cls = new UMLClass(name);
         }
 
         UMLLifeline lifeline = this.sequenceDiagram.createLifeline(cls, height);
         lifeline.setXCoordinate(x);
         lifeline.setYCoordinate(y);
         lifeline.setHeight(height);
-
-        SequenceUML sq;
-        if(y == 0.0){
-            sq = new SequenceUML(x, DEFAULT_SEQUENCE_HEIGHT, height, rPane, name);
-        }else{
-            sq = new SequenceUML(x, y, height, rPane, name);
-        }
 
         sq.lifeline = lifeline;
 
@@ -340,60 +341,54 @@ public class SequenceController extends Parent {
         Pair<String, String[]> operation;
         String[] createArguments;
 
-        if (from == null || to == null) {
-            // Inconsistence
-            // TODO barevne odliseni message
-        } else {
-            try {
-                switch (messageID) {
-                    case "sync":
-                        operation = parseOperationLabel(messageText);
-                        UMLSynchronousMessage sync = this.sequenceDiagram.createSynchronousMessage(from.lifeline, to.lifeline, operation.getKey(), operation.getValue());
-                        sync.setYCoordinate(yCoordinate);
-                        break;
-                    case "async":
-                        operation = parseOperationLabel(messageText);
-                        UMLAsynchronousMessage async = this.sequenceDiagram.createAsynchronousMessage(from.lifeline, to.lifeline, operation.getKey(), operation.getValue());
-                        async.setYCoordinate(yCoordinate);
-                        break;
-                    case "syncSelf":
-                        operation = parseOperationLabel(messageText);
-                        UMLSynchronousSelfMessage syncSelf = this.sequenceDiagram.createSynchronousSelfMessage(from.lifeline, operation.getKey(), operation.getValue());
-                        syncSelf.setYCoordinate(yCoordinate);
-                        break;
-                    case "asyncSelf":
-                        operation = parseOperationLabel(messageText);
-                        UMLAsynchronousSelfMessage asyncSelf = this.sequenceDiagram.createAsynchronousSelfMessage(from.lifeline, operation.getKey(), operation.getValue());
-                        asyncSelf.setYCoordinate(yCoordinate);
-                        break;
-                    case "returnSelf":
-                        operation = parseOperationLabel(messageText);
-                        UMLReturnSelfMessage returnSelf = this.sequenceDiagram.createReturnSelfMessage(from.lifeline, operation.getKey(), operation.getValue());
-                        returnSelf.setYCoordinate(yCoordinate);
-                        break;
-                    case "create":
-                        createArguments = parseCreateLabel(messageText);
-                        UMLCreateMessage createMessage = this.sequenceDiagram.createCreateMessage(from.lifeline, to.lifeline, createArguments);
-                        createMessage.setYCoordinate(yCoordinate);
-                        break;
-                    case "return":
-                        UMLReturnMessage returnMessage = this.sequenceDiagram.createReturnMessage(from.lifeline, to.lifeline, messageText);
-                        returnMessage.setYCoordinate(yCoordinate);
-                        break;
-                    default:
-                        break;
-                }
-            } catch (InvalidOperationLabel err) {
-                // TODO
-                err.printStackTrace();
-            } catch (OperationNotExists e) {
-                // Inconsistence
-                // TODO barevne odliseni message
-                e.printStackTrace();
+        Message message = new Message(from.getView().getLayoutX(), yCoordinate, to.getView().getLayoutX(), yCoordinate, messageID, messageText);
+        try {
+            switch (messageID) {
+                case "sync":
+                    operation = parseOperationLabel(messageText);
+                    UMLSynchronousMessage sync = this.sequenceDiagram.createSynchronousMessage(from.lifeline, to.lifeline, operation.getKey(), operation.getValue());
+                    sync.setYCoordinate(yCoordinate);
+                    break;
+                case "async":
+                    operation = parseOperationLabel(messageText);
+                    UMLAsynchronousMessage async = this.sequenceDiagram.createAsynchronousMessage(from.lifeline, to.lifeline, operation.getKey(), operation.getValue());
+                    async.setYCoordinate(yCoordinate);
+                    break;
+                case "syncSelf":
+                    operation = parseOperationLabel(messageText);
+                    UMLSynchronousSelfMessage syncSelf = this.sequenceDiagram.createSynchronousSelfMessage(from.lifeline, operation.getKey(), operation.getValue());
+                    syncSelf.setYCoordinate(yCoordinate);
+                    break;
+                case "asyncSelf":
+                    operation = parseOperationLabel(messageText);
+                    UMLAsynchronousSelfMessage asyncSelf = this.sequenceDiagram.createAsynchronousSelfMessage(from.lifeline, operation.getKey(), operation.getValue());
+                    asyncSelf.setYCoordinate(yCoordinate);
+                    break;
+                case "returnSelf":
+                    operation = parseOperationLabel(messageText);
+                    UMLReturnSelfMessage returnSelf = this.sequenceDiagram.createReturnSelfMessage(from.lifeline, operation.getKey(), operation.getValue());
+                    returnSelf.setYCoordinate(yCoordinate);
+                    break;
+                case "create":
+                    createArguments = parseCreateLabel(messageText);
+                    UMLCreateMessage createMessage = this.sequenceDiagram.createCreateMessage(from.lifeline, to.lifeline, createArguments);
+                    createMessage.setYCoordinate(yCoordinate);
+                    break;
+                case "return":
+                    UMLReturnMessage returnMessage = this.sequenceDiagram.createReturnMessage(from.lifeline, to.lifeline, messageText);
+                    returnMessage.setYCoordinate(yCoordinate);
+                    break;
+                default:
+                    break;
+            }
+        } catch (InvalidOperationLabel err) {
+            // TODO
+            err.printStackTrace();
+        } catch (OperationNotExists e) {
+            for(Node node : message.getChildrenUnmodifiable()){
+                node.getStyleClass().add("Collision");
             }
         }
-
-        Message message = new Message(from.getView().getLayoutX(), yCoordinate, to.getView().getLayoutX(), yCoordinate, messageID, messageText);
         message.x1Property().bind(from.getView().layoutXProperty());
         message.x2Property().bind(to.getView().layoutXProperty());
 
@@ -495,52 +490,72 @@ public class SequenceController extends Parent {
                 default:
                     break;
             }
+            return getNode(e, fromNode, sq, messageID, messageText);
         } catch (InvalidOperationLabel err) {
             getWarning("invalid Message text");
             return null;
         } catch (OperationNotExists err) {
-            getYesNoWindow();
-            /*
-             * TODO, jedna se o zaslani zpravy, ktera neexistuje
-             *  -> zda skutecne provest -> ANO / NE
-             *  -> pokud ano -> nasledujici usek kodu a vytvoreni na frontendu
-             *  -> pokud ne  -> nic se na backendu ani frontendu neprovede
-             */
-
-            /*
-            switch (messageID) {
-                case "sync":
-                    UMLSynchronousMessage sync = this.sequenceDiagram.createSynchronousMessageNotExists(fromNode.lifeline, sq.lifeline, operation.getKey(), operation.getValue());
-                    sync.setYCoordinate(e.getY());
-                    break;
-                case "async":
-                    UMLAsynchronousMessage async = this.sequenceDiagram.createAsynchronousMessageNotExists(fromNode.lifeline, sq.lifeline, operation.getKey(), operation.getValue());
-                    async.setYCoordinate(e.getY());
-                    break;
-                case "syncSelf":
-                    UMLSynchronousSelfMessage syncSelf = this.sequenceDiagram.createSynchronousSelfMessageNotExists(fromNode.lifeline, operation.getKey(), operation.getValue());
-                    syncSelf.setYCoordinate(e.getY());
-                    break;
-                case "asyncSelf":
-                    UMLAsynchronousSelfMessage asyncSelf = this.sequenceDiagram.createAsynchronousSelfMessageNotExists(fromNode.lifeline, operation.getKey(), operation.getValue());
-                    asyncSelf.setYCoordinate(e.getY());
-                    break;
-                case "returnSelf":
-                    UMLReturnSelfMessage returnSelf = this.sequenceDiagram.createReturnSelfMessageNotExists(fromNode.lifeline, operation.getKey(), operation.getValue());
-                    returnSelf.setYCoordinate(e.getY());
-                    break;
-                case "return":
-                    UMLReturnMessage returnMessage = this.sequenceDiagram.createReturnMessage(fromNode.lifeline, sq.lifeline, messageText);
-                    returnMessage.setYCoordinate(e.getY());
-                    break;
-                default:
-                    break;
+            if (getYesNoWindow()) {
+                switch (messageID) {
+                    case "sync":
+                        try {
+                            operation = parseOperationLabel(messageText);
+                        } catch (InvalidOperationLabel ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        UMLSynchronousMessage sync = this.sequenceDiagram.createSynchronousMessageNotExists(fromNode.lifeline, sq.lifeline, operation.getKey(), operation.getValue());
+                        sync.setYCoordinate(e.getY());
+                        break;
+                    case "async":
+                        try {
+                            operation = parseOperationLabel(messageText);
+                        } catch (InvalidOperationLabel ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        UMLAsynchronousMessage async = this.sequenceDiagram.createAsynchronousMessageNotExists(fromNode.lifeline, sq.lifeline, operation.getKey(), operation.getValue());
+                        async.setYCoordinate(e.getY());
+                        break;
+                    case "syncSelf":
+                        try {
+                            operation = parseOperationLabel(messageText);
+                        } catch (InvalidOperationLabel ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        UMLSynchronousSelfMessage syncSelf = this.sequenceDiagram.createSynchronousSelfMessageNotExists(fromNode.lifeline, operation.getKey(), operation.getValue());
+                        syncSelf.setYCoordinate(e.getY());
+                        break;
+                    case "asyncSelf":
+                        try {
+                            operation = parseOperationLabel(messageText);
+                        } catch (InvalidOperationLabel ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        UMLAsynchronousSelfMessage asyncSelf = this.sequenceDiagram.createAsynchronousSelfMessageNotExists(fromNode.lifeline, operation.getKey(), operation.getValue());
+                        asyncSelf.setYCoordinate(e.getY());
+                        break;
+                    case "returnSelf":
+                        try {
+                            operation = parseOperationLabel(messageText);
+                        } catch (InvalidOperationLabel ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        UMLReturnSelfMessage returnSelf = this.sequenceDiagram.createReturnSelfMessageNotExists(fromNode.lifeline, operation.getKey(), operation.getValue());
+                        returnSelf.setYCoordinate(e.getY());
+                        break;
+                    case "return":
+                        UMLReturnMessage returnMessage = this.sequenceDiagram.createReturnMessage(fromNode.lifeline, sq.lifeline, messageText);
+                        returnMessage.setYCoordinate(e.getY());
+                        break;
+                    default:
+                        break;
+                }
+                return getNode(e, fromNode, sq, messageID, messageText);
             }
-
-            */
         }
+        return null;
+    }
 
-
+    private Node getNode(MouseEvent e, SequenceUML fromNode, SequenceUML sq, String messageID, String messageText) {
         Message message = new Message(fromNode.getView().getLayoutX(), e.getY(), sq.getView().getLayoutX(), e.getY(), messageID, messageText);
 
         message.x1Property().bind(fromNode.getView().layoutXProperty());
@@ -614,20 +629,18 @@ public class SequenceController extends Parent {
     }
 
     private boolean getYesNoWindow() {
-        AtomicBoolean status = new AtomicBoolean(false);
+        Boolean status = false;
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Current operation does not exist in the class");
         alert.setContentText("Add operation anyway");
         ButtonType okButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
         ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
         alert.getButtonTypes().setAll(okButton, noButton);
-        alert.showAndWait().ifPresent(type -> {
-            if (type == ButtonType.OK) {
-                status.set(true);
-            }
-        });
-
-        return status.get();
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.orElse(noButton) == okButton){
+            status = true;
+        }
+        return status;
     }
 
     private void timeLineClicked(MouseEvent e, SequenceUML sq) {
@@ -639,14 +652,26 @@ public class SequenceController extends Parent {
             } else if (count == 1) {
                 if (tmpNode == (Node)sq){
                     if(syncMessageAct){
-                        rPane.getChildren().add(createMessage(e, tmpNode, sq, "syncSelf"));
+                        Node message = createMessage(e, tmpNode, sq, "syncSelf");
+                        if (message != null){
+                            rPane.getChildren().add(message);
+                        }
                     }else if(asyncMessageAct){
-                        rPane.getChildren().add(createMessage(e, tmpNode, sq, "asyncSelf"));
+                        Node message = createMessage(e, tmpNode, sq, "asyncSelf");
+                        if (message != null){
+                            rPane.getChildren().add(message);
+                        }
                     }else if(returnMessageAct){
-                        rPane.getChildren().add(createMessage(e, tmpNode, sq, "returnSelf"));
+                        Node message = createMessage(e, tmpNode, sq, "returnSelf");
+                        if (message != null){
+                            rPane.getChildren().add(message);
+                        }
                     }
                 }else {
-                    rPane.getChildren().add(createMessage(e, tmpNode, sq, messageID));
+                    Node message = createMessage(e, tmpNode, sq, messageID);
+                    if (message != null){
+                        rPane.getChildren().add(message);
+                    }
                 }
                 count = 0;
             }

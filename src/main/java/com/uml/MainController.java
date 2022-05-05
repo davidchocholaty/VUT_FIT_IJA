@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
@@ -490,25 +491,34 @@ public class MainController extends Parent {
     public void handleKeyEvents(KeyEvent event) {
         if (event.getCode() == KeyCode.DELETE && tmpNode.getView() != null) {
             UMLClass cls = diagram.findClass(tmpNode.getView().getId());
-            diagram.deleteAllClassRelationships(cls);
+            if (isUsedForLifeline(cls)){
+                if (getYesNoWindow()){
+                    diagram.deleteAllClassRelationships(cls);
 
-            for (Arrow a : tmpNode.edges) {
-                rPane.getChildren().remove(a);
+                    for (Arrow a : tmpNode.edges) {
+                        rPane.getChildren().remove(a);
+                    }
+
+                    rPane.getChildren().remove(tmpNode.getView());
+                    diagram.deleteClass(cls);
+                }
             }
-
-            rPane.getChildren().remove(tmpNode.getView());
-
-            /*
-             * TODO mazani tridy, ktera je pouzita v sekvencnim diagramu
-             *  -> zjisteni: isUsedForLifeline(cls);
-             *
-             *  -> zda skutecne provest -> ANO / NE
-             *  -> pokud ano -> diagram.deleteClass(cls);
-             *  -> pokud ne -> nic se na backendu ani frontendu neprovede
-             */
-
-            diagram.deleteClass(cls);
         }
+    }
+
+    private boolean getYesNoWindow() {
+        Boolean status = false;
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Current class was used in sequence diagram");
+        alert.setContentText("Delete class anyway");
+        ButtonType okButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+        ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
+        alert.getButtonTypes().setAll(okButton, noButton);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.orElse(noButton) == okButton){
+            status = true;
+        }
+        return status;
     }
 
     /**

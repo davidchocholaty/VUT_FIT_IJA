@@ -25,8 +25,7 @@ public class SequenceUML extends Parent {
     private final SimpleDoubleProperty x2 = new SimpleDoubleProperty();
     private final SimpleDoubleProperty y2 = new SimpleDoubleProperty();
     private Node view;
-    private Node line;
-    private final Polyline dashedLine = new Polyline();
+    public final Polyline dashedLine = new Polyline();
     private final Polyline clickLine = new Polyline();
     private final double LINE_SCALER = 20;
     public final Glow glow = new Glow(0.8);
