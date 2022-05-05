@@ -169,7 +169,7 @@ public class SequenceController extends Parent {
         }else{
             sq = new SequenceUML(x, y, height, rPane, name);
         }
-        sq.nameProperty().bind(new SimpleStringProperty(cls.getName()));
+        sq.nameProperty().bind(cls.getClassName());
 
         if (cls == null){
             sq.getView().getStyleClass().add("CollisionButton");
@@ -235,7 +235,7 @@ public class SequenceController extends Parent {
 
         SequenceUML sq = new SequenceUML(mouseEvent.getX(), DEFAULT_SEQUENCE_HEIGHT,0.0, rPane, nm[0]);
 
-        sq.nameProperty().bind(new SimpleStringProperty(cls.getName()));
+        sq.nameProperty().bind(cls.getClassName());
 
         sq.lifeline = lifeline;
 
@@ -292,7 +292,7 @@ public class SequenceController extends Parent {
         lifeline.setYCoordinate(mouseEvent.getY());
 
         SequenceUML sq = new SequenceUML(mouseEvent.getX(), mouseEvent.getY(),0.0, rPane, nm[0]);
-        sq.nameProperty().bind(new SimpleStringProperty(cls.getName()));
+        sq.nameProperty().bind(cls.getClassName());
         rPane.getChildren().add(sq);
 
         sq.lifeline = lifeline;
