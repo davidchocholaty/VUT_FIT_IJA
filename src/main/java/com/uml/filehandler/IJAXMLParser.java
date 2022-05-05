@@ -1123,7 +1123,9 @@ public class IJAXMLParser {
         long fromId;
         long toId;
         double y;
+
         this.secondLevelOrder = 1;
+        y = 0.0;
 
         /* Label tag */
         node = list.item(this.secondLevelOrder);
