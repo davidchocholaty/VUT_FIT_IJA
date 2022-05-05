@@ -3,6 +3,7 @@ package com.uml;
 import com.uml.classdiagram.ClassDiagram;
 import com.uml.classdiagram.UMLClass;
 import com.uml.customexception.InvalidOperationLabel;
+import com.uml.customexception.OperationNotExists;
 import com.uml.sequencediagram.*;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -386,6 +387,10 @@ public class SequenceController extends Parent {
             } catch (InvalidOperationLabel err) {
                 // TODO
                 err.printStackTrace();
+            } catch (OperationNotExists e) {
+                // Inconsistence
+                // TODO barevne odliseni message
+                e.printStackTrace();
             }
         }
 
@@ -494,6 +499,45 @@ public class SequenceController extends Parent {
         } catch (InvalidOperationLabel err) {
             getWarning("invalid Message text");
             return null;
+        } catch (OperationNotExists err) {
+            /*
+             * TODO, jedna se o zaslani zpravy, ktera neexistuje
+             *  -> zda skutecne provest -> ANO / NE
+             *  -> pokud ano -> nasledujici usek kodu a vytvoreni na frontendu
+             *  -> pokud ne  -> nic se na backendu ani frontendu neprovede
+             */
+
+            /*
+            switch (messageID) {
+                case "sync":
+                    UMLSynchronousMessage sync = this.sequenceDiagram.createSynchronousMessageNotExists(fromNode.lifeline, sq.lifeline, operation.getKey(), operation.getValue());
+                    sync.setYCoordinate(e.getY());
+                    break;
+                case "async":
+                    UMLAsynchronousMessage async = this.sequenceDiagram.createAsynchronousMessageNotExists(fromNode.lifeline, sq.lifeline, operation.getKey(), operation.getValue());
+                    async.setYCoordinate(e.getY());
+                    break;
+                case "syncSelf":
+                    UMLSynchronousSelfMessage syncSelf = this.sequenceDiagram.createSynchronousSelfMessageNotExists(fromNode.lifeline, operation.getKey(), operation.getValue());
+                    syncSelf.setYCoordinate(e.getY());
+                    break;
+                case "asyncSelf":
+                    UMLAsynchronousSelfMessage asyncSelf = this.sequenceDiagram.createAsynchronousSelfMessageNotExists(fromNode.lifeline, operation.getKey(), operation.getValue());
+                    asyncSelf.setYCoordinate(e.getY());
+                    break;
+                case "returnSelf":
+                    UMLReturnSelfMessage returnSelf = this.sequenceDiagram.createReturnSelfMessageNotExists(fromNode.lifeline, operation.getKey(), operation.getValue());
+                    returnSelf.setYCoordinate(e.getY());
+                    break;
+                case "return":
+                    UMLReturnMessage returnMessage = this.sequenceDiagram.createReturnMessage(fromNode.lifeline, sq.lifeline, messageText);
+                    returnMessage.setYCoordinate(e.getY());
+                    break;
+                default:
+                    break;
+            }
+
+            */
         }
 
 
@@ -544,10 +588,11 @@ public class SequenceController extends Parent {
             createArguments = parseCreateLabel(messageText);
             UMLCreateMessage createMessage = this.sequenceDiagram.createCreateMessage(fromNode.lifeline, sq.lifeline, createArguments);
             createMessage.setYCoordinate(e.getY());
-        } catch (InvalidOperationLabel err) {
+        } catch (InvalidOperationLabel | OperationNotExists err) {
             getWarning("Message have invalid operation label");
             return null;
         }
+
         Message message = new Message(fromNode.getView().getLayoutX(), e.getY(), sq.getView().getLayoutX(), e.getY(), messageID, messageText);
         message.x1Property().bind(fromNode.getView().layoutXProperty());
         message.x2Property().bind(sq.getView().layoutXProperty());

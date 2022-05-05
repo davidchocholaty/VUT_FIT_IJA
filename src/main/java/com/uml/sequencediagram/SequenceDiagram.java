@@ -10,7 +10,8 @@
 package com.uml.sequencediagram;
 
 import com.uml.classdiagram.UMLClass;
-import com.uml.customexception.InvalidOperationLabel;
+import com.uml.customexception.OperationNotExists;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -172,18 +173,18 @@ public class SequenceDiagram extends Element {
 	 * @param operation Method name.
 	 * @param operationArguments Method parameters.
 	 * @return New instance of an UMLSynchronousMessage.
-	 * @throws InvalidOperationLabel Invalid operation name or operation arguments.
+	 * @throws OperationNotExists Invalid operation name or operation arguments.
 	 */
 	public UMLSynchronousMessage createSynchronousMessage(UMLLifeline fromLifeline,
 	                                                      UMLLifeline toLifeline,
 														  String operation,
-														  String[] operationArguments) throws InvalidOperationLabel {
+														  String[] operationArguments) throws OperationNotExists {
 		UMLSynchronousMessage newSyncMessage = new UMLSynchronousMessage(fromLifeline, toLifeline);
 
 		boolean exitSuccess = newSyncMessage.setOperation(operation, operationArguments);
 
 		if (!exitSuccess) {
-			throw new InvalidOperationLabel("Invalid synchronous message operation.");
+			throw new OperationNotExists("Invalid synchronous message operation.");
 		}
 
 		this.diagramMessages.add(newSyncMessage);
@@ -199,18 +200,18 @@ public class SequenceDiagram extends Element {
 	 * @param operation Method name.
 	 * @param operationArguments Method parameters.
 	 * @return New instance of an UMLAsynchronousMessage.
-	 * @throws InvalidOperationLabel Invalid operation name or operation arguments.
+	 * @throws OperationNotExists Invalid operation name or operation arguments.
 	 */
 	public UMLAsynchronousMessage createAsynchronousMessage(UMLLifeline fromLifeline,
 	                                                        UMLLifeline toLifeline,
 														    String operation,
-															String[] operationArguments) throws InvalidOperationLabel {
+															String[] operationArguments) throws OperationNotExists {
 		UMLAsynchronousMessage newAsyncMessage = new UMLAsynchronousMessage(fromLifeline, toLifeline);
 		
 		boolean exitSuccess = newAsyncMessage.setOperation(operation, operationArguments);
 
 		if (!exitSuccess) {
-			throw new InvalidOperationLabel("Invalid asynchronous message operation.");
+			throw new OperationNotExists("Invalid asynchronous message operation.");
 		}
 		
 		this.diagramMessages.add(newAsyncMessage);
@@ -225,17 +226,17 @@ public class SequenceDiagram extends Element {
 	 * @param operation Method name.
 	 * @param operationArguments Method parameters.
 	 * @return New instance of an UMLSynchronousSelfMessage.
-	 * @throws InvalidOperationLabel Invalid operation name or operation arguments.
+	 * @throws OperationNotExists Invalid operation name or operation arguments.
 	 */
 	public UMLSynchronousSelfMessage createSynchronousSelfMessage(UMLLifeline lifeline,
 													   String operation,
-													   String[] operationArguments) throws InvalidOperationLabel {
+													   String[] operationArguments) throws OperationNotExists {
 		UMLSynchronousSelfMessage newSelfMessage = new UMLSynchronousSelfMessage(lifeline);
 		
 		boolean exitSuccess = newSelfMessage.setOperation(operation, operationArguments);
 
 		if (!exitSuccess) {
-			throw new InvalidOperationLabel("Invalid self message operation.");
+			throw new OperationNotExists("Invalid self message operation.");
 		}
 		
 		this.diagramMessages.add(newSelfMessage);
@@ -250,17 +251,17 @@ public class SequenceDiagram extends Element {
 	 * @param operation Method name.
 	 * @param operationArguments Method parameters.
 	 * @return New instance of an UMLAsynchronousSelfMessage.
-	 * @throws InvalidOperationLabel Invalid operation name or operation arguments.
+	 * @throws OperationNotExists Invalid operation name or operation arguments.
 	 */
 	public UMLAsynchronousSelfMessage createAsynchronousSelfMessage(UMLLifeline lifeline,
 											                        String operation,
-																    String[] operationArguments) throws InvalidOperationLabel {
+																    String[] operationArguments) throws OperationNotExists {
 		UMLAsynchronousSelfMessage newSelfMessage = new UMLAsynchronousSelfMessage(lifeline);
 
 		boolean exitSuccess = newSelfMessage.setOperation(operation, operationArguments);
 
 		if (!exitSuccess) {
-			throw new InvalidOperationLabel("Invalid self message operation.");
+			throw new OperationNotExists("Invalid self message operation.");
 		}
 
 		this.diagramMessages.add(newSelfMessage);
@@ -275,17 +276,17 @@ public class SequenceDiagram extends Element {
 	 * @param operation Method name.
 	 * @param operationArguments Method parameters.
 	 * @return New instance of an UMLReturnSelfMessage.
-	 * @throws InvalidOperationLabel Invalid operation name or operation arguments.
+	 * @throws OperationNotExists Invalid operation name or operation arguments.
 	 */
 	public UMLReturnSelfMessage createReturnSelfMessage(UMLLifeline lifeline,
 														String operation,
-														String[] operationArguments) throws InvalidOperationLabel {
+														String[] operationArguments) throws OperationNotExists {
 		UMLReturnSelfMessage newSelfMessage = new UMLReturnSelfMessage(lifeline);
 
 		boolean exitSuccess = newSelfMessage.setOperation(operation, operationArguments);
 
 		if (!exitSuccess) {
-			throw new InvalidOperationLabel("Invalid self message operation.");
+			throw new OperationNotExists("Invalid self message operation.");
 		}
 
 		this.diagramMessages.add(newSelfMessage);
@@ -300,17 +301,17 @@ public class SequenceDiagram extends Element {
 	 * @param toLifeline Lifeline where the message ends.
 	 * @param operationArguments Method parameters.
 	 * @return New instance of an UMLCreateMessage.
-	 * @throws InvalidOperationLabel Invalid operation arguments.
+	 * @throws OperationNotExists Invalid operation arguments.
 	 */
 	public UMLCreateMessage createCreateMessage(UMLLifeline fromLifeline,
 												UMLLifeline toLifeline,
-												String[] operationArguments) throws InvalidOperationLabel {
+												String[] operationArguments) throws OperationNotExists {
 		UMLCreateMessage newCreateMessage = new UMLCreateMessage(fromLifeline, toLifeline);
 
 		boolean exitSuccess = newCreateMessage.setOperation("<<create>>", operationArguments);
 
 		if (!exitSuccess) {
-			throw new InvalidOperationLabel("Invalid create message operation arguments.");
+			throw new OperationNotExists("Invalid create message operation arguments.");
 		}
 
 		this.diagramMessages.add(newCreateMessage);
@@ -333,6 +334,139 @@ public class SequenceDiagram extends Element {
 		this.diagramMessages.add(newReturnMessage);
 
 		return newReturnMessage;
+	}
+
+	/*---------------------------------------------------------------------------------------*/
+	/*                       CREATE MESSAGE WITH OPERATION NOT EXISTS                        */
+	/*---------------------------------------------------------------------------------------*/
+
+	private String createOperationLabel(String operation, String[] operationArguments) {
+		StringBuilder label = new StringBuilder();
+
+		for (int i = 0; i < operationArguments.length; i++) {
+			label.append(operationArguments[i]);
+			label.append(", ");
+		}
+
+		return operation + "(" + label.substring(0, label.length() - 2) + ")";
+	}
+
+	/**
+	 * Creates an instance of the UML synchronous message and inserts it into the diagram.
+	 *
+	 * @param fromLifeline Lifeline where the message starts.
+	 * @param toLifeline Lifeline where the message ends.
+	 * @param operation Method name.
+	 * @param operationArguments Method parameters.
+	 * @return New instance of an UMLSynchronousMessage.
+	 */
+	public UMLSynchronousMessage createSynchronousMessageNotExists(UMLLifeline fromLifeline,
+														           UMLLifeline toLifeline,
+														           String operation,
+														           String[] operationArguments) {
+		UMLSynchronousMessage newSyncMessage = new UMLSynchronousMessage(fromLifeline, toLifeline);
+		this.diagramMessages.add(newSyncMessage);
+
+		newSyncMessage.setLabel(createOperationLabel(operation, operationArguments));
+
+		return newSyncMessage;
+	}
+
+	/**
+	 * Creates an instance of the UML asynchronous message and inserts it into the diagram.
+	 *
+	 * @param fromLifeline Lifeline where the message starts.
+	 * @param toLifeline Lifeline where the message ends.
+	 * @param operation Method name.
+	 * @param operationArguments Method parameters.
+	 * @return New instance of an UMLAsynchronousMessage.
+	 */
+	public UMLAsynchronousMessage createAsynchronousMessageNotExists(UMLLifeline fromLifeline,
+															         UMLLifeline toLifeline,
+															         String operation,
+															         String[] operationArguments) {
+		UMLAsynchronousMessage newAsyncMessage = new UMLAsynchronousMessage(fromLifeline, toLifeline);
+		this.diagramMessages.add(newAsyncMessage);
+
+		newAsyncMessage.setLabel(createOperationLabel(operation, operationArguments));
+
+		return newAsyncMessage;
+	}
+
+	/**
+	 * Creates an instance of the UML synchronous self message and inserts it into the diagram.
+	 *
+	 * @param lifeline Lifeline where the message starts and ends.
+	 * @param operation Method name.
+	 * @param operationArguments Method parameters.
+	 * @return New instance of an UMLSynchronousSelfMessage.
+	 */
+	public UMLSynchronousSelfMessage createSynchronousSelfMessageNotExists(UMLLifeline lifeline,
+																           String operation,
+																           String[] operationArguments) {
+		UMLSynchronousSelfMessage newSelfMessage = new UMLSynchronousSelfMessage(lifeline);
+		this.diagramMessages.add(newSelfMessage);
+
+		newSelfMessage.setLabel(createOperationLabel(operation, operationArguments));
+
+		return newSelfMessage;
+	}
+
+	/**
+	 * Creates an instance of the UML asynchronous self message and inserts it into the diagram.
+	 *
+	 * @param lifeline Lifeline where the message starts and ends.
+	 * @param operation Method name.
+	 * @param operationArguments Method parameters.
+	 * @return New instance of an UMLAsynchronousSelfMessage.
+	 */
+	public UMLAsynchronousSelfMessage createAsynchronousSelfMessageNotExists(UMLLifeline lifeline,
+																	         String operation,
+																	         String[] operationArguments) {
+		UMLAsynchronousSelfMessage newSelfMessage = new UMLAsynchronousSelfMessage(lifeline);
+		this.diagramMessages.add(newSelfMessage);
+
+		newSelfMessage.setLabel(createOperationLabel(operation, operationArguments));
+
+		return newSelfMessage;
+	}
+
+	/**
+	 * Creates an instance of the UML return self message and inserts it into the diagram.
+	 *
+	 * @param lifeline Lifeline where the message starts and ends.
+	 * @param operation Method name.
+	 * @param operationArguments Method parameters.
+	 * @return New instance of an UMLReturnSelfMessage.
+	 */
+	public UMLReturnSelfMessage createReturnSelfMessageNotExists(UMLLifeline lifeline,
+														         String operation,
+														         String[] operationArguments) {
+		UMLReturnSelfMessage newSelfMessage = new UMLReturnSelfMessage(lifeline);
+		this.diagramMessages.add(newSelfMessage);
+
+		newSelfMessage.setLabel(createOperationLabel(operation, operationArguments));
+
+		return newSelfMessage;
+	}
+
+	/**
+	 * Creates an instance of the UML create message and inserts it into the diagram.
+	 *
+	 * @param fromLifeline Lifeline where the message starts.
+	 * @param toLifeline Lifeline where the message ends.
+	 * @param operationArguments Method parameters.
+	 * @return New instance of an UMLCreateMessage.
+	 */
+	public UMLCreateMessage createCreateMessageNotExists(UMLLifeline fromLifeline,
+												         UMLLifeline toLifeline,
+												         String[] operationArguments) {
+		UMLCreateMessage newCreateMessage = new UMLCreateMessage(fromLifeline, toLifeline);
+		this.diagramMessages.add(newCreateMessage);
+
+		newCreateMessage.setLabel(createOperationLabel("<<create>>", operationArguments));
+
+		return newCreateMessage;
 	}
 
 	/**

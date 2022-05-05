@@ -470,8 +470,20 @@ public class MainController extends Parent {
         }
     }
 
+    private boolean isUsedForLifeline(UMLClass cls) {
+        for (SequenceDiagram currentDiagram : this.sequenceDiagrams) {
+            for (UMLLifeline currentLifeline : currentDiagram.getLifelines()) {
+                if (currentLifeline.getObjectClass().equals(cls)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     /**
-     * Records the execution of the element delete action
+     * Records the execution of the element delete action.
      *
      * @param event Event.
      */
@@ -485,6 +497,15 @@ public class MainController extends Parent {
             }
 
             rPane.getChildren().remove(tmpNode.getView());
+
+            /*
+             * TODO mazani tridy, ktera je pouzita v sekvencnim diagramu
+             *  -> zjisteni: isUsedForLifeline(cls);
+             *
+             *  -> zda skutecne provest -> ANO / NE
+             *  -> pokud ano -> diagram.deleteClass(cls);
+             *  -> pokud ne -> nic se na backendu ani frontendu neprovede
+             */
 
             diagram.deleteClass(cls);
         }
