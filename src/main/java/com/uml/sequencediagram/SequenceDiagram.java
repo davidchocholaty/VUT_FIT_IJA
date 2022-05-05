@@ -340,6 +340,13 @@ public class SequenceDiagram extends Element {
 	/*                       CREATE MESSAGE WITH OPERATION NOT EXISTS                        */
 	/*---------------------------------------------------------------------------------------*/
 
+	/**
+	 * Creates operation label by operation name and operation arguments.
+	 *
+	 * @param operation Operation name.
+	 * @param operationArguments Operation arguments.
+	 * @return Operation in format name(arguments separated with comma).
+	 */
 	private String createOperationLabel(String operation, String[] operationArguments) {
 		StringBuilder label = new StringBuilder();
 
@@ -352,7 +359,8 @@ public class SequenceDiagram extends Element {
 	}
 
 	/**
-	 * Creates an instance of the UML synchronous message and inserts it into the diagram.
+	 * Creates an instance of the UML synchronous message and inserts it into the diagram
+	 * when operation does not exist in class.
 	 *
 	 * @param fromLifeline Lifeline where the message starts.
 	 * @param toLifeline Lifeline where the message ends.
@@ -373,7 +381,8 @@ public class SequenceDiagram extends Element {
 	}
 
 	/**
-	 * Creates an instance of the UML asynchronous message and inserts it into the diagram.
+	 * Creates an instance of the UML asynchronous message and inserts it into the diagram
+	 * when operation does not exist in class.
 	 *
 	 * @param fromLifeline Lifeline where the message starts.
 	 * @param toLifeline Lifeline where the message ends.
@@ -394,7 +403,8 @@ public class SequenceDiagram extends Element {
 	}
 
 	/**
-	 * Creates an instance of the UML synchronous self message and inserts it into the diagram.
+	 * Creates an instance of the UML synchronous self message and inserts it into the diagram
+	 * when operation does not exist in class.
 	 *
 	 * @param lifeline Lifeline where the message starts and ends.
 	 * @param operation Method name.
@@ -413,7 +423,8 @@ public class SequenceDiagram extends Element {
 	}
 
 	/**
-	 * Creates an instance of the UML asynchronous self message and inserts it into the diagram.
+	 * Creates an instance of the UML asynchronous self message and inserts it into the diagram
+	 * when operation does not exist in class.
 	 *
 	 * @param lifeline Lifeline where the message starts and ends.
 	 * @param operation Method name.
@@ -432,7 +443,8 @@ public class SequenceDiagram extends Element {
 	}
 
 	/**
-	 * Creates an instance of the UML return self message and inserts it into the diagram.
+	 * Creates an instance of the UML return self message and inserts it into the diagram
+	 * when operation does not exist in class.
 	 *
 	 * @param lifeline Lifeline where the message starts and ends.
 	 * @param operation Method name.
@@ -451,7 +463,8 @@ public class SequenceDiagram extends Element {
 	}
 
 	/**
-	 * Creates an instance of the UML create message and inserts it into the diagram.
+	 * Creates an instance of the UML create message and inserts it into the diagram
+	 * when operation does not exist in class.
 	 *
 	 * @param fromLifeline Lifeline where the message starts.
 	 * @param toLifeline Lifeline where the message ends.
@@ -564,6 +577,9 @@ public class SequenceDiagram extends Element {
 		return false;
 	}
 
+	/**
+	 * Restore unique identifier for lifeline to default value (0).
+	 */
 	public static void restoreLifelineId() {
 		UMLLifeline.restoreId();
 	}

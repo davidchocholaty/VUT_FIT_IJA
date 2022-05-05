@@ -47,6 +47,12 @@ public class UMLLifeline {
 		return this.id;
 	}
 
+	/**
+	 * Restore unique lifeline identifier to default value (0).
+	 * <p>
+	 *     Following lifelines identifiers order will starts with 0.
+	 * </p>
+	 */
 	public static void restoreId() {
 		nextId = 0;
 	}

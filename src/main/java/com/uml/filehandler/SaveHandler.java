@@ -201,6 +201,12 @@ public class SaveHandler {
         }
     }
 
+    /**
+     * Add is interface tag.
+     *
+     * @param diagramClass Class element.
+     * @param currentClass Current class to be an interface.
+     */
     private void addIsInterfaceTag(Element diagramClass, UMLClass currentClass) {
         Element interfaceTag;
 
@@ -937,13 +943,25 @@ public class SaveHandler {
         diagramDestroy.appendChild(yCoordinate);
         yCoordinate.setTextContent(Double.toString(currentDestroy.getYCoordinate()));
     }
-    
+
+    /**
+     * Add all sequence diagram activation tags.
+     *
+     * @param sequenceDiagramElement Sequence diagram element.
+     * @param diagramActivations All sequence diagram activations.
+     */
     private void addActivationTags(Element sequenceDiagramElement, List<UMLActivation> diagramActivations) {
         for (UMLActivation currentActivation : diagramActivations) {
             addActivationTag(sequenceDiagramElement, currentActivation);
         }
     }
 
+    /**
+     * Add activation tag.
+     *
+     * @param sequenceDiagramElement Sequence diagram element.
+     * @param currentActivation Current activation to be saved.
+     */
     private void addActivationTag(Element sequenceDiagramElement, UMLActivation currentActivation) {
         Element diagramActivation;
 
@@ -955,6 +973,12 @@ public class SaveHandler {
         addActivationYCoordinateTags(diagramActivation, currentActivation);
     }
 
+    /**
+     * Add lifeline reference tag for an activation.
+     *
+     * @param diagramActivation Current activation element.
+     * @param currentActivation Current activation used in sequence diagram.
+     */
     private void addLifelineReferenceTag(Element diagramActivation, UMLActivation currentActivation) {
         Element lifeline;
 
@@ -965,6 +989,15 @@ public class SaveHandler {
         lifeline.setTextContent(currentActivation.getLifeline().getObjectClass().getName());
     }
 
+    /**
+     * Add both activation y coordinates.
+     * <p>
+     *     Method adds start and end y coordinate for activation on a lifeline.
+     * </p>
+     *
+     * @param diagramActivation Activation element.
+     * @param currentActivation Current activation to be saved.
+     */
     private void addActivationYCoordinateTags(Element diagramActivation, UMLActivation currentActivation) {
         Element yCoordinate;
 

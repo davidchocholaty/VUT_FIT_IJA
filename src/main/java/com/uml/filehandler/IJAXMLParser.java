@@ -12,7 +12,6 @@ package com.uml.filehandler;
 import com.uml.*;
 import com.uml.customexception.*;
 import com.uml.sequencediagram.SequenceDiagram;
-import com.uml.sequencediagram.UMLLifeline;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.w3c.dom.*;
@@ -198,6 +197,13 @@ public class IJAXMLParser {
         return null;
     }
 
+    /**
+     * Function returns and instance of SequenceUML (lifeline) with the specified name and identifier.
+     *
+     * @param name Name of lifeline.
+     * @param id Lifeline identifier.
+     * @return Found SequenceUML instance. Null otherwise.
+     */
     private SequenceUML getLifelineByNameAndId(String name, long id) {
         for (SequenceUML currentLifeline : this.diagramLifelines) {
             if (currentLifeline.lifeline.getObjectClass().getName().equals(name) &&
@@ -904,14 +910,6 @@ public class IJAXMLParser {
         String toMultiplicity = null;
         int idx = 1;
 
-        /*
-        final int instLevelTagsCnt = 5;
-
-        if (list.getLength() != instLevelTagsCnt) {
-            throw new IllegalFileFormat("Invalid file syntax.");
-        } else {
-        */
-
         /* fromMultiplicity */
         node = list.item(idx);
         idx += 2;
@@ -1254,10 +1252,6 @@ public class IJAXMLParser {
                 SequenceUML fromLifeline = getLifelineByNameAndId(from, fromId);
                 SequenceUML toLifeline = getLifelineByNameAndId(to, toId);
 
-                //if (fromLifeline == null || toLifeline == null) {
-                //    throw new IllegalFileFormat("Invalid file syntax.");
-                //}
-
                 this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "return");
             } else {
                 throw new IllegalFileFormat("Invalid file syntax.");
@@ -1289,10 +1283,6 @@ public class IJAXMLParser {
             SequenceUML fromLifeline = getLifelineByNameAndId(from, fromId);
             SequenceUML toLifeline = getLifelineByNameAndId(to, toId);
 
-            //if (fromLifeline == null || toLifeline == null) {
-            //    throw new IllegalFileFormat("Invalid file syntax.");
-            //}
-
             switch (list.item(1).getNodeName()) {
                 case "synchronousMessage":
                     this.sequenceController.createMessageLoaded(fromLifeline, toLifeline, y, label, "sync");
@@ -1318,6 +1308,13 @@ public class IJAXMLParser {
         }
     }
 
+    /**
+     * Parse all destroy tags.
+     *
+     * @throws IllegalFileFormat Invalid file syntax.
+     * @throws NullPointerException Destroy identifier is null.
+     * @throws NumberFormatException Invalid destroy identifier syntax.
+     */
     private void parseDestroys() throws IllegalFileFormat, NullPointerException, NumberFormatException {
         Node node;
 
@@ -1338,6 +1335,14 @@ public class IJAXMLParser {
         }
     }
 
+    /**
+     * Parse destroy tag children.
+     *
+     * @param destroyNode Destroy xml node.
+     * @throws IllegalFileFormat Invalid file syntax.
+     * @throws NullPointerException Destroy identifier is null.
+     * @throws NumberFormatException Invalid destroy identifier syntax.
+     */
     private void parseDestroyChildren(Node destroyNode) throws IllegalFileFormat,
             NullPointerException, NumberFormatException {
         NodeList list = destroyNode.getChildNodes();
@@ -1390,13 +1395,16 @@ public class IJAXMLParser {
         /* Call frontend method for creating destroy element */
         SequenceUML frontLifeline = getLifelineByNameAndId(lifeline, id);
 
-        //if (frontLifeline == null) {
-        //    throw new IllegalFileFormat("Invalid file syntax.");
-        //}
-
         this.sequenceController.createDestroy(frontLifeline, y);
     }
 
+    /**
+     * Parse all activation tags.
+     *
+     * @throws IllegalFileFormat Invalid file syntax.
+     * @throws NullPointerException Activation identifier is null.
+     * @throws NumberFormatException Invalid activation identifier syntax.
+     */
     private void parseActivations() throws IllegalFileFormat, NullPointerException, NumberFormatException {
         Node node;
 
@@ -1417,6 +1425,14 @@ public class IJAXMLParser {
         }
     }
 
+    /**
+     * Parse activation tag children.
+     *
+     * @param activationNode Activation xml node.
+     * @throws IllegalFileFormat Invalid file syntax.
+     * @throws NullPointerException Activation identifier is null.
+     * @throws NumberFormatException Invalid activation identifier syntax.
+     */
     private void parseActivationChildren(Node activationNode) throws IllegalFileFormat,
             NullPointerException, NumberFormatException {
         NodeList list = activationNode.getChildNodes();
@@ -1492,10 +1508,6 @@ public class IJAXMLParser {
 
         /* Call frontend method for creating activation element */
         SequenceUML frontLifeline = getLifelineByNameAndId(lifeline, id);
-
-        //if (frontLifeline == null) {
-        //    throw new IllegalFileFormat("Invalid file syntax.");
-        //}
 
         this.sequenceController.createActivationLoaded(frontLifeline, yStart, yEnd);
     }
