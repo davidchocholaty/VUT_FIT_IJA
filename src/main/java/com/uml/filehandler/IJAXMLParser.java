@@ -168,9 +168,9 @@ public class IJAXMLParser {
                             this.firstLevelOrder = 1;
 
                             parseLifelines();
-                            //parseMessages();
-                            //parseDestroys();
-                            //parseActivations();
+                            parseMessages();
+                            parseDestroys();
+                            parseActivations();
                         }
                     }
 
@@ -1092,12 +1092,6 @@ public class IJAXMLParser {
                     break;
                 }
 
-                String attrValue = parseXmlAttribute(node, "label");
-
-                if (attrValue == null) {
-                    throw new IllegalFileFormat("Invalid file syntax.");
-                }
-
                 if (node.hasChildNodes()) {
                     parseMessageChildren(node);
                 }
@@ -1204,12 +1198,16 @@ public class IJAXMLParser {
             }
         }
 
+        node = list.item(this.secondLevelOrder);
+
         if (node.getNodeType() == Node.ELEMENT_NODE) {
+            System.out.println(node.getNodeName());
             if (node.getNodeName().equals("labelType")) {
                 parseLabelType(node, label, from, to, fromId, toId, y);
             } else if (node.getNodeName().equals("operationType")) {
                 parseOperationType(node, label, from, to, fromId, toId, y);
             } else {
+                System.out.println("here invalid");
                 throw new IllegalFileFormat("Invalid file syntax");
             }
         }
