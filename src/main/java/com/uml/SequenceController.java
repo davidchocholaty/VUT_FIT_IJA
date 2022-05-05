@@ -13,9 +13,8 @@ import javafx.scene.layout.Pane;
 import javafx.util.Pair;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SequenceController extends Parent {
 
@@ -500,6 +499,7 @@ public class SequenceController extends Parent {
             getWarning("invalid Message text");
             return null;
         } catch (OperationNotExists err) {
+            getYesNoWindow();
             /*
              * TODO, jedna se o zaslani zpravy, ktera neexistuje
              *  -> zda skutecne provest -> ANO / NE
@@ -611,6 +611,23 @@ public class SequenceController extends Parent {
         alert.setContentText(warning_message);
 
         alert.showAndWait();
+    }
+
+    private boolean getYesNoWindow() {
+        AtomicBoolean status = new AtomicBoolean(false);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Current operation does not exist in the class");
+        alert.setContentText("Add operation anyway");
+        ButtonType okButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+        ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
+        alert.getButtonTypes().setAll(okButton, noButton);
+        alert.showAndWait().ifPresent(type -> {
+            if (type == ButtonType.OK) {
+                status.set(true);
+            }
+        });
+
+        return status.get();
     }
 
     private void timeLineClicked(MouseEvent e, SequenceUML sq) {
