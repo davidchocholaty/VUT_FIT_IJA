@@ -307,7 +307,7 @@ public class SequenceDiagram extends Element {
 												String[] operationArguments) throws InvalidOperationLabel {
 		UMLCreateMessage newCreateMessage = new UMLCreateMessage(fromLifeline, toLifeline);
 
-		boolean exitSuccess = newCreateMessage.setOperation(null, operationArguments);
+		boolean exitSuccess = newCreateMessage.setOperation("<<create>>", operationArguments);
 
 		if (!exitSuccess) {
 			throw new InvalidOperationLabel("Invalid create message operation arguments.");
