@@ -169,10 +169,10 @@ public class SequenceController extends Parent {
         lifeline.setXCoordinate(x);
 
         SequenceUML sq;
-        if(height == 0.0){
-            sq = new SequenceUML(x, DEFAULT_SEQUENCE_HEIGHT, y,rPane, name);
+        if(y == 0.0){
+            sq = new SequenceUML(x, DEFAULT_SEQUENCE_HEIGHT, height, rPane, name);
         }else{
-            sq = new SequenceUML(x, DEFAULT_SEQUENCE_HEIGHT, y,rPane, name);
+            sq = new SequenceUML(x, y, height, rPane, name);
         }
 
         //TODO nekonzistence
@@ -286,6 +286,7 @@ public class SequenceController extends Parent {
 
         UMLLifeline lifeline = this.sequenceDiagram.createLifeline(cls, 0.0);
         lifeline.setXCoordinate(mouseEvent.getX());
+        lifeline.setYCoordinate(mouseEvent.getY());
 
         SequenceUML sq = new SequenceUML(mouseEvent.getX(), mouseEvent.getY(),0.0, rPane, nm[0]);
         rPane.getChildren().add(sq);
