@@ -335,10 +335,22 @@ public class SequenceDiagram extends Element {
 		return newReturnMessage;
 	}
 
+	/**
+	 * Method obtaining sequence diagram messages.
+	 *
+	 * @return Unmodifiable list with diagram messages.
+	 */
 	public List<UMLMessage> getMessages() {
 		return Collections.unmodifiableList(this.diagramMessages);
 	}
 
+	/**
+	 * Creates an instance of the UML object destroy and inserts it into the diagram.
+	 *
+	 * @param lifeline Lifeline on which is destroy symbol created.
+	 * @param yCoordinate Y coordinate on frontend scene.
+	 * @return New instance of an UMLDestroy.
+	 */
 	public UMLDestroy createDestroy(UMLLifeline lifeline,
 									double yCoordinate) {
 		UMLDestroy newDestroy = new UMLDestroy(lifeline, yCoordinate);
@@ -348,10 +360,21 @@ public class SequenceDiagram extends Element {
 		return newDestroy;
 	}
 
+	/**
+	 * Method obtaining sequence diagram destroys.
+	 *
+	 * @return Unmodifiable list with diagram destroys.
+	 */
 	public List<UMLDestroy> getDestroys() {
 		return Collections.unmodifiableList(this.diagramDestroys);
 	}
 
+	/**
+	 * Delete destroying object symbol from diagram if exists.
+	 *
+	 * @param destroy Destroy symbol to be deleted.
+	 * @return Status of operation (true/false).
+	 */
 	public boolean deleteDestroy(UMLDestroy destroy) {
 		int idx;
 
@@ -363,6 +386,14 @@ public class SequenceDiagram extends Element {
 		return false;
 	}
 
+	/**
+	 * Creates an instance of the UML activation and inserts it into the diagram.
+	 *
+	 * @param lifeline Lifeline on which is activation created.
+	 * @param firstYCoordinate Y coordinate where activation starts on lifeline.
+	 * @param secondYCoordinate Y coordinate where activation ends on lifeline.
+	 * @return New instance of an UMLActivation.
+	 */
 	public UMLActivation createActivation(UMLLifeline lifeline,
 										  double firstYCoordinate,
 										  double secondYCoordinate) {
@@ -373,10 +404,21 @@ public class SequenceDiagram extends Element {
 		return newActivation;
 	}
 
+	/**
+	 * Method for obtaining diagram activations.
+	 *
+	 * @return Unmodifiable list with diagram activations.
+	 */
 	public List<UMLActivation> getActivations() {
 		return Collections.unmodifiableList(this.diagramActivations);
 	}
 
+	/**
+	 * Delete activation from diagram if exists.
+	 *
+	 * @param activation Activation to be deleted.
+	 * @return Status of operation (true/false).
+	 */
 	public boolean deleteActivation(UMLActivation activation) {
 		int idx;
 
