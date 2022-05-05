@@ -5,6 +5,7 @@ import com.uml.classdiagram.UMLClass;
 import com.uml.customexception.InvalidOperationLabel;
 import com.uml.customexception.OperationNotExists;
 import com.uml.sequencediagram.*;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -168,6 +169,7 @@ public class SequenceController extends Parent {
         }else{
             sq = new SequenceUML(x, y, height, rPane, name);
         }
+        sq.nameProperty().bind(new SimpleStringProperty(cls.getName()));
 
         if (cls == null){
             sq.getView().getStyleClass().add("CollisionButton");
@@ -233,6 +235,8 @@ public class SequenceController extends Parent {
 
         SequenceUML sq = new SequenceUML(mouseEvent.getX(), DEFAULT_SEQUENCE_HEIGHT,0.0, rPane, nm[0]);
 
+        sq.nameProperty().bind(new SimpleStringProperty(cls.getName()));
+
         sq.lifeline = lifeline;
 
         sq.getView().setOnMouseDragged(e -> drag(e, sq));
@@ -288,6 +292,7 @@ public class SequenceController extends Parent {
         lifeline.setYCoordinate(mouseEvent.getY());
 
         SequenceUML sq = new SequenceUML(mouseEvent.getX(), mouseEvent.getY(),0.0, rPane, nm[0]);
+        sq.nameProperty().bind(new SimpleStringProperty(cls.getName()));
         rPane.getChildren().add(sq);
 
         sq.lifeline = lifeline;

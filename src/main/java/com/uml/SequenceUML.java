@@ -4,6 +4,8 @@ import com.uml.classdiagram.UMLClass;
 import com.uml.sequencediagram.UMLLifeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -24,7 +26,8 @@ public class SequenceUML extends Parent {
 
     private final SimpleDoubleProperty x2 = new SimpleDoubleProperty();
     private final SimpleDoubleProperty y2 = new SimpleDoubleProperty();
-    private Node view;
+    private final SimpleStringProperty name = new SimpleStringProperty();
+    private Button view;
     public final Polyline dashedLine = new Polyline();
     private final Polyline clickLine = new Polyline();
     private final double LINE_SCALER = 20;
@@ -41,7 +44,7 @@ public class SequenceUML extends Parent {
         this.view = sequence;
     }
 
-    public Node getView(){
+    public Button getView(){
         return this.view;
     }
 
@@ -56,10 +59,12 @@ public class SequenceUML extends Parent {
         }else{
             this.y2.set(y);
         }
+        this.name.set(name);
+        System.out.println(this.name.get());
         FXMLLoader loader = new FXMLLoader(App.class.getResource("sequence_uml.fxml"));
         Button sequence = loader.load();
         setView(sequence);
-        sequence.setText(name);
+        sequence.setText(this.name.get());
         getView().setLayoutX(x);
         getView().setLayoutY(height);
         getView().translateXProperty().bind(sequence.widthProperty().divide(-2));
@@ -80,6 +85,8 @@ public class SequenceUML extends Parent {
             s.addListener((l,o,n) -> update() );
         }
 
+        this.name.addListener((l,o,n) -> update());
+
         update();
     }
 
@@ -91,6 +98,8 @@ public class SequenceUML extends Parent {
         double y1 = start[1];
         double x2 = start[0];
         double y2 = end[1];
+
+        getView().setText(this.name.get());
 
         dashedLine.getPoints().setAll(x1, y1, x2, y2);
         clickLine.getPoints().setAll(x1, y1, x2, y2);
@@ -115,5 +124,17 @@ public class SequenceUML extends Parent {
 
     public void setY2(double y2) {
         this.y2.set(y2);
+    }
+
+    public String getName() {
+        return name.get();
+    }
+
+    public SimpleStringProperty nameProperty() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name.set(name);
     }
 }
