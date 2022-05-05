@@ -47,12 +47,13 @@ public class SequenceUML extends Parent {
     }
 
     public SequenceUML(double x, double height, double y, Pane rpane, String name) throws IOException {
-        System.out.println(height);
         this.x1.set(x);
         this.y1.set(height);
         this.x2.set(x);
+        System.out.println(height);
+        System.out.println(y);
         if(y == 0.0){
-            this.y2.set(rpane.getHeight());
+            this.y2.set(rpane.getScene().getHeight());
         }else{
             this.y2.set(y);
         }

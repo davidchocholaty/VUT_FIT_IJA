@@ -7,10 +7,7 @@ import com.uml.sequencediagram.SequenceDiagram;
 import com.uml.sequencediagram.UMLLifeline;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.TextInputDialog;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.util.Pair;
@@ -301,7 +298,7 @@ public class SequenceController extends Parent {
             try {
                 timeLineDragDone(e);
             } catch (IOException ex) {
-                ex.printStackTrace();
+                getWarning("Non exist file");
             }
         });
         sq.getView().setOnContextMenuRequested(e -> changeHeight(e, sq));
@@ -451,8 +448,8 @@ public class SequenceController extends Parent {
                     break;
             }
         } catch (InvalidOperationLabel err) {
-            // TODO
-            err.printStackTrace();
+            getWarning("invalid Message text");
+            return null;
         }
 
 
@@ -503,8 +500,8 @@ public class SequenceController extends Parent {
             createArguments = parseCreateLabel(messageText);
             this.sequenceDiagram.createCreateMessage(fromNode.lifeline, sq.lifeline, createArguments);
         } catch (InvalidOperationLabel err) {
-            // TODO
-            err.printStackTrace();
+            getWarning("Message have invalid operation label");
+            return null;
         }
         Message message = new Message(fromNode.getView().getLayoutX(), e.getY(), sq.getView().getLayoutX(), e.getY(), messageID, messageText);
         message.x1Property().bind(fromNode.getView().layoutXProperty());
@@ -515,6 +512,15 @@ public class SequenceController extends Parent {
         fromNode.edges.add(message);
         sq.edges.add(message);
         return message;
+    }
+
+    private void getWarning(String warning_message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
+        alert.setHeaderText(null);
+        alert.setContentText(warning_message);
+
+        alert.showAndWait();
     }
 
     private void timeLineClicked(MouseEvent e, SequenceUML sq) {
@@ -582,7 +588,7 @@ public class SequenceController extends Parent {
             try {
                 timeLineDragDone(ev);
             } catch (IOException ex) {
-                ex.printStackTrace();
+                getWarning("Non exist file");
             }
         });
         rPane.getChildren().add(activ);
@@ -600,7 +606,7 @@ public class SequenceController extends Parent {
             try {
                 timeLineDragDone(ev);
             } catch (IOException ex) {
-                ex.printStackTrace();
+                getWarning("non exist file");
             }
         });
 
