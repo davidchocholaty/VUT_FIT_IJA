@@ -51,3 +51,6 @@
     -fx-stroke-width: 2;
     -fx-stroke: #A9A9A9;
 }
+.overriden{
+    -fx-text-fill: blue;
+}

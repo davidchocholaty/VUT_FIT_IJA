@@ -262,11 +262,11 @@ public class MainController extends Parent {
 
         cls.addAttribute(attr);
 
-        if(controller.classArguments.getText().equals("")){
-            controller.classArguments.setText(controller.classArguments.getText() + ((modifier.equals("")) ? "" : modifier) + " " + name + ((dataType.equals("")) ? "" : " : " + dataType) + ((value.equals("")) ? "" : " = " + value));
-        }else {
-            controller.classArguments.setText(controller.classArguments.getText() + "\n" + ((modifier.equals("")) ? "" : modifier) + " " + name + ((dataType.equals("")) ? "" : " : " + dataType) + ((value.equals("")) ? "" : " = " + value));
-        }
+        Label label = new Label();
+        label.setText((modifier.equals("") ? "" : modifier) + " " + name + ((dataType.equals("")) ? "" : " : " + dataType) + ((value.equals("")) ? "" : " = " + value));
+        controller.classArguments.getChildren().add(label);
+        label.setLayoutY(controller.classArgumentPosition);
+        controller.classArgumentPosition += 16;
     }
 
     /**
@@ -331,10 +331,13 @@ public class MainController extends Parent {
 
         cls.addOperation(operation);
 
-        if(controller.classMethods.getText().equals("")){
-            controller.classMethods.setText(controller.classMethods.getText() + ((modifier.equals("")) ? "" : modifier) + " " + name + ((parameters.equals("")) ? "()" : " ( " + parameters + " ) ") + ((ret.equals("")) ? "" : " : " + ret));
-        }else {
-            controller.classMethods.setText(controller.classMethods.getText() + "\n" + ((modifier.equals("")) ? "" : modifier) + " " + name + ((parameters.equals("")) ? "()" : " ( " + parameters + " ) ") + ((ret.equals("")) ? "" : " : " + ret));
+        Label label = new Label();
+        label.setText((modifier.equals("") ? "" : modifier) + " " + name + ((parameters.equals("")) ? "()" : " ( " + parameters + " ) ") + ((ret.equals("")) ? "" : " : " + ret));
+        controller.classMethods.getChildren().add(label);
+        label.setLayoutY(controller.classMethodsPosition);
+        controller.classMethodsPosition += 16;
+        if(diagram.isOverriddenMethod(cls, operation)){
+            label.getStyleClass().add("overriden");
         }
     }
 
