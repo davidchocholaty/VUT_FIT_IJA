@@ -171,8 +171,8 @@ public class IJAXMLParser {
 
                             parseLifelines();
                             parseMessages();
-                            //parseDestroys();
-                            //parseActivations();
+                            parseDestroys();
+                            parseActivations();
                         }
                     }
 
@@ -1323,14 +1323,8 @@ public class IJAXMLParser {
                     break;
                 }
 
-                String attrValue = parseXmlAttribute(node, "name");
-
-                if (attrValue == null) {
-                    throw new IllegalFileFormat("Invalid file syntax.");
-                }
-
                 if (node.hasChildNodes()) {
-                    parseDestroyChildren(node, attrValue);
+                    parseDestroyChildren(node);
                 }
             }
 
@@ -1338,7 +1332,7 @@ public class IJAXMLParser {
         }
     }
 
-    private void parseDestroyChildren(Node destroyNode, String attrValue) throws IllegalFileFormat,
+    private void parseDestroyChildren(Node destroyNode) throws IllegalFileFormat,
             NullPointerException, NumberFormatException {
         NodeList list = destroyNode.getChildNodes();
         Node node;
@@ -1410,14 +1404,8 @@ public class IJAXMLParser {
                     break;
                 }
 
-                String attrValue = parseXmlAttribute(node, "name");
-
-                if (attrValue == null) {
-                    throw new IllegalFileFormat("Invalid file syntax.");
-                }
-
                 if (node.hasChildNodes()) {
-                    parseActivationChildren(node, attrValue);
+                    parseActivationChildren(node);
                 }
             }
 
@@ -1425,7 +1413,7 @@ public class IJAXMLParser {
         }
     }
 
-    private void parseActivationChildren(Node activationNode, String attrValue) throws IllegalFileFormat,
+    private void parseActivationChildren(Node activationNode) throws IllegalFileFormat,
             NullPointerException, NumberFormatException {
         NodeList list = activationNode.getChildNodes();
         Node node;
