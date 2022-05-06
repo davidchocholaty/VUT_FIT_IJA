@@ -1,7 +1,7 @@
 /**
  * Project for course IJA at FIT BUT.
  * <p>
- *     Base element with name.
+ *     Class represents main controller of sequence frontend diagram.
  * </p>
  * @author: David Chocholaty <xchoch09@stud.fit.vutbr.cz>
  * @author: Adam Kankovsky <xkanko00@stud.fit.vutbr.cz>
@@ -14,7 +14,6 @@ import com.uml.classdiagram.UMLClass;
 import com.uml.customexception.InvalidOperationLabel;
 import com.uml.customexception.OperationNotExists;
 import com.uml.sequencediagram.*;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -982,8 +981,8 @@ public class SequenceController extends Parent {
      *     The destroy symbol is created on frontend scene and in backend too.
      *
      * </p>
+     * @param e Event of mouse.
      * @param sq Lifeline on which will be destroy symbol created.
-     * @param y Y coordinate of destroy on the lifeline.
      */
     private Node createDelete(MouseEvent e, SequenceUML sq) {
         Cross cross = new Cross(sq.getView().getLayoutX(), e.getY());
