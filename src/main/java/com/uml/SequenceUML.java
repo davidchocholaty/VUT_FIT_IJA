@@ -9,15 +9,19 @@
 
 package com.uml;
 
+import com.uml.classdiagram.UMLClass;
 import com.uml.sequencediagram.UMLLifeline;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.effect.Glow;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -35,6 +39,7 @@ public class SequenceUML extends Parent {
     private final SimpleDoubleProperty x2 = new SimpleDoubleProperty();
     private final SimpleDoubleProperty y2 = new SimpleDoubleProperty();
     private final SimpleStringProperty name = new SimpleStringProperty();
+    private final SimpleStringProperty instname = new SimpleStringProperty();
     private Button view;
     public final Polyline dashedLine = new Polyline();
     private final Polyline clickLine = new Polyline();
@@ -70,20 +75,7 @@ public class SequenceUML extends Parent {
         return this.view;
     }
 
-    /**
-     * Creates new SequenceUML instance.
-     * <p>
-     *     SequenceUML instance represents new lifeline on application frontend.
-     * </p>
-     *
-     * @param x X coordinate.
-     * @param height Lifeline height.
-     * @param y Y coordinate lifeline indent.
-     * @param rpane Pane.
-     * @param name Lifeline name.
-     * @throws IOException Error occurrence while setting lifeline name.
-     */
-    public SequenceUML(double x, double height, double y, Pane rpane, String name) throws IOException {
+    public SequenceUML(double x, double height, double y, Pane rpane, String instName, String clsName) throws IOException {
         this.x1.set(x);
         this.y1.set(height);
         this.x2.set(x);
@@ -93,12 +85,12 @@ public class SequenceUML extends Parent {
         }else{
             this.y2.set(y);
         }
-        this.name.set(name);
-
+        this.name.set(clsName);
+        this.instname.set(instName);
         FXMLLoader loader = new FXMLLoader(App.class.getResource("sequence_uml.fxml"));
         Button sequence = loader.load();
         setView(sequence);
-        sequence.setText(this.name.get());
+        sequence.setText(instname.get() + " : " + name.get());
         getView().setLayoutX(x);
         getView().setLayoutY(height);
         getView().translateXProperty().bind(sequence.widthProperty().divide(-2));
@@ -136,7 +128,7 @@ public class SequenceUML extends Parent {
         double x2 = start[0];
         double y2 = end[1];
 
-        getView().setText(this.name.get());
+        getView().setText(instname.get() + " : " + name.get());
 
         dashedLine.getPoints().setAll(x1, y1, x2, y2);
         clickLine.getPoints().setAll(x1, y1, x2, y2);

@@ -67,6 +67,10 @@ public class Arrow extends Group {
 
         relA.getStyleClass().add("relLabel");
         relB.getStyleClass().add("relLabel");
+        relA.translateXProperty().bind(relA.heightProperty().divide(-2));
+        relA.translateYProperty().bind(relA.heightProperty().divide(-1));
+        relB.translateXProperty().bind(relB.heightProperty().divide(-2));
+        relB.translateYProperty().bind(relB.heightProperty().divide(-1));
 
         UMLClass classFrom = controller.diagram.findClass(from.getView().getId());
         UMLClass classTo = controller.diagram.findClass(to.getView().getId());
@@ -172,6 +176,10 @@ public class Arrow extends Group {
 
         relA.setText(fromText);
         relB.setText(toText);
+        relA.translateXProperty().bind(relA.heightProperty().divide(-2));
+        relA.translateYProperty().bind(relA.heightProperty().divide(-1));
+        relB.translateXProperty().bind(relB.heightProperty().divide(-2));
+        relB.translateYProperty().bind(relB.heightProperty().divide(-1));
 
         switch (relType){
             case "association":
@@ -224,6 +232,11 @@ public class Arrow extends Group {
 
         relA.getStyleClass().add("relLabel");
         relB.getStyleClass().add("relLabel");
+
+        relA.translateXProperty().bind(relA.heightProperty().divide(-2));
+        relA.translateYProperty().bind(relA.heightProperty().divide(-1));
+        relB.translateXProperty().bind(relB.heightProperty().divide(-2));
+        relB.translateYProperty().bind(relB.heightProperty().divide(-1));
 
         if(relType.equals("inheritance")){
             getChildren().addAll(mainLine, headR);
@@ -343,8 +356,8 @@ public class Arrow extends Group {
         headAG1.getPoints().setAll(x2, y2, x_1, y_1,  x_2, y_2);
         headC1.getPoints().setAll(x2, y2, x_1, y_1,  x_2, y_2);
 
-        relA.setTranslateX(x1);
-        relA.setTranslateY(y1);
+        relA.setLayoutX(x1);
+        relA.setLayoutY(y1);
 
 
         start = scaleRel(x1,y1,x2,y2);
@@ -360,8 +373,8 @@ public class Arrow extends Group {
         headC3.getPoints().setAll(x_1,y_1,x1,y1);
         headC3.getPoints().addAll(x_2, y_2);
 
-        relB.setTranslateX(x1);
-        relB.setTranslateY(y1);
+        relB.setLayoutX(x1);
+        relB.setLayoutY(y1);
     }
 
     /**
