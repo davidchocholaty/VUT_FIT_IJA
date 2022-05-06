@@ -322,12 +322,26 @@ public class ClassController extends Parent{
         alert.showAndWait();
     }
 
+    /**
+     * Sets class abstract.
+     * <p>
+     *     Sets visual artifacts for class name (green color text) and set class abstract in backend.
+     * </p>
+     * @param actionEvent Action event.
+     */
     public void setAbstract(ActionEvent actionEvent) {
         className.getStyleClass().add("abstractClass");
         UMLClass cls = main.diagram.findClass(MainController.tmpNode.getView().getId());
         cls.setAbstract(true);
     }
 
+    /**
+     * Sets class as an interface.
+     * <p>
+     *     Sets visual artifacts for class name (blue color text) and set class interface in backend.
+     * </p>
+     * @param actionEvent Action event.
+     */
     public void setInterface(ActionEvent actionEvent) {
         className.getStyleClass().add("interfaceClass");
         UMLClass cls = main.diagram.findClass(MainController.tmpNode.getView().getId());

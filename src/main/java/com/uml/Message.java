@@ -1,7 +1,7 @@
 /**
  * Project for course IJA at FIT BUT.
  * <p>
- *     Base element with name.
+ *     Class represents UML sequence diagram message on frontend.
  * </p>
  * @author: David Chocholaty <xchoch09@stud.fit.vutbr.cz>
  * @author: Adam Kankovsky <xkanko00@stud.fit.vutbr.cz>
@@ -15,6 +15,9 @@ import javafx.scene.control.Label;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Polyline;
 
+/**
+ * Class represents UML sequence diagram message on frontend.
+ */
 public class Message extends Group {
 
     private static final double ARROW_SCALER = 10;
@@ -40,6 +43,16 @@ public class Message extends Group {
     private final double MESSAGEHEAD_ANGLE = Math.toRadians(30);
     private final double MESSAGEHEAD_LENGTH = 15;
 
+    /**
+     * Create new Message instance.
+     *
+     * @param X1 First x coordinate (start).
+     * @param X2 Second x coordinate (end).
+     * @param Y1 First y coordinate (start).
+     * @param Y2 Second y coordinate (end).
+     * @param messageID Type of message.
+     * @param message Message label.
+     */
     public Message(double X1, double X2, double Y1, double Y2, String messageID, String message){
         this.x1.set(X1);
         this.x2.set(Y1);
@@ -82,6 +95,9 @@ public class Message extends Group {
         update();
     }
 
+    /**
+     * Change message x and y coordinates on update.
+     */
     private void update(){
         double[] start = scale(x1.get(), y1.get(), x2.get(), y2.get());
         double[] end = scale(x2.get(), y2.get(), x1.get(), y1.get());
@@ -143,6 +159,15 @@ public class Message extends Group {
         headR.getPoints().setAll(x2, y2, x_1, y_1,  x_2, y_2);
     }
 
+    /**
+     * Calculate scale for message when is created.
+     *
+     * @param x1 First x coordinate.
+     * @param y1 First y coordinate.
+     * @param x2 Second x coordinate.
+     * @param y2 Second y coordinate.
+     * @return Calculated scale.
+     */
     private double[] scaleCreate(double x1, double y1, double x2, double y2){
         double theta = Math.atan2(y2-y1, x2-x1);
         return new double[]{
@@ -151,6 +176,15 @@ public class Message extends Group {
         };
     }
 
+    /**
+     * Calculate scale for message.
+     *
+     * @param x1 First x coordinate.
+     * @param y1 First y coordinate.
+     * @param x2 Second x coordinate.
+     * @param y2 Second y coordinate.
+     * @return Calculated scale.
+     */
     private double[] scale(double x1, double y1, double x2, double y2){
         double theta = Math.atan2(y2-y1, x2-x1);
         return new double[]{
@@ -159,51 +193,112 @@ public class Message extends Group {
         };
     }
 
+    /**
+     * Returns first x coordinate (start).
+     *
+     * @return Start x coordinate.
+     */
     public double getX1() {
         return x1.get();
     }
 
+    /**
+     * Returns first x simple property coordinate.
+     *
+     * @return First x simple property coordinate.
+     */
     public SimpleDoubleProperty x1Property() {
         return x1;
     }
 
+    /**
+     * Sets new x start coordinate.
+     *
+     * @param x1 New x coordinate.
+     */
     public void setX1(double x1) {
         this.x1.set(x1);
     }
 
+    /**
+     * Returns first y coordinate (start).
+     *
+     * @return Start y coordinate.
+     */
     public double getY1() {
         return y1.get();
     }
 
+    /**
+     * Returns first y simple property coordinate.
+     *
+     * @return First y simple property coordinate.
+     */
     public SimpleDoubleProperty y1Property() {
         return y1;
     }
 
+    /**
+     * Sets new y start coordinate.
+     *
+     * @param y1 New y coordinate.
+     */
     public void setY1(double y1) {
         this.y1.set(y1);
     }
 
+    /**
+     * Returns first x coordinate (end).
+     *
+     * @return End x coordinate.
+     */
     public double getX2() {
         return x2.get();
     }
 
+    /**
+     * Returns second x simple property coordinate.
+     *
+     * @return Second x simple property coordinate.
+     */
     public SimpleDoubleProperty x2Property() {
         return x2;
     }
 
+    /**
+     * Sets new x end coordinate.
+     *
+     * @param x2 New x coordinate.
+     */
     public void setX2(double x2) {
         this.x2.set(x2);
     }
 
+    /**
+     * Returns second y coordinate (end).
+     *
+     * @return End y coordinate.
+     */
     public double getY2() {
         return y2.get();
     }
 
+    /**
+     * Returns second y simple property coordinate.
+     *
+     * @return Second y simple property coordinate.
+     */
     public SimpleDoubleProperty y2Property() {
         return y2;
     }
 
+    /**
+     * Sets new y end coordinate.
+     *
+     * @param y2 New x coordinate.
+     */
     public void setY2(double y2) {
         this.y2.set(y2);
     }
+
 }

@@ -45,8 +45,6 @@ public class Arrow extends Group {
     private final double ARROWHEAD_ANGLE = Math.toRadians(30);
     private final double ARROWHEAD_LENGTH = 15;
 
-    //TODO delsi argument arrow scale
-
     /**
      * Creates new Arrow instance.
      *

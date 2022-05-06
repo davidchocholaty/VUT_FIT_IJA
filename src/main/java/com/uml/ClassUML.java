@@ -76,6 +76,17 @@ public class ClassUML extends Button{
         loaded.setId(name);
     }
 
+    /**
+     * Creates and instance of ClassUML for current main controller.
+     *
+     * @param x Class x coordinate.
+     * @param y Class y coordinate.
+     * @param name Class name.
+     * @param controller Current main controller.
+     * @param isAbstract Boolean value if class is abstract.
+     * @param isInterface Boolean value if class represents an interface.
+     * @throws IOException FXMLLoader error.
+     */
     public ClassUML(double x,
                     double y,
                     String name,

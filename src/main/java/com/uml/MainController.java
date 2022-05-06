@@ -483,6 +483,12 @@ public class MainController extends Parent {
         }
     }
 
+    /**
+     * Returns boolean value if the class is used as a lifeline in sequence diagram.
+     *
+     * @param cls Class for which is lifeline wanted.
+     * @return True if class is used as lifeline. False otherwise.
+     */
     private boolean isUsedForLifeline(UMLClass cls) {
         for (SequenceDiagram currentDiagram : this.sequenceDiagrams) {
             for (UMLLifeline currentLifeline : currentDiagram.getLifelines()) {
@@ -527,8 +533,16 @@ public class MainController extends Parent {
         }
     }
 
+    /**
+     * Show yes or now window.
+     * <p>
+     *     This window is used if user wants to delete class that is used as a lifeline in sequence diagram.
+     * </p>
+     *
+     * @return The option which is chosen by the user. (YES -> true, NO -> false).
+     */
     private boolean getYesNoWindow() {
-        Boolean status = false;
+        boolean status = false;
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Current class was used in sequence diagram");
         alert.setContentText("Delete class anyway");
@@ -630,6 +644,11 @@ public class MainController extends Parent {
 
     }
 
+    /**
+     * Add tab for create new sequence diagram.
+     *
+     * @param event Event.
+     */
     public void addTab(Event event) {
         try{
             String tabText = getSequenceTabName();
@@ -652,6 +671,12 @@ public class MainController extends Parent {
         }
     }
 
+    /**
+     * Add tab for new sequence diagram when diagrams are loaded from file.
+     *
+     * @param name Sequence diagram name (tab name).
+     * @return New sequence controller for sequence diagram.
+     */
     public SequenceController addTabLoad(String name) {
         try{
             String tabText = name;
@@ -678,6 +703,11 @@ public class MainController extends Parent {
         return null;
     }
 
+    /**
+     * Returns user defined name of new tab for sequence diagram.
+     *
+     * @return User defined sequence diagram name.
+     */
     private String getSequenceTabName() {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Tab name");
@@ -693,6 +723,14 @@ public class MainController extends Parent {
         return message[0];
     }
 
+    /**
+     * Undo operation for adding classes into class diagram.
+     * <p>
+     *     Class are backward deleted in reverse order, that was added into the class diagram.
+     * </p>
+     *
+     * @param mouseEvent Event of mouse.
+     */
     public void undo(MouseEvent mouseEvent) {
         if (!this.addedClasses.isEmpty()) {
             ClassUML cls = this.addedClasses.get(this.addedClasses.size() - 1);
