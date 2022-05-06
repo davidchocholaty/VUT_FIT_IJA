@@ -324,8 +324,12 @@ public class IJAXMLParser {
 
         Node node;
         double x, y;
+        boolean isAbstract;
+        boolean isInterface;
         this.secondLevelOrder = 1;
 
+        isAbstract = false;
+        isInterface = false;
         x = 0.0;
         y = 0.0;
 
@@ -333,29 +337,25 @@ public class IJAXMLParser {
         node = list.item(this.secondLevelOrder);
         this.secondLevelOrder += 2;
 
-        /*
         if (node.getNodeType() == Node.ELEMENT_NODE) {
-            if (!node.getNodeName().equals("abstract")) {
+            if (!node.getNodeName().equals("isAbstract")) {
                 throw new IllegalFileFormat("Invalid file syntax.");
             } else {
-
+                isAbstract = Boolean.parseBoolean(node.getTextContent());
             }
         }
-        */
 
         /* isInterface tag */
         node = list.item(this.secondLevelOrder);
         this.secondLevelOrder += 2;
 
-        /*
         if (node.getNodeType() == Node.ELEMENT_NODE) {
-            if (!node.getNodeName().equals("interface")) {
+            if (!node.getNodeName().equals("isInterface")) {
                 throw new IllegalFileFormat("Invalid file syntax.");
             } else {
-
+                isInterface = Boolean.parseBoolean(node.getTextContent());
             }
         }
-        */
 
         /* xCoordinate tag */
         node = list.item(this.secondLevelOrder);
@@ -382,7 +382,7 @@ public class IJAXMLParser {
         }
 
         /* Call frontend method for creating class element */
-        ClassUML el = this.controller.createElement(x, y, attrValue);
+        ClassUML el = this.controller.createElement(x, y, attrValue, isAbstract, isInterface);
         this.diagramClasses.add(el);
         this.controller.addElement(el);
 

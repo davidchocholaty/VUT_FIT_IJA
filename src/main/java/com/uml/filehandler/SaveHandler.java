@@ -167,7 +167,7 @@ public class SaveHandler {
         classDiagramElement.appendChild(diagramClass);
         diagramClass.setAttribute("name", currentClass.getName());
 
-        addAbstractTag(diagramClass, currentClass);
+        addIsAbstractTag(diagramClass, currentClass);
         addIsInterfaceTag(diagramClass, currentClass);
         addXCoordinateTag(diagramClass, currentClass);
         addYCoordinateTag(diagramClass, currentClass);
@@ -187,11 +187,11 @@ public class SaveHandler {
      * @param diagramClass Class element.
      * @param currentClass Current class to be abstract.
      */
-    private void addAbstractTag(Element diagramClass, UMLClass currentClass) {
+    private void addIsAbstractTag(Element diagramClass, UMLClass currentClass) {
         Element abstractTag;
 
         /* Abstract tag */
-        abstractTag = this.doc.createElement("abstract");
+        abstractTag = this.doc.createElement("isAbstract");
         diagramClass.appendChild(abstractTag);
 
         if (currentClass.isAbstract()) {

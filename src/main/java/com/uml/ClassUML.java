@@ -76,6 +76,32 @@ public class ClassUML extends Button{
         loaded.setId(name);
     }
 
+    public ClassUML(double x,
+                    double y,
+                    String name,
+                    MainController controller,
+                    boolean isAbstract,
+                    boolean isInterface) throws IOException {
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("class_uml.fxml"));
+        Button loaded = loader.load();
+        setView(loaded);
+        getView().setLayoutX(x);
+        getView().setLayoutY(y);
+        getView().translateXProperty().bind(loaded.widthProperty().divide(-2));
+        getView().translateYProperty().bind(loaded.heightProperty().divide(-2));
+
+        this.controller = loader.getController();
+        this.controller.setParentController(controller);
+
+        UMLClass cls = controller.diagram.createClass(name);
+        cls.setXCoordinate(x);
+        cls.setYCoordinate(y);
+        cls.setAbstract(isAbstract);
+        cls.setInterface(isInterface);
+
+        loaded.setId(name);
+    }
+
     /**
      * Get class controller.
      *

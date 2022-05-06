@@ -192,14 +192,14 @@ public class MainController extends Parent {
      * @throws IOException FXMLLoader error.
      */
     public ClassUML createElement(double x, double y, String name, boolean abst, boolean inter) throws IOException {
-        ClassUML el = new ClassUML(x, y, name, this);
+        ClassUML el = new ClassUML(x, y, name, this, abst, inter);
 
         ClassController controller = el.getController();
 
         if(abst){
             controller.className.getStyleClass().add("abstractClass");
         }else if(inter){
-            controller.className.getStyleClass().add("inter");
+            controller.className.getStyleClass().add("interfaceClass");
         }
 
         el.getController().className.setText(name);
