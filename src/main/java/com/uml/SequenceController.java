@@ -194,15 +194,15 @@ public class SequenceController extends Parent {
      * @return New lifeline.
      * @throws IOException Error occurrence while setting lifeline name.
      */
-    public SequenceUML addElementLoaded(String name, double height, double x, double y) throws IOException {
+    public SequenceUML addElementLoaded(String name, String preamble, double height, double x, double y) throws IOException {
         UMLClass cls = this.classDiagram.findClass(name);
 
         SequenceUML sq;
 
         if(y == 0.0){
-            sq = new SequenceUML(x, DEFAULT_SEQUENCE_HEIGHT, height, rPane, null, name);
+            sq = new SequenceUML(x, DEFAULT_SEQUENCE_HEIGHT, height, rPane, preamble, name);
         }else{
-            sq = new SequenceUML(x, y, height, rPane, null, name);
+            sq = new SequenceUML(x, y, height, rPane, preamble, name);
         }
         sq.nameProperty().bind(cls.getClassName());
 
@@ -286,8 +286,11 @@ public class SequenceController extends Parent {
 
         UMLClass cls = this.classDiagram.findClass(clsName[0]);
 
+        System.out.println(clsName[0]);
+
         UMLLifeline lifeline = this.sequenceDiagram.createLifeline(cls, 0.0);
         lifeline.setXCoordinate(mouseEvent.getX());
+        lifeline.setPreamble(nameinst[0]);
 
         SequenceUML sq = new SequenceUML(mouseEvent.getX(), DEFAULT_SEQUENCE_HEIGHT,0.0, rPane, nameinst[0], clsName[0]);
 
@@ -368,6 +371,7 @@ public class SequenceController extends Parent {
         UMLLifeline lifeline = this.sequenceDiagram.createLifeline(cls, 0.0);
         lifeline.setXCoordinate(mouseEvent.getX());
         lifeline.setYCoordinate(mouseEvent.getY());
+        lifeline.setPreamble(nameinst[0]);
 
         SequenceUML sq = new SequenceUML(mouseEvent.getX(), mouseEvent.getY(),0.0, rPane, nameinst[0], clsName[0]);
         sq.nameProperty().bind(cls.getClassName());

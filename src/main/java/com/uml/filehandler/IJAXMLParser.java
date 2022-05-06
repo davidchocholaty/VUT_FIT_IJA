@@ -1037,12 +1037,27 @@ public class IJAXMLParser {
         double height;
         double x, y;
         int order;
+        String preamble;
 
         order = 1;
 
         height = 0.0;
         x = 0.0;
         y = 0.0;
+
+        preamble = null;
+
+        /* Preamble tag */
+        node = list.item(order);
+        order += 2;
+
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            if (!node.getNodeName().equals("preamble")) {
+                throw new IllegalFileFormat("Invalid file syntax.");
+            } else {
+                preamble = node.getTextContent();
+            }
+        }
 
         /* Height tag */
         node = list.item(order);
@@ -1082,7 +1097,7 @@ public class IJAXMLParser {
 
         /* Call frontend method for creating lifeline element */
         try {
-            SequenceUML lifeline = this.sequenceController.addElementLoaded(attrValue, height, x, y);
+            SequenceUML lifeline = this.sequenceController.addElementLoaded(attrValue, preamble, height, x, y);
             this.diagramLifelines.add(lifeline);
         } catch (IOException e) {
             throw new IllegalFileFormat("Invalid file syntax.");

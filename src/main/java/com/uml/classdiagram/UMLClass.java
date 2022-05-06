@@ -49,6 +49,7 @@ public class UMLClass extends UMLClassifier {
 		this.xCoordinate = 0.0;
 		this.yCoordinate = 0.0;
 		className = new SimpleStringProperty();
+		className.set(name);
 	}
 
 	/**
