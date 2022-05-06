@@ -301,8 +301,6 @@ public class SequenceController extends Parent {
 
         UMLClass cls = this.classDiagram.findClass(clsName[0]);
 
-        System.out.println(clsName[0]);
-
         UMLLifeline lifeline = this.sequenceDiagram.createLifeline(cls, 0.0);
         lifeline.setXCoordinate(mouseEvent.getX());
         lifeline.setPreamble(nameinst[0]);
@@ -335,7 +333,6 @@ public class SequenceController extends Parent {
      * @throws IOException Input output error.
      */
     private void timeLineDragDone(MouseDragEvent e) throws IOException {
-        System.out.println();
         if(tmpNode != null){
             tmpNode2 = createAndAddElement(e);
             if (tmpNode2 == null){
@@ -384,7 +381,6 @@ public class SequenceController extends Parent {
             if (dialogButton == acceptButtonType){
                 nameinst[0] = instanceName.getText();
                 clsName[0] = className.getValue().toString();
-                System.out.println(clsName[0]);
             }
             return null;
         });
@@ -911,7 +907,6 @@ public class SequenceController extends Parent {
      */
     private void timeLineClicked(MouseEvent e, SequenceUML sq) {
         if (syncMessageAct || asyncMessageAct || returnMessageAct) {
-            System.out.println("click");
             if (count == 0) {
                 tmpNode = sq;
                 count++;
