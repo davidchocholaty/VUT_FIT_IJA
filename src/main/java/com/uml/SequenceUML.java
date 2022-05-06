@@ -27,6 +27,7 @@ public class SequenceUML extends Parent {
     private final SimpleDoubleProperty x2 = new SimpleDoubleProperty();
     private final SimpleDoubleProperty y2 = new SimpleDoubleProperty();
     private final SimpleStringProperty name = new SimpleStringProperty();
+    private final SimpleStringProperty instname = new SimpleStringProperty();
     private Button view;
     public final Polyline dashedLine = new Polyline();
     private final Polyline clickLine = new Polyline();
@@ -48,23 +49,21 @@ public class SequenceUML extends Parent {
         return this.view;
     }
 
-    public SequenceUML(double x, double height, double y, Pane rpane, String name) throws IOException {
+    public SequenceUML(double x, double height, double y, Pane rpane, String instName, String clsName) throws IOException {
         this.x1.set(x);
         this.y1.set(height);
         this.x2.set(x);
-        System.out.println(height);
-        System.out.println(y);
         if(y == 0.0){
             this.y2.set(rpane.getScene().getHeight());
         }else{
             this.y2.set(y);
         }
-        this.name.set(name);
-        System.out.println(this.name.get());
+        this.name.set(clsName);
+        this.instname.set(instName);
         FXMLLoader loader = new FXMLLoader(App.class.getResource("sequence_uml.fxml"));
         Button sequence = loader.load();
         setView(sequence);
-        sequence.setText(this.name.get());
+        sequence.setText(instname.get() + " : " + name.get());
         getView().setLayoutX(x);
         getView().setLayoutY(height);
         getView().translateXProperty().bind(sequence.widthProperty().divide(-2));
@@ -99,7 +98,7 @@ public class SequenceUML extends Parent {
         double x2 = start[0];
         double y2 = end[1];
 
-        getView().setText(this.name.get());
+        getView().setText(instname.get() + " : " + name.get());
 
         dashedLine.getPoints().setAll(x1, y1, x2, y2);
         clickLine.getPoints().setAll(x1, y1, x2, y2);

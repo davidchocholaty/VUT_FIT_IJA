@@ -6,10 +6,12 @@ import com.uml.customexception.InvalidOperationLabel;
 import com.uml.customexception.OperationNotExists;
 import com.uml.sequencediagram.*;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Pair;
 import javafx.scene.paint.Color;
@@ -165,9 +167,9 @@ public class SequenceController extends Parent {
         SequenceUML sq;
 
         if(y == 0.0){
-            sq = new SequenceUML(x, DEFAULT_SEQUENCE_HEIGHT, height, rPane, name);
+            sq = new SequenceUML(x, DEFAULT_SEQUENCE_HEIGHT, height, rPane, null, name);
         }else{
-            sq = new SequenceUML(x, y, height, rPane, name);
+            sq = new SequenceUML(x, y, height, rPane, null, name);
         }
         sq.nameProperty().bind(cls.getClassName());
 
@@ -211,29 +213,50 @@ public class SequenceController extends Parent {
     }
 
     private SequenceUML createElement(MouseEvent mouseEvent) throws IOException {
-        ChoiceDialog dialog = new ChoiceDialog();
-        dialog.setTitle("Class Name");
-        dialog.setHeaderText("Choice class name from list");
-        dialog.setContentText("Class list");
-        dialog.getItems().addAll(this.classDiagram.getClassesNames());
+        final String[] clsName = new String[1];
+        final String[] nameinst = new String[1];
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle("Add Method");
+        ButtonType acceptButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(acceptButtonType, ButtonType.CANCEL);
 
-        Optional<String> name = dialog.showAndWait();
-        String[] nm = {""};
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
 
-        name.ifPresent(s -> {
-            nm[0] = name.get();
+        TextField instanceName = new TextField();
+        instanceName.setPromptText("instance name");
+        ComboBox className = new ComboBox();
+        className.getItems().addAll(this.classDiagram.getClassesNames());
+
+        grid.add(new Label("Instance name :"), 0, 0);
+        grid.add(instanceName, 0, 1);
+        grid.add(new Label("Class name :"), 1, 0);
+        grid.add(className, 1, 1);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == acceptButtonType){
+                nameinst[0] = instanceName.getText();
+                clsName[0] = className.getValue().toString();
+            }
+            return null;
         });
 
-        if(nm[0].equals("")){
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.showAndWait();
+
+        if(clsName[0] != null && clsName[0].equals("")){
             return null;
         }
 
-        UMLClass cls = this.classDiagram.findClass(nm[0]);
+        UMLClass cls = this.classDiagram.findClass(clsName[0]);
 
         UMLLifeline lifeline = this.sequenceDiagram.createLifeline(cls, 0.0);
         lifeline.setXCoordinate(mouseEvent.getX());
 
-        SequenceUML sq = new SequenceUML(mouseEvent.getX(), DEFAULT_SEQUENCE_HEIGHT,0.0, rPane, nm[0]);
+        SequenceUML sq = new SequenceUML(mouseEvent.getX(), DEFAULT_SEQUENCE_HEIGHT,0.0, rPane, nameinst[0], clsName[0]);
 
         sq.nameProperty().bind(cls.getClassName());
 
@@ -268,30 +291,52 @@ public class SequenceController extends Parent {
     }
 
     private SequenceUML createAndAddElement(MouseDragEvent mouseEvent) throws IOException {
-        ChoiceDialog dialog = new ChoiceDialog();
-        dialog.setTitle("Class Name");
-        dialog.setHeaderText("Choice class name from list");
-        dialog.setContentText("Class list");
-        dialog.getItems().addAll(this.classDiagram.getClassesNames());
+        final String[] clsName = new String[1];
+        final String[] nameinst = new String[1];
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle("Add Method");
+        ButtonType acceptButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(acceptButtonType, ButtonType.CANCEL);
 
-        Optional<String> name = dialog.showAndWait();
-        String[] nm = {""};
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
 
-        name.ifPresent(s -> {
-            nm[0] = name.get();
+        TextField instanceName = new TextField();
+        instanceName.setPromptText("instance name");
+        ComboBox className = new ComboBox();
+        className.getItems().addAll(this.classDiagram.getClassesNames());
+
+        grid.add(new Label("Instance name :"), 0, 0);
+        grid.add(instanceName, 0, 1);
+        grid.add(new Label("Class name :"), 1, 0);
+        grid.add(className, 1, 1);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == acceptButtonType){
+                nameinst[0] = instanceName.getText();
+                clsName[0] = className.getValue().toString();
+                System.out.println(clsName[0]);
+            }
+            return null;
         });
 
-        if(nm[0].equals("")){
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.showAndWait();
+
+        if(clsName[0] != null && clsName[0].equals("")){
             return null;
         }
 
-        UMLClass cls = this.classDiagram.findClass(nm[0]);
+        UMLClass cls = this.classDiagram.findClass(clsName[0]);
 
         UMLLifeline lifeline = this.sequenceDiagram.createLifeline(cls, 0.0);
         lifeline.setXCoordinate(mouseEvent.getX());
         lifeline.setYCoordinate(mouseEvent.getY());
 
-        SequenceUML sq = new SequenceUML(mouseEvent.getX(), mouseEvent.getY(),0.0, rPane, nm[0]);
+        SequenceUML sq = new SequenceUML(mouseEvent.getX(), mouseEvent.getY(),0.0, rPane, nameinst[0], clsName[0]);
         sq.nameProperty().bind(cls.getClassName());
         rPane.getChildren().add(sq);
 

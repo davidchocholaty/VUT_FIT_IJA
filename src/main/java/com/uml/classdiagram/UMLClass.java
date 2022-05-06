@@ -306,8 +306,10 @@ public class UMLClass extends UMLClassifier {
 	public void setDefaultName() {
 		if (defaultClassId == 1) {
 			super.setName("Class");
+			this.className.set("Class");
 		} else {
 			super.setName("Class" + String.valueOf(defaultClassId));
+			this.className.set("Class" + String.valueOf(defaultClassId));
 		}
 
 		defaultClassId++;
