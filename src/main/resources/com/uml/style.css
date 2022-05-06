@@ -23,7 +23,6 @@
 .classHead{
     -fx-font-size: 20;
     -fx-alignment: center;
-    -fx-text-alignment: center;
     -fx-font-weight: bold;
 }
 .classBody{
@@ -61,4 +60,10 @@
     -fx-stroke: red;
     -fx-border-color: red;
     -fx-text-fill: red;
+}
+.abstractClass {
+    -fx-text-fill: green;
+}
+.interfaceClass {
+    -fx-text-fill: blue;
 }

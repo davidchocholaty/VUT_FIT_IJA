@@ -37,6 +37,8 @@
             <MenuItem fx:id="Name" mnemonicParsing="false" onAction="#addClassNameAction" text="add class name" />
             <MenuItem fx:id="Arguments" mnemonicParsing="false" onAction="#addArgumentAction" text="add argument" />
             <MenuItem fx:id="Methods" mnemonicParsing="false" onAction="#addMethod" text="add method" />
+            <MenuItem fx:id="Abstract" mnemonicParsing="false" onAction="#setAbstract" text="set abstract" />
+            <MenuItem fx:id="Interface" mnemonicParsing="false" onAction="#setInterface" text="set interface" />
          </items>
       </ContextMenu>
    </contextMenu>

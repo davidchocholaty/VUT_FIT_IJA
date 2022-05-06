@@ -321,4 +321,16 @@ public class ClassController extends Parent{
 
         alert.showAndWait();
     }
+
+    public void setAbstract(ActionEvent actionEvent) {
+        className.getStyleClass().add("abstractClass");
+        UMLClass cls = main.diagram.findClass(MainController.tmpNode.getView().getId());
+        cls.setAbstract(true);
+    }
+
+    public void setInterface(ActionEvent actionEvent) {
+        className.getStyleClass().add("interfaceClass");
+        UMLClass cls = main.diagram.findClass(MainController.tmpNode.getView().getId());
+        cls.setInterface(true);
+    }
 }
