@@ -68,6 +68,8 @@ public class MainController extends Parent {
 
     private List<SequenceDiagram> sequenceDiagrams = new ArrayList<SequenceDiagram>();
 
+    private List<ClassUML> addedClasses = new ArrayList<ClassUML>();
+
     /**
      * Initialize main controller.
      */
@@ -171,6 +173,8 @@ public class MainController extends Parent {
         el.getView().setOnDragDetected(e -> dDetect(e, el));
         el.getView().setOnMouseDragged(e -> drag(e, el));
         el.getView().setOnMousePressed(e -> classClick(e, el));
+
+        this.addedClasses.add(el);
 
         return el;
     }
@@ -681,5 +685,19 @@ public class MainController extends Parent {
     }
 
     public void undo(MouseEvent mouseEvent) {
+        if (!this.addedClasses.isEmpty()) {
+            ClassUML cls = this.addedClasses.get(this.addedClasses.size() - 1);
+            this.addedClasses.remove(cls);
+
+            UMLClass backCls = diagram.findClass(cls.getView().getId());
+            diagram.deleteAllClassRelationships(backCls);
+
+            for (Arrow a : cls.edges) {
+                rPane.getChildren().remove(a);
+            }
+
+            rPane.getChildren().remove(cls.getView());
+            diagram.deleteClass(backCls);
+        }
     }
 }
