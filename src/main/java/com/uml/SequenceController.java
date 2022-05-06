@@ -235,6 +235,12 @@ public class SequenceController extends Parent {
         return sq;
     }
 
+    /**
+     * Add lifeline element.
+     *
+     * @param mouseEvent Event of mous.
+     * @throws IOException Input handling error.
+     */
     public void addElement(MouseEvent mouseEvent) throws IOException {
         /* Lifeline */
         if(sequenceAct) {
@@ -245,6 +251,16 @@ public class SequenceController extends Parent {
         }
     }
 
+    /**
+     * Creates new lifeline.
+     * <p>
+     *     The new lifeline is created on frontend scene and in backend too.
+     * </p>
+     *
+     * @param mouseEvent Event of mouse.
+     * @return New SequenceUML lifeline.
+     * @throws IOException Input handling error.
+     */
     private SequenceUML createElement(MouseEvent mouseEvent) throws IOException {
         final String[] clsName = new String[1];
         final String[] nameinst = new String[1];
@@ -313,6 +329,12 @@ public class SequenceController extends Parent {
         return sq;
     }
 
+    /**
+     * Done timeline drag.
+     *
+     * @param e Mouse drag event.
+     * @throws IOException Input output error.
+     */
     private void timeLineDragDone(MouseDragEvent e) throws IOException {
         System.out.println();
         if(tmpNode != null){
@@ -326,6 +348,16 @@ public class SequenceController extends Parent {
         }
     }
 
+    /**
+     * Create lifeline used in an UML create message.
+     * <p>
+     *     The special difference from a classic lifeline is that this lifeline has set y coordinate indent.
+     * </p>
+     *
+     * @param mouseEvent Event of mouse.
+     * @return New SequenceUML lifeline.
+     * @throws IOException Input handling error.
+     */
     private SequenceUML createAndAddElement(MouseDragEvent mouseEvent) throws IOException {
         final String[] clsName = new String[1];
         final String[] nameinst = new String[1];
@@ -394,6 +426,15 @@ public class SequenceController extends Parent {
         return sq;
     }
 
+    /**
+     * Changes height of lifeline on frontend scene.
+     * <p>
+     *     For change is created a window for the user into which it can be set new height value.
+     * </p>
+     *
+     * @param e Event.
+     * @param sq Frontend lifeline.
+     */
     private void changeHeight(ContextMenuEvent e, SequenceUML sq) {
         TextInputDialog dialog = new TextInputDialog();
 
@@ -420,6 +461,12 @@ public class SequenceController extends Parent {
         }
     }
 
+    /**
+     * Method for detecting of timeline drag.
+     *
+     * @param e Mouse event.
+     * @param sq Frontend lifeline.
+     */
     private void timeLineDragDetected(MouseEvent e, SequenceUML sq){
         if (sequenceCreateAct){
             sq.getClickLine().startFullDrag();
@@ -427,10 +474,29 @@ public class SequenceController extends Parent {
         }
     }
 
+    /**
+     * Method for set frontend lifeline clicked.
+     *
+     * @param e Event of mouse.
+     * @param sq Clicked frontend lifeline.
+     */
     private void sequenceClicked(MouseEvent e, SequenceUML sq) {
         tmpNode = sq;
     }
 
+    /**
+     * Creates a new message when loading sequence diagram from a file.
+     * <p>
+     *     This method creates all message types. Possible types of message are: synchronous, asynchronous,
+     *     synchronous self, asynchronous self, return self, create and return.
+     * </p>
+     *
+     * @param from Lifeline where the message starts.
+     * @param to Lifeline where the message ends.
+     * @param yCoordinate Y coordinate lifeline indent.
+     * @param messageText Message label.
+     * @param messageID Type of message.
+     */
     public void createMessageLoaded(SequenceUML from, SequenceUML to, double yCoordinate, String messageText, String messageID) {
         Pair<String, String[]> operation;
         String[] createArguments;
@@ -475,8 +541,8 @@ public class SequenceController extends Parent {
                     break;
             }
         } catch (InvalidOperationLabel err) {
-            // TODO
-            err.printStackTrace();
+            getWarning("invalid Message text");
+            return;
         } catch (OperationNotExists e) {
             for(Node node : message.getChildrenUnmodifiable()){
                 node.getStyleClass().add("Collision");
@@ -536,6 +602,16 @@ public class SequenceController extends Parent {
     }
 
 
+    /**
+     * Method creates an operation label from string constant.
+     * <p>
+     *     Method split string constant into operation name and operation arguments for further work.
+     * </p>
+     *
+     * @param operationLabel Label string constant.
+     * @return Pair with operation name and operation arguments.
+     * @throws InvalidOperationLabel Invalid syntax of operation label.
+     */
     private Pair<String, String[]> parseOperationLabel(String operationLabel) throws InvalidOperationLabel {
         if (operationLabel == null) {
             throw new InvalidOperationLabel("Invalid message label.");
@@ -562,6 +638,13 @@ public class SequenceController extends Parent {
         return new Pair<String, String[]>(operationName, splitedOperationLabel);
     }
 
+    /**
+     * Method creates a create label arguments from string constant.
+     *
+     * @param createLabel Label string constant.
+     * @return Create label arguments.
+     * @throws InvalidOperationLabel Invalid syntax of create label arguments.
+     */
     private String[] parseCreateLabel(String createLabel) throws InvalidOperationLabel {
         if (createLabel == null) {
             throw new InvalidOperationLabel("Invalid message label.");
@@ -590,6 +673,18 @@ public class SequenceController extends Parent {
         return createLabel.split(",");
     }
 
+    /**
+     * Creates new message.
+     * <p>
+     *     The new message is created on frontend scene (see getNode() method) and in backend too.
+     * </p>
+     *
+     * @param e Event of mouse.
+     * @param fromNode Lifeline where message starts.
+     * @param sq Lifeline where message ends.
+     * @param messageID Type of message.
+     * @return New message.
+     */
     private Node createMessage(MouseEvent e,SequenceUML fromNode, SequenceUML sq, String messageID) {
         Pair<String, String[]> operation;
         String messageText = getMessage(messageID);
@@ -679,6 +774,16 @@ public class SequenceController extends Parent {
         return null;
     }
 
+    /**
+     * Creates new message on frontend scene.
+     *
+     * @param e Event of mouse.
+     * @param fromNode Lifeline where message starts.
+     * @param sq Lifeline where message starts.
+     * @param messageID Lifeline where message ends.
+     * @param messageText Message text.
+     * @return New frontend message.
+     */
     private Node getNode(MouseEvent e, SequenceUML fromNode, SequenceUML sq, String messageID, String messageText) {
         Message message = new Message(fromNode.getView().getLayoutX(), e.getY(), sq.getView().getLayoutX(), e.getY(), messageID, messageText);
 
@@ -690,6 +795,12 @@ public class SequenceController extends Parent {
         return message;
     }
 
+    /**
+     * Returns obtained message label.
+     *
+     * @param messageID Message type.
+     * @return Obtained message label.
+     */
     private String getMessage(String messageID) {
         TextInputDialog dialog;
         if (messageID.equals("return")){
@@ -718,6 +829,18 @@ public class SequenceController extends Parent {
         return message[0];
     }
 
+    /**
+     * Creates new UML create message.
+     * <p>
+     *     New create message is created on frontend scene and in backend too.
+     * </p>
+     *
+     * @param e Event of mouse drag.
+     * @param fromNode Lifeline where message starts.
+     * @param sq New created lifeline (where message ends).
+     * @param messageID Type of message.
+     * @return New create message.
+     */
     private Node createAndAddMessage(MouseDragEvent e, SequenceUML fromNode, SequenceUML sq, String messageID) {
         Pair<String, String[]> operation;
         String[] createArguments;
@@ -743,6 +866,11 @@ public class SequenceController extends Parent {
         return message;
     }
 
+    /**
+     * Show warning window.
+     *
+     * @param warning_message Warning text message.
+     */
     private void getWarning(String warning_message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Warning");
@@ -752,6 +880,15 @@ public class SequenceController extends Parent {
         alert.showAndWait();
     }
 
+    /**
+     * Show yes or now window.
+     * <p>
+     *     This window is used if user wants to create operation that is correct by syntax,
+     *     but does not exist in class from which instance (lifeline) the message starts.
+     * </p>
+     *
+     * @return The option which is chosen by the user. (YES -> true, NO -> false).
+     */
     private boolean getYesNoWindow() {
         Boolean status = false;
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -767,6 +904,12 @@ public class SequenceController extends Parent {
         return status;
     }
 
+    /**
+     * Choose clicked timeline.
+     *
+     * @param e Mouse event.
+     * @param sq Clicked lifeline.
+     */
     private void timeLineClicked(MouseEvent e, SequenceUML sq) {
         if (syncMessageAct || asyncMessageAct || returnMessageAct) {
             System.out.println("click");
@@ -813,21 +956,35 @@ public class SequenceController extends Parent {
         }
     }
 
-    public void createDestroy(SequenceUML sq, double y){
-        if (sq == null) {
-            // Inconsistence
-            // TODO barevne odliseni
-        } else {
-            Cross cross = new Cross(sq.getView().getLayoutX(), y);
-            cross.x1Property().bind(sq.getView().layoutXProperty());
-            sq.setY2(y + 40);
-            sq.edges.add(cross);
-            rPane.getChildren().add(cross);
 
-            this.sequenceDiagram.createDestroy(sq.lifeline, y);
-        }
+    /**
+     * Creates destroy symbol.
+     * <p>
+     *     The destroy symbol is created on frontend scene and in backend too.
+     *
+     * </p>
+     * @param sq Lifeline on which will be destroy symbol created.
+     * @param y Y coordinate of destroy on the lifeline.
+     */
+    public void createDestroy(SequenceUML sq, double y){
+        Cross cross = new Cross(sq.getView().getLayoutX(), y);
+        cross.x1Property().bind(sq.getView().layoutXProperty());
+        sq.setY2(y + 40);
+        sq.edges.add(cross);
+        rPane.getChildren().add(cross);
+
+        this.sequenceDiagram.createDestroy(sq.lifeline, y);
     }
 
+    /**
+     * Creates destroy symbol.
+     * <p>
+     *     The destroy symbol is created on frontend scene and in backend too.
+     *
+     * </p>
+     * @param sq Lifeline on which will be destroy symbol created.
+     * @param y Y coordinate of destroy on the lifeline.
+     */
     private Node createDelete(MouseEvent e, SequenceUML sq) {
         Cross cross = new Cross(sq.getView().getLayoutX(), e.getY());
         cross.x1Property().bind(sq.getView().layoutXProperty());
@@ -839,31 +996,41 @@ public class SequenceController extends Parent {
         return cross;
     }
 
+    /**
+     * Creates an activation while loading sequence diagram from file.
+     *
+     * @param sq Lifeline on which will be activation created.
+     * @param y1 First y coordinate where lifeline starts on the lifeline.
+     * @param y2 Second y coordinate where lifeline ends on the lifeline.
+     */
     public void createActivationLoaded(SequenceUML sq, double y1, double y2){
-        if (sq == null) {
-            // Inconsistence
-            // TODO barevne odliseni
-        } else {
-            ActivationSequenceUML activ = new ActivationSequenceUML(y1, sq.getView().getLayoutX(), y2);
-            activ.x1Property().bind(sq.getView().layoutXProperty());
+        ActivationSequenceUML activ = new ActivationSequenceUML(y1, sq.getView().getLayoutX(), y2);
+        activ.x1Property().bind(sq.getView().layoutXProperty());
 
-            sq.edges.add(activ);
+        sq.edges.add(activ);
 
-            activ.getRectangle().setOnMouseClicked(ev -> timeLineClicked(ev, sq));
-            activ.getRectangle().setOnDragDetected(ev -> timeLineDragDetected(ev, sq));
-            rPane.setOnMouseDragReleased(ev -> {
-                try {
-                    timeLineDragDone(ev);
-                } catch (IOException ex) {
-                    getWarning("Non exist file");
-                }
-            });
-            rPane.getChildren().add(activ);
+        activ.getRectangle().setOnMouseClicked(ev -> timeLineClicked(ev, sq));
+        activ.getRectangle().setOnDragDetected(ev -> timeLineDragDetected(ev, sq));
+        rPane.setOnMouseDragReleased(ev -> {
+            try {
+                timeLineDragDone(ev);
+            } catch (IOException ex) {
+                getWarning("Non exist file");
+            }
+        });
+        rPane.getChildren().add(activ);
 
-            this.sequenceDiagram.createActivation(sq.lifeline, y1, y2);
-        }
+        this.sequenceDiagram.createActivation(sq.lifeline, y1, y2);
     }
 
+    /**
+     * Creates the new activation.
+     *
+     * @param e Event of mouse.
+     * @param activation Activation coordinate.
+     * @param sq Lifeline on which will be activation created.
+     * @return New activation.
+     */
     private Node createActivation(MouseEvent e, Double activation, SequenceUML sq){
         ActivationSequenceUML activ = new ActivationSequenceUML(activation, sq.getView().getLayoutX(), e.getY());
         activ.x1Property().bind(sq.getView().layoutXProperty());
@@ -885,6 +1052,12 @@ public class SequenceController extends Parent {
         return activ;
     }
 
+    /**
+     * Drag with a lifeline on frontend scene.
+     *
+     * @param e Event of mouse.
+     * @param sq Dragged lifeline.
+     */
     private void drag(MouseEvent e, SequenceUML sq) {
         double x = sq.getView().getTranslateX() + e.getX() + sq.getView().getLayoutX();
         sq.getView().setLayoutX(x);
