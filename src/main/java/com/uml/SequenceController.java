@@ -1,3 +1,12 @@
+/**
+ * Project for course IJA at FIT BUT.
+ * <p>
+ *     Base element with name.
+ * </p>
+ * @author: David Chocholaty <xchoch09@stud.fit.vutbr.cz>
+ * @author: Adam Kankovsky <xkanko00@stud.fit.vutbr.cz>
+ */
+
 package com.uml;
 
 import com.uml.classdiagram.ClassDiagram;
@@ -12,11 +21,12 @@ import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.util.Pair;
-import javafx.scene.paint.Color;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Class represents controller for sequence diagram.
+ */
 public class SequenceController extends Parent {
 
     private static final double DEFAULT_SEQUENCE_HEIGHT = 40;
@@ -45,10 +55,18 @@ public class SequenceController extends Parent {
     public SequenceDiagram sequenceDiagram;
     public ClassDiagram classDiagram;
 
+    /**
+     * Sequence controller initialization.
+     */
     public void initialize() {
         group.getToggles().addAll(sequenceButton, sequenceCreateButton, syncMessageButton, asyncMessageButton, returnMessageButton, destroyMessageButton, activationButton);
     }
 
+    /**
+     * Sequence controller activation.
+     *
+     * @param mouseEvent Event of mouse.
+     */
     public void sequenceActive(MouseEvent mouseEvent) {
         if (sequenceButton.isSelected()) {
             sequenceAct = true;
@@ -146,6 +164,11 @@ public class SequenceController extends Parent {
         }
     }
 
+    /**
+     * Method for deleting lifeline.
+     *
+     * @param keyEvent Key event.
+     */
     public void handleKeyEvents(KeyEvent keyEvent) {
         if (keyEvent.getCode() == KeyCode.DELETE && tmpNode.getView() != null) {
             for (Node a : tmpNode.edges) {
@@ -159,6 +182,16 @@ public class SequenceController extends Parent {
         }
     }
 
+    /**
+     * Add lifeline when loading diagram from file.
+     *
+     * @param name Lifeline name.
+     * @param height Lifeline height.
+     * @param x Lifeline x coordinate.
+     * @param y Lifeline y coordinate indent.
+     * @return New lifeline.
+     * @throws IOException Error occurrence while setting lifeline name.
+     */
     public SequenceUML addElementLoaded(String name, double height, double x, double y) throws IOException {
         UMLClass cls = this.classDiagram.findClass(name);
 

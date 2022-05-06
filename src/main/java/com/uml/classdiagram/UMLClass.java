@@ -313,17 +313,22 @@ public class UMLClass extends UMLClassifier {
 		defaultClassId++;
 	}
 
-	@Override
 	/**
 	 * Set new class name.
 	 *
 	 * @param name New class name.
 	 */
+	@Override
 	public void setName(String name) {
 		super.setName(name);
 		this.className.set(name);
 	}
 
+	/**
+	 * Returns the class name for renaming objects in diagrams.
+	 *
+	 * @return Class name.
+	 */
 	public SimpleStringProperty getClassName() {
 		return this.className;
 	}

@@ -10,7 +10,6 @@
 package com.uml;
 
 import com.uml.classdiagram.*;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;

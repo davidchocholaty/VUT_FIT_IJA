@@ -1,9 +1,17 @@
+/**
+ * Project for course IJA at FIT BUT.
+ * <p>
+ *     Base element with name.
+ * </p>
+ * @author: David Chocholaty <xchoch09@stud.fit.vutbr.cz>
+ * @author: Adam Kankovsky <xkanko00@stud.fit.vutbr.cz>
+ */
+
 package com.uml;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.shape.Polyline;
-import javafx.scene.shape.Rectangle;
 
 public class Cross extends Group {
     private static final double CROSS_WIDTH = 5;
