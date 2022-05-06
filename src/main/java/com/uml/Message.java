@@ -1,15 +1,19 @@
+/**
+ * Project for course IJA at FIT BUT.
+ * <p>
+ *     Base element with name.
+ * </p>
+ * @author: David Chocholaty <xchoch09@stud.fit.vutbr.cz>
+ * @author: Adam Kankovsky <xkanko00@stud.fit.vutbr.cz>
+ */
+
 package com.uml;
-import com.uml.classdiagram.UMLClass;
-import com.uml.classdiagram.UMLInheritance;
+
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextInputDialog;
-import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Polyline;
-
-import java.util.Optional;
 
 public class Message extends Group {
 

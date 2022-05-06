@@ -575,9 +575,19 @@ public class SaveHandler {
         sequenceDiagramElement.appendChild(diagramLifeline);
         diagramLifeline.setAttribute("name", currentLifeline.getObjectClass().getName());
 
+        addPreambleTag(diagramLifeline, currentLifeline);
         addHeightTag(diagramLifeline, currentLifeline);
         addXCoordinateTag(diagramLifeline, currentLifeline);
         addYCoordinateTag(diagramLifeline, currentLifeline);
+    }
+
+    private void addPreambleTag(Element diagramLifeline, UMLLifeline currentLifeline) {
+        Element preamble;
+
+        /* preamble tag */
+        preamble = this.doc.createElement("preamble");
+        diagramLifeline.appendChild(preamble);
+        preamble.setTextContent(currentLifeline.getPreamble());
     }
 
     /**

@@ -22,6 +22,7 @@ public class UMLLifeline {
 	private double yCoordinate;
 	private UMLClass objectClass;
 	private double height;
+	private String preamble;
 
 	/**
 	 * Creates an instance representing an UML lifeline model.
@@ -31,6 +32,7 @@ public class UMLLifeline {
 	 */
 	public UMLLifeline(UMLClass objectClass, double height) {		
 		this.objectClass = objectClass;
+		this.preamble = "";
 		this.height = height;
 		this.xCoordinate = 0.0;
 		this.yCoordinate = 0.0;
@@ -55,6 +57,14 @@ public class UMLLifeline {
 	 */
 	public static void restoreId() {
 		nextId = 0;
+	}
+
+	public String getPreamble() {
+		return this.preamble;
+	}
+
+	public void setPreamble(String preamble) {
+		this.preamble = preamble;
 	}
 
 	/**
