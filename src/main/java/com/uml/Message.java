@@ -100,23 +100,23 @@ public class Message extends Group {
         dashedLineSelf.getStrokeDashArray().addAll(15d, 10d);
 
         //self lines
-        mainLineSelf.getPoints().setAll(x2, y2, x2 - SELF_SPACE, y2);
-        dashedLineSelf.getPoints().setAll(x2, y2, x2 - SELF_SPACE, y2);
-        mainLineSelf.getPoints().addAll(x2 - SELF_SPACE, y2 + SELF_SPACE);
-        dashedLineSelf.getPoints().addAll(x2 - SELF_SPACE, y2 + SELF_SPACE);
-        messageTextSelf.setLayoutX(x2 - SELF_SPACE);
-        messageTextSelf.setLayoutY((y2 + y2 + SELF_SPACE)/2);
-        mainLineSelf.getPoints().addAll(x2, y2 + SELF_SPACE);
-        dashedLineSelf.getPoints().addAll(x2, y2 + SELF_SPACE);
+        mainLineSelf.getPoints().setAll(this.x2.get(), this.y2.get(), this.x2.get() - SELF_SPACE, this.y2.get());
+        dashedLineSelf.getPoints().setAll(this.x2.get(), this.y2.get(), this.x2.get() - SELF_SPACE, this.y2.get());
+        mainLineSelf.getPoints().addAll(this.x2.get() - SELF_SPACE, this.y2.get() + SELF_SPACE);
+        dashedLineSelf.getPoints().addAll(this.x2.get() - SELF_SPACE, this.y2.get() + SELF_SPACE);
+        messageTextSelf.setLayoutX(this.x2.get() - SELF_SPACE);
+        messageTextSelf.setLayoutY((this.y2.get() + this.y2.get() + SELF_SPACE)/2);
+        mainLineSelf.getPoints().addAll(this.x2.get(), this.y2.get() + SELF_SPACE);
+        dashedLineSelf.getPoints().addAll(this.x2.get(), this.y2.get() + SELF_SPACE);
 
         double thetaSelf = Math.atan2(y2-y1, x2-x1);
-        double x_1Self = x2 - Math.cos(thetaSelf + MESSAGEHEAD_ANGLE) * MESSAGEHEAD_LENGTH;
-        double y_1Self = y2 - Math.sin(thetaSelf + MESSAGEHEAD_ANGLE) * MESSAGEHEAD_LENGTH;
-        headASSelf.getPoints().setAll(x_1Self,y_1Self + SELF_SPACE,x2,y2 + SELF_SPACE);
-        double x_2Self = x2 - Math.cos(thetaSelf - MESSAGEHEAD_ANGLE) * MESSAGEHEAD_LENGTH;
-        double y_2Self= y2 - Math.sin(thetaSelf - MESSAGEHEAD_ANGLE) * MESSAGEHEAD_LENGTH;
+        double x_1Self = this.x2.get() - Math.cos(thetaSelf + MESSAGEHEAD_ANGLE) * MESSAGEHEAD_LENGTH;
+        double y_1Self = this.y2.get() - Math.sin(thetaSelf + MESSAGEHEAD_ANGLE) * MESSAGEHEAD_LENGTH;
+        headASSelf.getPoints().setAll(x_1Self,y_1Self + SELF_SPACE,this.x2.get(),this.y2.get() + SELF_SPACE);
+        double x_2Self = this.x2.get() - Math.cos(thetaSelf - MESSAGEHEAD_ANGLE) * MESSAGEHEAD_LENGTH;
+        double y_2Self= this.y2.get() - Math.sin(thetaSelf - MESSAGEHEAD_ANGLE) * MESSAGEHEAD_LENGTH;
         headASSelf.getPoints().addAll(x_2Self, y_2Self + SELF_SPACE);
-        headRSelf.getPoints().setAll(x2, y2 + SELF_SPACE, x_1Self, y_1Self + SELF_SPACE,  x_2Self, y_2Self + SELF_SPACE);
+        headRSelf.getPoints().setAll(this.x2.get(), this.y2.get() + SELF_SPACE, x_1Self, y_1Self + SELF_SPACE,  x_2Self, y_2Self + SELF_SPACE);
 
 
         //normal message
