@@ -13,7 +13,7 @@ Po překladu aplikace lze se spustitelný jar archiv nachází ve složce dest. 
 
 java -jar dest/VUT_FIT_IJA-1.0.jar
 
-Po zadání zmíněného příkazu se spustí aplikace IJA UML designer. Nápovědu lze vyvolat pomocí tlačítka Help nacházejícím se v právém horním rohu aplikace. Ukázkový příklad se nachází ve složce data.
+Po zadání zmíněného příkazu se spustí aplikace IJA UML designer. Nápovědu lze vyvolat pomocí tlačítka Help nacházejícím se v právém horním rohu aplikace. Ukázkové příklady se nachází ve složce data.
 
 
 V případě jakýchkoliv dotazů se neváhejte obrátit na autory aplikace na následující e-mailové adrese:
