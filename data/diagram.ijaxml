@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ijaUml>
+    <classDiagram name="Class diagram">
+        <class name="Element">
+            <isAbstract>false</isAbstract>
+            <isInterface>false</isInterface>
+            <xCoordinate>396.0</xCoordinate>
+            <yCoordinate>62.0</yCoordinate>
+            <attribute name="name">
+                <dataType>String</dataType>
+                <visibility>PUBLIC</visibility>
+                <value/>
+            </attribute>
+            <operation name="Element">
+                <dataType/>
+                <visibility>PUBLIC</visibility>
+                <attribute name="name">
+                    <dataType>String</dataType>
+                    <visibility>UNSPECIFIED</visibility>
+                    <value/>
+                </attribute>
+            </operation>
+            <operation name="getName">
+                <dataType>String</dataType>
+                <visibility>PUBLIC</visibility>
+            </operation>
+            <operation name="rename">
+                <dataType>void</dataType>
+                <visibility>PUBLIC</visibility>
+                <attribute name="name">
+                    <dataType>String</dataType>
+                    <visibility>UNSPECIFIED</visibility>
+                    <value/>
+                </attribute>
+            </operation>
+        </class>
+        <class name="UMLAttribute">
+            <isAbstract>false</isAbstract>
+            <isInterface>false</isInterface>
+            <xCoordinate>115.0</xCoordinate>
+            <yCoordinate>280.0</yCoordinate>
+            <attribute name="type">
+                <dataType>UMLClassifier</dataType>
+                <visibility>PUBLIC</visibility>
+                <value/>
+            </attribute>
+            <operation name="getType">
+                <dataType>UMLClassifier</dataType>
+                <visibility>PUBLIC</visibility>
+            </operation>
+        </class>
+        <class name="UMLClassifier">
+            <isAbstract>false</isAbstract>
+            <isInterface>false</isInterface>
+            <xCoordinate>400.0</xCoordinate>
+            <yCoordinate>283.0</yCoordinate>
+            <operation name="UMLClassifier">
+                <dataType/>
+                <visibility>PUBLIC</visibility>
+                <attribute name="name">
+                    <dataType>String</dataType>
+                    <visibility>UNSPECIFIED</visibility>
+                    <value/>
+                </attribute>
+            </operation>
+            <operation name="isUserDefined">
+                <dataType>boolean</dataType>
+                <visibility>PUBLIC</visibility>
+            </operation>
+        </class>
+        <class name="ClassDiagram">
+            <isAbstract>false</isAbstract>
+            <isInterface>false</isInterface>
+            <xCoordinate>796.0</xCoordinate>
+            <yCoordinate>278.0</yCoordinate>
+            <attribute name="classes">
+                <dataType>List&lt;UMLClassifier&gt;</dataType>
+                <visibility>PUBLIC</visibility>
+                <value/>
+            </attribute>
+            <operation name="createClass">
+                <dataType>UMLClass</dataType>
+                <visibility>PUBLIC</visibility>
+                <attribute name="name">
+                    <dataType>String</dataType>
+                    <visibility>UNSPECIFIED</visibility>
+                    <value/>
+                </attribute>
+            </operation>
+            <operation name="classifierForName">
+                <dataType>UMLClassifier</dataType>
+                <visibility>PUBLIC</visibility>
+                <attribute name="name">
+                    <dataType>String</dataType>
+                    <visibility>UNSPECIFIED</visibility>
+                    <value/>
+                </attribute>
+            </operation>
+        </class>
+        <class name="UMLClass">
+            <isAbstract>false</isAbstract>
+            <isInterface>false</isInterface>
+            <xCoordinate>400.0</xCoordinate>
+            <yCoordinate>476.0</yCoordinate>
+            <attribute name="attributes">
+                <dataType>List&lt;UMLAttributes&gt;</dataType>
+                <visibility>PUBLIC</visibility>
+                <value/>
+            </attribute>
+            <operation name="addAttribute">
+                <dataType>boolean</dataType>
+                <visibility>PUBLIC</visibility>
+                <attribute name="attr">
+                    <dataType>UMLAttribute</dataType>
+                    <visibility>UNSPECIFIED</visibility>
+                    <value/>
+                </attribute>
+            </operation>
+            <operation name="getAttrPosition">
+                <dataType>int</dataType>
+                <visibility>PUBLIC</visibility>
+                <attribute name="attr">
+                    <dataType>UMLAttribute</dataType>
+                    <visibility>UNSPECIFIED</visibility>
+                    <value/>
+                </attribute>
+            </operation>
+        </class>
+        <relationship>
+            <from>UMLAttribute</from>
+            <to>UMLClassifier</to>
+            <instanceLevel>
+                <fromMultiplicity>UNSPECIFIED</fromMultiplicity>
+                <toMultiplicity>UNSPECIFIED</toMultiplicity>
+                <association/>
+            </instanceLevel>
+        </relationship>
+        <relationship>
+            <from>ClassDiagram</from>
+            <to>UMLClassifier</to>
+            <instanceLevel>
+                <fromMultiplicity>UNSPECIFIED</fromMultiplicity>
+                <toMultiplicity>UNSPECIFIED</toMultiplicity>
+                <association/>
+            </instanceLevel>
+        </relationship>
+        <relationship>
+            <from>UMLClass</from>
+            <to>UMLAttribute</to>
+            <instanceLevel>
+                <fromMultiplicity>UNSPECIFIED</fromMultiplicity>
+                <toMultiplicity>UNSPECIFIED</toMultiplicity>
+                <association/>
+            </instanceLevel>
+        </relationship>
+        <relationship>
+            <from>UMLClass</from>
+            <to>UMLClassifier</to>
+            <classLevel>
+                <inheritance/>
+            </classLevel>
+        </relationship>
+        <relationship>
+            <from>UMLAttribute</from>
+            <to>Element</to>
+            <classLevel>
+                <inheritance/>
+            </classLevel>
+        </relationship>
+        <relationship>
+            <from>UMLClassifier</from>
+            <to>Element</to>
+            <classLevel>
+                <inheritance/>
+            </classLevel>
+        </relationship>
+        <relationship>
+            <from>ClassDiagram</from>
+            <to>Element</to>
+            <classLevel>
+                <inheritance/>
+            </classLevel>
+        </relationship>
+    </classDiagram>
+    <sequenceDiagram name="SequenceDiagram">
+        <lifeline name="Main">
+            <preamble/>
+            <height>0.0</height>
+            <xCoordinate>169.0</xCoordinate>
+            <yCoordinate>0.0</yCoordinate>
+        </lifeline>
+        <lifeline name="ClassDiagram">
+            <preamble/>
+            <height>0.0</height>
+            <xCoordinate>471.0</xCoordinate>
+            <yCoordinate>0.0</yCoordinate>
+        </lifeline>
+        <lifeline name="UMLClass">
+            <preamble/>
+            <height>0.0</height>
+            <xCoordinate>726.0</xCoordinate>
+            <yCoordinate>163.0</yCoordinate>
+        </lifeline>
+        <lifeline name="UMLAttribute">
+            <preamble/>
+            <height>0.0</height>
+            <xCoordinate>866.0</xCoordinate>
+            <yCoordinate>404.0</yCoordinate>
+        </lifeline>
+        <message>
+            <label>createClass("c1")</label>
+            <from id="0">Main</from>
+            <to id="1">ClassDiagram</to>
+            <yCoordinate>147.0</yCoordinate>
+            <operationType>
+                <synchronousMessage/>
+            </operationType>
+        </message>
+        <message>
+            <label>c1</label>
+            <from id="1">ClassDiagram</from>
+            <to id="0">Main</to>
+            <yCoordinate>228.0</yCoordinate>
+            <labelType>
+                <returnMessage/>
+            </labelType>
+        </message>
+        <message>
+            <label>classifierForName("int")</label>
+            <from id="0">Main</from>
+            <to id="1">ClassDiagram</to>
+            <yCoordinate>300.0</yCoordinate>
+            <operationType>
+                <synchronousMessage/>
+            </operationType>
+        </message>
+        <message>
+            <label>cInt</label>
+            <from id="1">ClassDiagram</from>
+            <to id="0">Main</to>
+            <yCoordinate>371.0</yCoordinate>
+            <labelType>
+                <returnMessage/>
+            </labelType>
+        </message>
+        <message>
+            <label>&lt;&lt;create&gt;&gt;("c1")</label>
+            <from id="1">ClassDiagram</from>
+            <to id="2">UMLClass</to>
+            <yCoordinate>163.0</yCoordinate>
+            <operationType>
+                <createMessage/>
+            </operationType>
+        </message>
+        <message>
+            <label>&lt;&lt;create&gt;&gt;("a1", cInt)</label>
+            <from id="0">Main</from>
+            <to id="3">UMLAttribute</to>
+            <yCoordinate>404.0</yCoordinate>
+            <operationType>
+                <createMessage/>
+            </operationType>
+        </message>
+        <message>
+            <label>addAttribute(a1)</label>
+            <from id="0">Main</from>
+            <to id="2">UMLClass</to>
+            <yCoordinate>451.0</yCoordinate>
+            <operationType>
+                <synchronousMessage/>
+            </operationType>
+        </message>
+        <message>
+            <label>true</label>
+            <from id="2">UMLClass</from>
+            <to id="0">Main</to>
+            <yCoordinate>483.0</yCoordinate>
+            <labelType>
+                <returnMessage/>
+            </labelType>
+        </message>
+        <message>
+            <label>isAbstract()</label>
+            <from id="0">Main</from>
+            <to id="3">UMLAttribute</to>
+            <yCoordinate>521.0</yCoordinate>
+            <operationType>
+                <synchronousMessage/>
+            </operationType>
+        </message>
+        <message>
+            <label>false</label>
+            <from id="3">UMLAttribute</from>
+            <to id="0">Main</to>
+            <yCoordinate>558.0</yCoordinate>
+            <labelType>
+                <returnMessage/>
+            </labelType>
+        </message>
+        <activation>
+            <lifelineReference id="0">Main</lifelineReference>
+            <yCoordinate order="1">130.0</yCoordinate>
+            <yCoordinate order="2">576.0</yCoordinate>
+        </activation>
+        <activation>
+            <lifelineReference id="1">ClassDiagram</lifelineReference>
+            <yCoordinate order="1">144.0</yCoordinate>
+            <yCoordinate order="2">238.0</yCoordinate>
+        </activation>
+        <activation>
+            <lifelineReference id="2">UMLClass</lifelineReference>
+            <yCoordinate order="1">438.0</yCoordinate>
+            <yCoordinate order="2">492.0</yCoordinate>
+        </activation>
+        <activation>
+            <lifelineReference id="3">UMLAttribute</lifelineReference>
+            <yCoordinate order="1">510.0</yCoordinate>
+            <yCoordinate order="2">568.0</yCoordinate>
+        </activation>
+    </sequenceDiagram>
+</ijaUml>

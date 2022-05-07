@@ -21,7 +21,7 @@ import javafx.scene.shape.Polyline;
 public class Message extends Group {
 
     private static final double ARROW_SCALER = 10;
-    private static final double ARROW_SCALER_CREATE = 30;
+    private static final double ARROW_SCALER_CREATE = 75;
     private static final double SELF_SPACE = 30;
     private final SimpleDoubleProperty x1 = new SimpleDoubleProperty();
     private final SimpleDoubleProperty y1 = new SimpleDoubleProperty();

@@ -203,7 +203,10 @@ public class SequenceController extends Parent {
         }else{
             sq = new SequenceUML(x, y, height, rPane, preamble, name);
         }
-        sq.nameProperty().bind(cls.getClassName());
+
+        if (cls != null) {
+            sq.nameProperty().bind(cls.getClassName());
+        }
 
         if (cls == null){
             sq.getView().getStyleClass().add("CollisionButton");

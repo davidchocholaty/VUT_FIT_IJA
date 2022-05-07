@@ -230,35 +230,37 @@ public class ClassController extends Parent{
 
                 String[] splittedMethodParams = methodParams.split(",");
 
-                for (String currentParam : splittedMethodParams) {
-                    if (currentParam.equals("")) {
-                        warning("bad parameter format. You need to write the comma between");
-                        addMethod(actionEvent);
-                        return null;
-                    }
+                if (splittedMethodParams.length > 1 || !splittedMethodParams[0].equals("")) {
+                    for (String currentParam : splittedMethodParams) {
+                        if (currentParam.equals("")) {
+                            warning("bad parameter format. You need to write the comma between");
+                            addMethod(actionEvent);
+                            return null;
+                        }
 
-                    String[] splittedParam = currentParam.split(":");
+                        String[] splittedParam = currentParam.split(":");
 
-                    if (splittedParam.length != 2) {
-                        warning("Bad parameter format.");
-                        addMethod(actionEvent);
-                        return null;
-                    } else if(splittedParam[0].equals("")) {
-                        warning("You need to write parameter name.");
-                        addMethod(actionEvent);
-                        return null;
-                    } else if (splittedParam[1].equals("")) {
-                        warning("You need to write parameter data type.");
-                        addMethod(actionEvent);
-                        return null;
-                    } else {
-                        String paramName = splittedParam[0];
-                        String paramDataType = splittedParam[1];
+                        if (splittedParam.length != 2) {
+                            warning("Bad parameter format.");
+                            addMethod(actionEvent);
+                            return null;
+                        } else if(splittedParam[0].equals("")) {
+                            warning("You need to write parameter name.");
+                            addMethod(actionEvent);
+                            return null;
+                        } else if (splittedParam[1].equals("")) {
+                            warning("You need to write parameter data type.");
+                            addMethod(actionEvent);
+                            return null;
+                        } else {
+                            String paramName = splittedParam[0];
+                            String paramDataType = splittedParam[1];
 
-                        UMLDataType dataType = main.diagram.dataTypeForName(paramDataType);
+                            UMLDataType dataType = main.diagram.dataTypeForName(paramDataType);
 
-                        UMLAttribute attr = new UMLAttribute(paramName, dataType);
-                        classAttributes.add(attr);
+                            UMLAttribute attr = new UMLAttribute(paramName, dataType);
+                            classAttributes.add(attr);
+                        }
                     }
                 }
 

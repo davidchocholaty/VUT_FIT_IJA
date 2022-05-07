@@ -303,24 +303,25 @@ public class MainController extends Parent {
         List<UMLAttribute> classAttributes = new ArrayList<UMLAttribute>();
 
         /* Create method parameters */
+        if (parameters != null && !parameters.equals("")) {
+            String methodParams = parameters;
+            /* Remove all whitespaces and non-visible characters */
+            methodParams = methodParams.replaceAll("\\s+","");
 
-        String methodParams = parameters;
-        /* Remove all whitespaces and non-visible characters */
-        methodParams = methodParams.replaceAll("\\s+","");
+            String[] splitedMethodParams = methodParams.split(",");
 
-        String[] splitedMethodParams = methodParams.split(",");
+            for (String currentParam : splitedMethodParams) {
 
-        for (String currentParam : splitedMethodParams) {
+                String[] splitedParam = currentParam.split(":");
 
-            String[] splitedParam = currentParam.split(":");
+                String paramName = splitedParam[0];
+                String paramDataType = splitedParam[1];
 
-            String paramName = splitedParam[0];
-            String paramDataType = splitedParam[1];
+                UMLDataType dataType = this.diagram.dataTypeForName(paramDataType);
 
-            UMLDataType dataType = this.diagram.dataTypeForName(paramDataType);
-
-            UMLAttribute attr = new UMLAttribute(paramName, dataType);
-            classAttributes.add(attr);
+                UMLAttribute attr = new UMLAttribute(paramName, dataType);
+                classAttributes.add(attr);
+            }
         }
 
         UMLOperation operation = UMLOperation.create(name, retDataType, classAttributes.toArray(new UMLAttribute[classAttributes.size()]));

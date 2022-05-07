@@ -667,30 +667,32 @@ public class IJAXMLParser {
         List<Pair<String, String>> attrList = new ArrayList<Pair<String, String>>();
         StringBuilder params = new StringBuilder();
 
-        while (idx < list.getLength()) {
-            node = list.item(idx);
+        if (idx < list.getLength()) {
+            while (idx < list.getLength()) {
+                node = list.item(idx);
 
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                if (!node.getNodeName().equals("attribute")) {
-                    throw new IllegalFileFormat("Invalid file syntax.");
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    if (!node.getNodeName().equals("attribute")) {
+                        throw new IllegalFileFormat("Invalid file syntax.");
+                    }
+
+                    String attrValue = parseXmlAttribute(node, "name");
+
+                    if (attrValue == null) {
+                        throw new IllegalFileFormat("Invalid file syntax.");
+                    }
+
+                    if (node.hasChildNodes()) {
+                        String dataType = parseOperationArgument(node);
+                        params.append(attrValue).append(" : ").append(dataType).append(", ");
+                    }
                 }
 
-                String attrValue = parseXmlAttribute(node, "name");
-
-                if (attrValue == null) {
-                    throw new IllegalFileFormat("Invalid file syntax.");
-                }
-
-                if (node.hasChildNodes()) {
-                    String dataType = parseOperationArgument(node);
-                    params.append(attrValue).append(" : ").append(dataType).append(", ");
-                }
+                idx += 2;
             }
 
-            idx += 2;
+            params.setLength(params.length() - 2); /* delete last ", " */
         }
-
-        params.setLength(params.length() - 2); /* delete last ", " */
 
         ClassUML cls = this.diagramClasses.get(this.diagramClasses.size() - 1);
         this.controller.addOperation(cls, operName, params.toString(), operRetDataType, operVisibility);
