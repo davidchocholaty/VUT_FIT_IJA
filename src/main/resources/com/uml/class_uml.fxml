@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Button minWidth="100.0" mnemonicParsing="false" styleClass="classElement" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uml.ClassController">
+<Button minWidth="100.0" mnemonicParsing="false" styleClass="classElement" stylesheets="@style.css" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uml.ClassController">
    <graphic>
       <VBox>
          <padding>
