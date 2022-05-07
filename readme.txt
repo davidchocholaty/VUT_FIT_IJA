@@ -11,7 +11,7 @@ mvn package javadoc:javadoc
 
 Po překladu aplikace lze se spustitelný jar archiv nachází ve složce dest. Dále lze aplikaci spustit pomocí zadání následujícího příkazu do terminálu v kořenové složce hierarchie souborů aplikace:
 
-java -jar dest/VUT_FIT_IJA-1.0.jar
+java -jar dest/ija-app.jar
 
 Po zadání zmíněného příkazu se spustí aplikace IJA UML designer. Nápovědu lze vyvolat pomocí tlačítka Help nacházejícím se v právém horním rohu aplikace. Ukázkové příklady se nachází ve složce data.
 
