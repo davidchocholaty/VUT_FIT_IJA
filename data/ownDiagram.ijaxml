@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ijaUml>
+    <classDiagram name="Class diagram">
+        <class name="MyClass">
+            <isAbstract>true</isAbstract>
+            <isInterface>false</isInterface>
+            <xCoordinate>799.0</xCoordinate>
+            <yCoordinate>221.0</yCoordinate>
+        </class>
+        <class name="MyClass2">
+            <isAbstract>false</isAbstract>
+            <isInterface>true</isInterface>
+            <xCoordinate>712.0</xCoordinate>
+            <yCoordinate>511.0</yCoordinate>
+            <attribute name="attr">
+                <dataType>int</dataType>
+                <visibility>PROTECTED</visibility>
+                <value>0</value>
+            </attribute>
+            <attribute name="attr2">
+                <dataType>String</dataType>
+                <visibility>PACKAGE</visibility>
+                <value/>
+            </attribute>
+            <operation name="myMethod">
+                <dataType>long</dataType>
+                <visibility>PROTECTED</visibility>
+                <attribute name="arg1">
+                    <dataType>String</dataType>
+                    <visibility>UNSPECIFIED</visibility>
+                    <value/>
+                </attribute>
+                <attribute name="arg2">
+                    <dataType>double</dataType>
+                    <visibility>UNSPECIFIED</visibility>
+                    <value/>
+                </attribute>
+            </operation>
+        </class>
+        <class name="MyClass3">
+            <isAbstract>false</isAbstract>
+            <isInterface>false</isInterface>
+            <xCoordinate>286.0</xCoordinate>
+            <yCoordinate>101.0</yCoordinate>
+            <attribute name="attr">
+                <dataType>boolean</dataType>
+                <visibility>PRIVATE</visibility>
+                <value>false</value>
+            </attribute>
+            <operation name="my">
+                <dataType>int</dataType>
+                <visibility>UNSPECIFIED</visibility>
+                <attribute name="arg">
+                    <dataType>int</dataType>
+                    <visibility>UNSPECIFIED</visibility>
+                    <value/>
+                </attribute>
+            </operation>
+            <operation name="my2">
+                <dataType>long</dataType>
+                <visibility>UNSPECIFIED</visibility>
+                <attribute name="arg1">
+                    <dataType>int</dataType>
+                    <visibility>UNSPECIFIED</visibility>
+                    <value/>
+                </attribute>
+                <attribute name="arg2">
+                    <dataType>int</dataType>
+                    <visibility>UNSPECIFIED</visibility>
+                    <value/>
+                </attribute>
+            </operation>
+        </class>
+        <class name="MyClass4">
+            <isAbstract>false</isAbstract>
+            <isInterface>false</isInterface>
+            <xCoordinate>143.0</xCoordinate>
+            <yCoordinate>391.0</yCoordinate>
+        </class>
+        <relationship>
+            <from>MyClass2</from>
+            <to>MyClass</to>
+            <instanceLevel>
+                <fromMultiplicity>UNSPECIFIED</fromMultiplicity>
+                <toMultiplicity>UNSPECIFIED</toMultiplicity>
+                <association/>
+            </instanceLevel>
+        </relationship>
+        <relationship>
+            <from>MyClass</from>
+            <to>MyClass3</to>
+            <instanceLevel>
+                <fromMultiplicity>ZERO</fromMultiplicity>
+                <toMultiplicity>ZERO_OR_MANY</toMultiplicity>
+                <association/>
+            </instanceLevel>
+        </relationship>
+        <relationship>
+            <from>MyClass4</from>
+            <to>MyClass3</to>
+            <classLevel>
+                <inheritance/>
+            </classLevel>
+        </relationship>
+        <relationship>
+            <from>MyClass4</from>
+            <to>MyClass</to>
+            <instanceLevel>
+                <fromMultiplicity>ZERO_OR_ONE</fromMultiplicity>
+                <toMultiplicity>ONE_OR_MANY</toMultiplicity>
+                <aggregation/>
+            </instanceLevel>
+        </relationship>
+        <relationship>
+            <from>MyClass4</from>
+            <to>MyClass2</to>
+            <instanceLevel>
+                <fromMultiplicity>UNSPECIFIED</fromMultiplicity>
+                <toMultiplicity>UNSPECIFIED</toMultiplicity>
+                <composition/>
+            </instanceLevel>
+        </relationship>
+    </classDiagram>
+    <sequenceDiagram name="SequenceDiagram1">
+        <lifeline name="MyClass">
+            <preamble/>
+            <height>0.0</height>
+            <xCoordinate>162.0</xCoordinate>
+            <yCoordinate>0.0</yCoordinate>
+        </lifeline>
+        <lifeline name="MyClass2">
+            <preamble/>
+            <height>0.0</height>
+            <xCoordinate>432.0</xCoordinate>
+            <yCoordinate>0.0</yCoordinate>
+        </lifeline>
+        <lifeline name="MyClass3">
+            <preamble/>
+            <height>0.0</height>
+            <xCoordinate>564.0</xCoordinate>
+            <yCoordinate>164.0</yCoordinate>
+        </lifeline>
+        <lifeline name="MyClass4">
+            <preamble>a1</preamble>
+            <height>0.0</height>
+            <xCoordinate>901.0</xCoordinate>
+            <yCoordinate>256.0</yCoordinate>
+        </lifeline>
+        <message>
+            <label>&lt;&lt;create&gt;&gt;()</label>
+            <from id="0">MyClass</from>
+            <to id="2">MyClass3</to>
+            <yCoordinate>164.0</yCoordinate>
+            <operationType>
+                <createMessage/>
+            </operationType>
+        </message>
+        <message>
+            <label>&lt;&lt;create&gt;&gt;("a1")</label>
+            <from id="1">MyClass2</from>
+            <to id="3">MyClass4</to>
+            <yCoordinate>256.0</yCoordinate>
+            <operationType>
+                <createMessage/>
+            </operationType>
+        </message>
+        <message>
+            <label>my2(1, 2)</label>
+            <from id="2">MyClass3</from>
+            <to id="3">MyClass4</to>
+            <yCoordinate>321.0</yCoordinate>
+            <operationType>
+                <synchronousMessage/>
+            </operationType>
+        </message>
+        <message>
+            <label>my(1)</label>
+            <from id="2">MyClass3</from>
+            <to id="3">MyClass4</to>
+            <yCoordinate>401.0</yCoordinate>
+            <operationType>
+                <asynchronousMessage/>
+            </operationType>
+        </message>
+        <message>
+            <label>val</label>
+            <from id="3">MyClass4</from>
+            <to id="2">MyClass3</to>
+            <yCoordinate>366.0</yCoordinate>
+            <labelType>
+                <returnMessage/>
+            </labelType>
+        </message>
+        <message>
+            <label>val2</label>
+            <from id="3">MyClass4</from>
+            <to id="2">MyClass3</to>
+            <yCoordinate>456.0</yCoordinate>
+            <labelType>
+                <returnMessage/>
+            </labelType>
+        </message>
+        <destroy>
+            <lifelineReference id="0">MyClass</lifelineReference>
+            <yCoordinate>475.0</yCoordinate>
+        </destroy>
+        <destroy>
+            <lifelineReference id="1">MyClass2</lifelineReference>
+            <yCoordinate>454.0</yCoordinate>
+        </destroy>
+        <destroy>
+            <lifelineReference id="2">MyClass3</lifelineReference>
+            <yCoordinate>602.0</yCoordinate>
+        </destroy>
+        <activation>
+            <lifelineReference id="2">MyClass3</lifelineReference>
+            <yCoordinate order="1">299.0</yCoordinate>
+            <yCoordinate order="2">474.0</yCoordinate>
+        </activation>
+        <activation>
+            <lifelineReference id="3">MyClass4</lifelineReference>
+            <yCoordinate order="1">305.0</yCoordinate>
+            <yCoordinate order="2">476.0</yCoordinate>
+        </activation>
+        <activation>
+            <lifelineReference id="0">MyClass</lifelineReference>
+            <yCoordinate order="1">140.0</yCoordinate>
+            <yCoordinate order="2">435.0</yCoordinate>
+        </activation>
+        <activation>
+            <lifelineReference id="1">MyClass2</lifelineReference>
+            <yCoordinate order="1">215.0</yCoordinate>
+            <yCoordinate order="2">430.0</yCoordinate>
+        </activation>
+    </sequenceDiagram>
+    <sequenceDiagram name="SequenceDiagram2">
+        <lifeline name="MyClass">
+            <preamble/>
+            <height>0.0</height>
+            <xCoordinate>197.0</xCoordinate>
+            <yCoordinate>0.0</yCoordinate>
+        </lifeline>
+        <lifeline name="MyClass3">
+            <preamble/>
+            <height>0.0</height>
+            <xCoordinate>453.0</xCoordinate>
+            <yCoordinate>0.0</yCoordinate>
+        </lifeline>
+        <lifeline name="MyClass2">
+            <preamble/>
+            <height>0.0</height>
+            <xCoordinate>587.0</xCoordinate>
+            <yCoordinate>190.0</yCoordinate>
+        </lifeline>
+        <message>
+            <label>&lt;&lt;create&gt;&gt;()</label>
+            <from id="4">MyClass</from>
+            <to id="6">MyClass2</to>
+            <yCoordinate>190.0</yCoordinate>
+            <operationType>
+                <createMessage/>
+            </operationType>
+        </message>
+        <destroy>
+            <lifelineReference id="4">MyClass</lifelineReference>
+            <yCoordinate>398.0</yCoordinate>
+        </destroy>
+        <activation>
+            <lifelineReference id="4">MyClass</lifelineReference>
+            <yCoordinate order="1">159.0</yCoordinate>
+            <yCoordinate order="2">367.0</yCoordinate>
+        </activation>
+    </sequenceDiagram>
+</ijaUml>
