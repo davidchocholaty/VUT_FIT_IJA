@@ -3,6 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -10,208 +12,376 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="602.0" prefWidth="856.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="602.0" prefWidth="856.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox alignment="TOP_CENTER" prefHeight="140.0" prefWidth="856.0">
-         <children>
-            <Label alignment="TOP_CENTER" text="Help" textAlignment="CENTER" underline="true">
-               <font>
-                  <Font name="System Bold" size="42.0" />
-               </font>
-               <VBox.margin>
-                  <Insets bottom="20.0" />
-               </VBox.margin>
-            </Label>
-            <HBox prefHeight="100.0" prefWidth="805.0">
-               <children>
-                  <Label text="Commisioned Buttons:">
-                     <font>
-                        <Font name="System Bold" size="24.0" />
-                     </font>
-                  </Label>
-               </children>
-               <VBox.margin>
-                  <Insets bottom="10.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="805.0">
-               <children>
-                  <ImageView fitHeight="150.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../images/icons8-file-30.png" />
-                     </image>
-                  </ImageView>
-                  <Label text=" - Load Button">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                  </Label>
-               </children>
-               <padding>
-                  <Insets left="20.0" />
-               </padding>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="805.0">
-               <children>
-                  <ImageView fitHeight="150.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../images/icons8-save-30.png" />
-                     </image>
-                  </ImageView>
-                  <Label text=" - Save button (you need to type the file extension: *.ijaxml, *.ixl)">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                  </Label>
-               </children>
-               <VBox.margin>
-                  <Insets left="20.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="805.0">
-               <children>
-                  <Label text=" - on the right side there is a menu for events with classes.">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                  </Label>
-               </children>
-               <VBox.margin>
-                  <Insets left="20.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox>
-               <children>
-                  <Label text="Working with classes:">
-                     <font>
-                        <Font name="System Bold" size="24.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets bottom="10.0" />
-                     </HBox.margin>
-                  </Label>
-               </children>
-            </HBox>
-            <HBox prefHeight="91.0" prefWidth="856.0">
-               <children>
-                  <ImageView fitHeight="150.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../images/class.png" />
-                     </image>
-                  </ImageView>
-                  <VBox>
+      <TabPane tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Class diagram">
+               <content>
+                  <AnchorPane>
                      <children>
-                        <Label text="- with the selected class button and after clicking on the free area, an empty class will be inserted." wrapText="true">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Label>
-                        <Label text=" - arguments and operations can be added with the right mouse click." wrapText="true">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Label>
-                        <Label text=" - after clicking on a class, you can delete it using the delete key" wrapText="true">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Label>
+                        <VBox alignment="TOP_CENTER" prefHeight="140.0" prefWidth="856.0">
+                           <children>
+                              <Label alignment="TOP_CENTER" text="Help" textAlignment="CENTER" underline="true">
+                                 <font>
+                                    <Font name="System Bold" size="42.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="20.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <HBox prefHeight="100.0" prefWidth="805.0">
+                                 <children>
+                                    <Label text="Commisioned Buttons:">
+                                       <font>
+                                          <Font name="System Bold" size="24.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="805.0">
+                                 <children>
+                                    <ImageView fitHeight="150.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/icons8-file-30.png" />
+                                       </image>
+                                    </ImageView>
+                                    <Label text=" - Load Button">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <padding>
+                                    <Insets left="20.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="805.0">
+                                 <children>
+                                    <ImageView fitHeight="150.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/icons8-save-30.png" />
+                                       </image>
+                                    </ImageView>
+                                    <Label text=" - Save button (you need to type the file extension: *.ijaxml, *.ixl)">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets left="20.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="805.0">
+                                 <children>
+                                    <Label text=" - on the right side there is a menu for events with classes.">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets left="20.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox>
+                                 <children>
+                                    <Label text="Working with classes:">
+                                       <font>
+                                          <Font name="System Bold" size="24.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets bottom="10.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="91.0" prefWidth="856.0">
+                                 <children>
+                                    <ImageView fitHeight="150.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/class.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox>
+                                       <children>
+                                          <Label text="- with the selected class button and after clicking on the free area, an empty class will be inserted." wrapText="true">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <Label text=" - arguments and operations can be added with the right mouse click." wrapText="true">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <Label text=" - after clicking on a class, you can delete it using the delete key" wrapText="true">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </VBox>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="20.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <Separator prefWidth="200.0" />
+                              <HBox prefHeight="100.0" prefWidth="805.0">
+                                 <children>
+                                    <VBox>
+                                       <children>
+                                          <ImageView fitHeight="25.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../images/asociation.png" />
+                                             </image>
+                                          </ImageView>
+                                          <ImageView fitHeight="25.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../images/realization.png" />
+                                             </image>
+                                          </ImageView>
+                                          <ImageView fitHeight="150.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../images/Agregation.png" />
+                                             </image>
+                                          </ImageView>
+                                          <ImageView fitHeight="150.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../images/Composition.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                       <HBox.margin>
+                                          <Insets left="20.0" />
+                                       </HBox.margin>
+                                    </VBox>
+                                    <VBox>
+                                       <children>
+                                          <Label text=" - the user must be in relation mode to add a session. (Clicked to some relationship button)" wrapText="true">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <Label text=" - then all you have to do is click on the two classes we want to link" wrapText="true">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </VBox>
+                                 </children>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="805.0">
+                                 <children>
+                                    <Label text="Examples:" wrapText="true">
+                                       <font>
+                                          <Font name="System Bold" size="24.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="805.0">
+                                 <children>
+                                    <Label text=" - are located in the data folder" wrapText="true">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                                 <padding>
+                                    <Insets left="20.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets left="5.0" right="5.0" />
+                           </padding>
+                        </VBox>
                      </children>
-                     <HBox.margin>
-                        <Insets left="10.0" />
-                     </HBox.margin>
-                  </VBox>
-               </children>
-               <VBox.margin>
-                  <Insets bottom="10.0" left="20.0" />
-               </VBox.margin>
-            </HBox>
-            <Separator prefWidth="200.0" />
-            <HBox prefHeight="100.0" prefWidth="805.0">
-               <children>
-                  <VBox>
+                  </AnchorPane>
+               </content>
+          </Tab>
+          <Tab text="Sequence diagram">
+               <content>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <ImageView fitHeight="25.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/asociation.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fitHeight="25.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/realization.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fitHeight="150.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/Agregation.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fitHeight="150.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/Composition.png" />
-                           </image>
-                        </ImageView>
+                        <VBox prefWidth="856.0">
+                           <children>
+                              <Label alignment="CENTER" contentDisplay="CENTER" text="Sequence diagram:" textAlignment="CENTER">
+                                 <font>
+                                    <Font name="System Bold" size="24.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="20.0" top="10.0" />
+                                 </padding>
+                              </Label>
+                              <HBox>
+                                 <children>
+                                    <ImageView fitHeight="70.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/sequence.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox>
+                                       <children>
+                                          <Label text="When this button is selected and is clicked in an empty field. The sequence timeline is inserted. After clicking on the button above the timeline, a window for adjusting the size of the timeline is called up." wrapText="true">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                             <padding>
+                                                <Insets left="3.0" />
+                                             </padding>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox>
+                                 <children>
+                                    <ImageView fitHeight="70.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/create.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox>
+                                       <children>
+                                          <Label text="With this button selected, it is possible to insert a new timeline after grabbing the timeline and dragging to the desired distance. After performing this action, it will be possible to insert a message into the window." wrapText="true">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                             <padding>
+                                                <Insets left="3.0" />
+                                             </padding>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox>
+                                 <children>
+                                    <VBox prefHeight="57.0" prefWidth="147.0">
+                                       <children>
+                                          <ImageView fitHeight="38.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../images/asociation.png" />
+                                             </image>
+                                          </ImageView>
+                                          <ImageView fitHeight="38.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../images/realization.png" />
+                                             </image>
+                                          </ImageView>
+                                          <ImageView fitHeight="38.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../images/retrurn.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </VBox>
+                                    <VBox>
+                                       <children>
+                                          <Label text="These buttons can be used to insert a synchronous, asynchronous and return message by clicking on the timelines to which the message relates. For your self messages, just press twice on the same axis." wrapText="true">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                             <padding>
+                                                <Insets left="3.0" />
+                                             </padding>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox prefHeight="84.0" prefWidth="846.0">
+                                 <children>
+                                    <ImageView fitHeight="70.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/delete.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox>
+                                       <children>
+                                          <Label text="In this mode, it is possible to end the axis at the click location." wrapText="true">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                             <padding>
+                                                <Insets bottom="20.0" left="3.0" top="20.0" />
+                                             </padding>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox>
+                                 <children>
+                                    <ImageView fitHeight="70.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/action.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox>
+                                       <children>
+                                          <Label text="This menu menu allows you to insert an activity on the axis by selecting the start and end of the activity." wrapText="true">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                             <padding>
+                                                <Insets left="3.0" />
+                                             </padding>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets left="5.0" right="5.0" />
+                           </padding>
+                        </VBox>
                      </children>
-                     <HBox.margin>
-                        <Insets left="20.0" />
-                     </HBox.margin>
-                  </VBox>
-                  <VBox>
-                     <children>
-                        <Label text=" - the user must be in relation mode to add a session. (Clicked to some relationship button)" wrapText="true">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Label>
-                        <Label text=" - then all you have to do is click on the two classes we want to link" wrapText="true">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Label>
-                     </children>
-                     <HBox.margin>
-                        <Insets left="10.0" />
-                     </HBox.margin>
-                  </VBox>
-               </children>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <VBox.margin>
-                  <Insets bottom="10.0" top="10.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="805.0">
-               <children>
-                  <Label text="Examples:" wrapText="true">
-                     <font>
-                        <Font name="System Bold" size="24.0" />
-                     </font>
-                  </Label>
-               </children>
-               <padding>
-                  <Insets bottom="10.0" />
-               </padding>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="805.0">
-               <children>
-                  <Label text=" - are located in the data folder" wrapText="true">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                  </Label>
-               </children>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <padding>
-                  <Insets left="20.0" />
-               </padding>
-            </HBox>
-         </children>
-         <padding>
-            <Insets left="5.0" right="5.0" />
-         </padding>
-      </VBox>
+                  </AnchorPane>
+               </content></Tab>
+        </tabs>
+      </TabPane>
    </children>
 </AnchorPane>
