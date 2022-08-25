@@ -9,7 +9,7 @@ Adam Kaňkovský (frontend, compilation, packaging)
 
 David Chocholatý (backend, diagrams saving and loading)
 
-- Points: 80 / 80
+- Body (Points): 80 / 80
 
 ## Compilation and Run
 
